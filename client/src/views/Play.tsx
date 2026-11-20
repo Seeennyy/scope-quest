@@ -300,14 +300,14 @@ function CalcView({ sc, pub, me, content, lang, sock }: any) {
       {fx && <div className="factor small">💱 {fx.value} {fx.unit} <span className="muted">({fx.source})</span></div>}
       {isM && <p className="hint">💡 {tr(myOpt.hint, lang)}</p>}
       {pub.phase === 'answering' ? <>
-        {showCalc && <Calculator onUse={n => { setVal(String(Math.round(n * 1000) / 1000)); setSent(false); }} />}
         <div className="answer-row" dir="ltr">
           <input inputMode="decimal" value={val} onChange={e => { setVal(e.target.value); setSent(false); }} placeholder="0.0" aria-label={ui('answerIn', lang)} />
           <span className="unit">t CO₂e</span>
           <button className="btn-primary" disabled={!val} onClick={submit}>{sent ? '✓' : ui('submit', lang)}</button>
         </div>
-        <button className="link" onClick={() => setShowCalc(!showCalc)}>{showCalc ? '▾' : '▸'} 🧮</button>
         {sent && <Waiting lang={lang} />}
+        <button className="link" onClick={() => setShowCalc(!showCalc)}>{showCalc ? '▾' : '▸'} 🧮</button>
+        {showCalc && <Calculator onUse={n => { setVal(String(Math.round(n * 1000) / 1000)); setSent(false); }} />}
       </> : <>
         {me.answer?.v != null && <div className="my-num" dir="ltr">{num(me.answer.v, 2)} t CO₂e</div>}
         {!rv && <Waiting lang={lang} />}

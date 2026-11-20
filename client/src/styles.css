@@ -29,7 +29,7 @@ input, textarea, select { font-family: inherit; font-weight: 700; }
 
 /* ================= PHONE ================= */
 body.is-play { background: var(--cream); }
-.phone { max-width: 520px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: 86px; }
+.phone { max-width: 520px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; padding-bottom: 96px; }
 .phone.center { justify-content: center; padding: 24px; }
 .ph-head { position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: 1fr auto auto; grid-template-rows: auto auto; gap: 0 10px; align-items: center; padding: 10px 14px; background: var(--team, var(--s3)); color: #fff; box-shadow: 0 3px 0 #0003; }
 .ph-team { font-size: 1.05rem; display: flex; gap: 6px; align-items: center; }
@@ -109,7 +109,7 @@ body.is-play { background: var(--cream); }
 .calcview .doc { font-size: .95rem; }
 .method-chip { background: var(--ink); color: #fff; border-radius: 12px; padding: 8px 12px; text-align: center; }
 .hint { margin: 0; font-weight: 600; }
-.answer-row { display: flex; gap: 8px; align-items: center; position: sticky; bottom: 76px; background: var(--cream); padding: 6px 0; }
+.answer-row { display: flex; gap: 8px; align-items: center; padding: 6px 0; }
 .answer-row input { flex: 1; min-width: 0; font-size: 1.6rem; padding: 10px 12px; border-radius: 14px; border: 3px solid var(--ink); min-height: 58px; }
 .unit { white-space: nowrap; }
 .my-num { font-size: 2rem; text-align: center; }
