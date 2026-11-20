@@ -1,0 +1,1922 @@
+{
+  "meta": {
+    "title": {
+      "en": "Scope Quest",
+      "ar": "سكوب كويست"
+    },
+    "subtitle": {
+      "en": "The Nile Loaf Carbon Inventory",
+      "ar": "جرد الكربون لشركة نايل لوف"
+    },
+    "instructorName": "Dr. Instructor",
+    "company": {
+      "en": "Nile Loaf",
+      "ar": "نايل لوف"
+    },
+    "inventoryYear": 2026,
+    "ceoName": {
+      "en": "Madame Nour, CEO",
+      "ar": "مدام نور، الرئيسة التنفيذية"
+    },
+    "consolidation": {
+      "en": "Board note: Nile Loaf consolidates by FINANCIAL CONTROL. The extra vans are on a short operating lease (we rent them, we drive them).",
+      "ar": "ملاحظة المجلس: نايل لوف تعتمد نهج السيطرة المالية. الفانات الإضافية بعقد تأجير تشغيلي قصير (بنستأجرها وبنسوقها بنفسنا)."
+    }
+  },
+  "teams": [
+    {
+      "id": "felucca",
+      "name": {
+        "en": "Team Felucca",
+        "ar": "فريق الفلوكة"
+      },
+      "emoji": "⛵",
+      "color": "#1f7a8c"
+    },
+    {
+      "id": "koshary",
+      "name": {
+        "en": "Team Koshary",
+        "ar": "فريق الكشري"
+      },
+      "emoji": "🍲",
+      "color": "#c8553d"
+    },
+    {
+      "id": "karkade",
+      "name": {
+        "en": "Team Karkadeh",
+        "ar": "فريق الكركديه"
+      },
+      "emoji": "🌺",
+      "color": "#8e2c58"
+    },
+    {
+      "id": "scarab",
+      "name": {
+        "en": "Team Scarab",
+        "ar": "فريق الجعران"
+      },
+      "emoji": "🪲",
+      "color": "#2d6a4f"
+    },
+    {
+      "id": "lotus",
+      "name": {
+        "en": "Team Lotus",
+        "ar": "فريق اللوتس"
+      },
+      "emoji": "🪷",
+      "color": "#5a4fcf"
+    },
+    {
+      "id": "taameya",
+      "name": {
+        "en": "Team Ta'ameya",
+        "ar": "فريق الطعمية"
+      },
+      "emoji": "🧆",
+      "color": "#b07d12"
+    }
+  ],
+  "sources": {
+    "T57": "GHG Protocol Scope 3 Standard, Table 5.7 (deck slides 6–7)",
+    "T61": "GHG Protocol Scope 3 Calculation Guidance, Table 6.1 (deck slide 8)",
+    "CORP": "GHG Protocol Corporate Standard: direct = owned or operated assets (deck slide 5)",
+    "CORP_S1": "GHG Protocol Corporate Standard, Ch. 4: Scope 1 includes stationary combustion and fugitive (e.g. HFC) emissions",
+    "CORP_S2": "GHG Protocol Corporate Standard, Ch. 4 & Scope 2 Guidance: purchased electricity = Scope 2",
+    "S3_T54": "GHG Protocol Scope 3 Standard, Table 5.4: Category 12 End-of-life treatment of sold products",
+    "METHODS": "GHG Protocol transport methods: fuel-, distance-, spend-based (deck slide 9)",
+    "ISO_524": "ISO 14064-1:2018, clause 5.2.4 (six inventory categories)",
+    "ISO_B2": "ISO 14064-1:2018, Annex B.2 (Category 1: direct emissions)",
+    "ISO_B3": "ISO 14064-1:2018, Annex B.3 (Category 2: imported energy)",
+    "ISO_B4": "ISO 14064-1:2018, Annex B.4 (Category 3: transportation)",
+    "ISO_B41": "ISO 14064-1:2018, Annex B.4.1 (leased vehicles depend on consolidation approach)",
+    "ISO_B5": "ISO 14064-1:2018, Annex B.5 (Category 4: products used by the organization)",
+    "ISO_B6": "ISO 14064-1:2018, Annex B.6.2 c) (Category 5: end of life of sold products)",
+    "EDGAR": "JRC/EDGAR, GHG emissions of all world countries, 2024 report",
+    "EDGAR_EG": "JRC/EDGAR 2024 booklet, Egypt country page (PDF p. 114)",
+    "EDGAR_GLOBAL": "JRC/EDGAR 2024 booklet, Key conclusions (PDF p. 8) and global per-capita (PDF p. 17)",
+    "T57_LEASE": "GHG Protocol Scope 3 Std Table 5.7 row 2 + Corporate Standard leased-assets guidance (Appendix F): operating lease + financial control → Scope 3 Cat 8; operational control → Scope 1"
+  },
+  "factors": [
+    {
+      "id": "diesel",
+      "name": "Diesel (100% mineral diesel), combustion",
+      "value": 2.66155,
+      "unit": "kg CO₂e / litre",
+      "source": "UK DESNZ GHG Conversion Factors 2025, Fuels › Liquid fuels",
+      "note": "Egyptian road diesel assumed unblended (no biofuel). Verify against the DESNZ flat file before the lecture."
+    },
+    {
+      "id": "grid_eg",
+      "name": "Egypt grid electricity, average",
+      "value": 0.381,
+      "unit": "kg CO₂ / kWh",
+      "source": "Egyptian Electricity Holding Company (EEHC) Annual Report 2024/2025: 380.86 t CO₂/GWh",
+      "note": "CO₂ only (≈ CO₂e for a gas-fired grid), grid average incl. renewables. Used for location-based Scope 2. Verify against the EEHC report (per kWh generated)."
+    },
+    {
+      "id": "r134a",
+      "name": "HFC-134a (R-134a) GWP100",
+      "value": 1530,
+      "unit": "kg CO₂e / kg",
+      "source": "IPCC AR6 WG1, Ch. 7 Table 7.SM.7",
+      "note": "AR6 value. DESNZ files use AR5 (1,300); state which one you use."
+    },
+    {
+      "id": "natgas",
+      "name": "Natural gas, stationary combustion (commercial)",
+      "value": 56.276,
+      "unit": "kg CO₂e / GJ (NCV)",
+      "source": "IPCC 2006 Guidelines Vol. 2 Ch. 2 Table 2.4 (CO₂ 56,100; CH₄ 5; N₂O 0.1 kg/TJ) × AR6 GWP100 (CH₄ fossil 29.8, N₂O 273)",
+      "note": "Pre-filled line only (oven gas)."
+    },
+    {
+      "id": "van_tkm",
+      "name": "Diesel van, average (up to 3.5 t), freight",
+      "value": 0.61643,
+      "unit": "kg CO₂e / tonne·km",
+      "source": "UK DESNZ GHG Conversion Factors 2024, Freighting goods › Vans › Diesel",
+      "note": "Verify against the current DESNZ year."
+    },
+    {
+      "id": "flight",
+      "name": "Flight, international to/from non-UK, economy, without RF",
+      "value": 0.0645,
+      "unit": "kg CO₂e / passenger·km",
+      "source": "UK DESNZ GHG Conversion Factors 2025, Business travel – air",
+      "note": "Includes DESNZ's 8% distance uplift, so use great-circle distance. Without radiative forcing (RF). Verify."
+    },
+    {
+      "id": "eeio_truck",
+      "name": "Spend-based: specialized freight trucking, local (NAICS 484220)",
+      "value": 0.595,
+      "unit": "kg CO₂e / USD (2022)",
+      "source": "US EPA Supply Chain GHG Emission Factors v1.3 (with margins)",
+      "note": "US trucking-industry factor (2022 USD) applied to an Egyptian invoice: the reason spend-based is the lowest data quality. Verify."
+    },
+    {
+      "id": "fx",
+      "name": "Exchange rate used for spend-based method",
+      "value": 50,
+      "unit": "EGP / USD",
+      "source": "Game assumption (approximate 2025–26 rate)",
+      "note": "Not inflation-adjusted to 2022 USD. That's part of the lesson."
+    },
+    {
+      "id": "flour_pcf",
+      "name": "Flour carbon footprint (cradle-to-gate)",
+      "value": 0.45,
+      "unit": "kg CO₂e / kg flour",
+      "source": "Fictional supplier declaration from 'Delta Mills' (story data)",
+      "note": "Invented for the story. NOT a real factor."
+    }
+  ],
+  "categories": {
+    "ghgp": {
+      "1": {
+        "en": "1 Purchased goods",
+        "ar": "1 السلع المشتراة"
+      },
+      "2": {
+        "en": "2 Capital goods",
+        "ar": "2 السلع الرأسمالية"
+      },
+      "3": {
+        "en": "3 Fuel & energy (upstream)",
+        "ar": "3 الوقود والطاقة (المنبع)"
+      },
+      "4": {
+        "en": "4 Upstream transport",
+        "ar": "4 النقل والتوزيع في المنبع"
+      },
+      "6": {
+        "en": "6 Business travel",
+        "ar": "6 سفر العمل"
+      },
+      "7": {
+        "en": "7 Employee commuting",
+        "ar": "7 تنقل الموظفين"
+      },
+      "8": {
+        "en": "8 Upstream leased assets",
+        "ar": "8 الأصول المؤجرة (منبع)"
+      },
+      "9": {
+        "en": "9 Downstream transport",
+        "ar": "9 النقل والتوزيع في المصب"
+      },
+      "12": {
+        "en": "12 End-of-life of sold products",
+        "ar": "12 نهاية عمر المنتجات المباعة"
+      }
+    },
+    "iso": {
+      "1": {
+        "en": "1 Direct",
+        "ar": "1 مباشرة"
+      },
+      "2": {
+        "en": "2 Imported energy",
+        "ar": "2 الطاقة المستوردة"
+      },
+      "3": {
+        "en": "3 Transportation",
+        "ar": "3 النقل"
+      },
+      "4": {
+        "en": "4 Products used by us",
+        "ar": "4 منتجات نستخدمها"
+      },
+      "5": {
+        "en": "5 Use of our products",
+        "ar": "5 استخدام منتجاتنا"
+      },
+      "6": {
+        "en": "6 Other",
+        "ar": "6 مصادر أخرى"
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "oven_gas",
+      "icon": "🔥",
+      "pos": [
+        470,
+        430
+      ],
+      "transport": false,
+      "name": {
+        "en": "Gas burnt in the bread ovens",
+        "ar": "الغاز المحروق في أفران العيش"
+      },
+      "desc": {
+        "en": "Natural gas from the city network, burnt in Nile Loaf's own ovens.",
+        "ar": "غاز طبيعي من شبكة المدينة بيتحرق في أفران نايل لوف نفسها."
+      },
+      "scope": "S1",
+      "cat": null,
+      "iso": [
+        1
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Combustion in equipment we own = direct = Scope 1.",
+        "ar": "احتراق في معدات بنملكها = مباشر = النطاق 1."
+      },
+      "source": "CORP_S1",
+      "isoReason": {
+        "en": "Stationary combustion inside our boundary → Category 1.",
+        "ar": "احتراق ثابت داخل حدودنا ← الفئة 1."
+      },
+      "isoSource": "ISO_B2",
+      "wisdom": {
+        "talk": "The gas company sold the fuel, but the flame is ours. Whoever burns it reports it as Scope 1.",
+        "misconception": "\"We bought the gas, so it's Scope 2.\" Scope 2 is only purchased electricity, steam, heat or cooling.",
+        "clause": "Corporate Standard Ch. 4: stationary combustion; ISO Annex B.2.2 a)",
+        "follow": {
+          "S2": "Ask them: is gas 'purchased energy' like electricity? Where does the CO₂ come out, at the power plant or in our oven?",
+          "S3": "Ask them: who owns the oven?"
+        }
+      }
+    },
+    {
+      "id": "own_diesel_vans",
+      "icon": "🚐",
+      "pos": [
+        880,
+        540
+      ],
+      "transport": true,
+      "name": {
+        "en": "Nile Loaf's own diesel vans",
+        "ar": "فانات الديزل المملوكة لنايل لوف"
+      },
+      "desc": {
+        "en": "6 vans bought by Nile Loaf, fuelled with diesel, delivering bread to shops.",
+        "ar": "6 فانات اشترتها نايل لوف، بتمشي بالديزل وبتوزع العيش على الفروع."
+      },
+      "scope": "S1",
+      "cat": null,
+      "iso": [
+        1
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Fuel used in vehicles we own or control = Scope 1.",
+        "ar": "وقود في عربيات بنملكها أو نتحكم فيها = النطاق 1."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Mobile combustion in our own vehicles → Category 1, not Category 3.",
+        "ar": "احتراق متحرك في عربياتنا ← الفئة 1 مش الفئة 3."
+      },
+      "isoSource": "ISO_B2",
+      "wisdom": {
+        "talk": "Transport isn't automatically Scope 3. Table 5.7, row 1: owned or controlled vehicles are Scope 1 for fuel.",
+        "misconception": "\"Transport = Scope 3.\" Ownership and control decide the scope, not the activity.",
+        "clause": "Scope 3 Std Table 5.7 row 1; ISO B.2.2 b) and B.4.1 (owned transport → Category 1)",
+        "follow": {
+          "S3": "Ask them: who owns these vans? Who pays for the diesel?",
+          "S2": "Ask them: does a diesel van use purchased electricity?"
+        }
+      }
+    },
+    {
+      "id": "grid_power",
+      "icon": "⚡",
+      "pos": [
+        1430,
+        520
+      ],
+      "transport": false,
+      "name": {
+        "en": "Grid electricity for bakeries & office",
+        "ar": "كهرباء الشبكة للمخابز والمكتب"
+      },
+      "desc": {
+        "en": "Electricity bought from the national grid for mixers, lights, the cold room and A/C.",
+        "ar": "كهرباء من الشبكة القومية للعجانات والإضاءة وغرفة التبريد والتكييف."
+      },
+      "scope": "S2",
+      "cat": null,
+      "iso": [
+        2
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Purchased electricity: the CO₂ comes out at the power plant = Scope 2.",
+        "ar": "كهرباء مشتراة: الانبعاث بيطلع في محطة الكهرباء = النطاق 2."
+      },
+      "source": "CORP_S2",
+      "isoReason": {
+        "en": "Indirect emissions from imported electricity → Category 2.",
+        "ar": "انبعاثات غير مباشرة من كهرباء مستوردة ← الفئة 2."
+      },
+      "isoSource": "ISO_B3",
+      "wisdom": {
+        "talk": "The textbook Scope 2. Companies in markets with contractual instruments (e.g. certificates) must report it two ways: location-based and market-based. We'll see why in the Board Meeting.",
+        "misconception": "\"No chimney at our site means no emissions.\" The chimney is at the power plant, and it's still our responsibility.",
+        "clause": "Scope 2 Guidance (dual reporting); ISO B.3.2 a)",
+        "follow": {
+          "S1": "Ask them: where is the smokestack? Inside our walls?",
+          "S3": "Ask them: is electricity a 'purchased good' (Cat 1) or does it have its own scope?"
+        }
+      }
+    },
+    {
+      "id": "own_ev_vans",
+      "icon": "🔌",
+      "pos": [
+        990,
+        470
+      ],
+      "transport": true,
+      "name": {
+        "en": "Own electric vans charged at the depot",
+        "ar": "فانات كهربا مملوكة بتتشحن في الجراج"
+      },
+      "desc": {
+        "en": "2 electric vans owned by Nile Loaf, charged from the grid at our depot.",
+        "ar": "فانين كهربا ملك نايل لوف، بيتشحنوا من الشبكة في الجراج بتاعنا."
+      },
+      "scope": "S2",
+      "cat": null,
+      "iso": [
+        2
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Owned vehicle running on electricity = Scope 2 (Table 5.7: Scope 1 for fuel, Scope 2 for electricity).",
+        "ar": "عربية مملوكة بتمشي بالكهربا = النطاق 2 (جدول 5.7: النطاق 1 للوقود والنطاق 2 للكهربا)."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "The emissions are from imported grid electricity → Category 2.",
+        "ar": "الانبعاثات من كهرباء الشبكة المستوردة ← الفئة 2."
+      },
+      "isoSource": "ISO_B3",
+      "wisdom": {
+        "talk": "Same owner, same delivery job as the diesel vans, but a different scope. The energy carrier decides between Scope 1 and Scope 2.",
+        "misconception": "\"Electric vans are zero-emission.\" Their exhaust moved to the power plant.",
+        "clause": "Scope 3 Std Table 5.7 row 1 ('scope 2 for electricity use'); Calc Guidance Table 6.1 row 1; ISO B.3.2 a). B.4.1's 'owned → Category 1' covers fuel burnt on board, and grid electricity stays Category 2",
+        "follow": {
+          "S1": "Ask them: what does an electric van burn on the road?",
+          "S3": "Ask them: we own it, so why would it be value chain?"
+        }
+      }
+    },
+    {
+      "id": "fridge_leak",
+      "icon": "❄️",
+      "pos": [
+        610,
+        360
+      ],
+      "transport": false,
+      "name": {
+        "en": "Refrigerant leaking from the cold room",
+        "ar": "تسريب غاز التبريد من غرفة التبريد"
+      },
+      "desc": {
+        "en": "Our cold room leaks R-134a gas; the technician tops it up every few months.",
+        "ar": "غرفة التبريد بتسرب غاز R-134a، والفني بيعبيها كل كام شهر."
+      },
+      "scope": "S1",
+      "cat": null,
+      "iso": [
+        1
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Fugitive emissions from equipment we own = Scope 1.",
+        "ar": "انبعاثات متسربة من معدات بنملكها = النطاق 1."
+      },
+      "source": "CORP_S1",
+      "isoReason": {
+        "en": "Direct fugitive emissions (cooling systems) → Category 1.",
+        "ar": "انبعاثات تسرب مباشرة (أنظمة تبريد) ← الفئة 1."
+      },
+      "isoSource": "ISO_B2",
+      "wisdom": {
+        "talk": "Nothing burns, but it's still Scope 1. And per kilogram it's a monster: GWP 1,530 means 1 kg of R-134a ≈ 1.5 tonnes of CO₂e.",
+        "misconception": "\"No combustion = no emissions\" or \"it's electricity-related so Scope 2\".",
+        "clause": "Corporate Standard Ch. 4 (fugitive); ISO B.2.2 d) NOTE 2 (equipment leaks, e.g. cooling systems); ISO 6.3: use the latest IPCC GWP (AR6)",
+        "follow": {
+          "S2": "Ask them: the fridge uses electricity, but is the leaking gas electricity?",
+          "S3": "Ask them: whose equipment is leaking?"
+        }
+      }
+    },
+    {
+      "id": "leased_vans",
+      "icon": "🔑",
+      "pos": [
+        1080,
+        610
+      ],
+      "transport": true,
+      "name": {
+        "en": "Leased vans that Nile Loaf drives",
+        "ar": "فانات مستأجرة سايقاها نايل لوف"
+      },
+      "desc": {
+        "en": "3 vans rented on an operating lease. Our drivers, our routes, our diesel.",
+        "ar": "3 فانات بعقد تأجير تشغيلي. سواقينا وخطوطنا والديزل علينا."
+      },
+      "scope": "S3",
+      "cat": "8",
+      "iso": [
+        3
+      ],
+      "isoAlso": [
+        4
+      ],
+      "reason": {
+        "en": "Leased & operated by us, not already in Scope 1/2 → Scope 3 Cat 8 (Table 5.7). That holds because we use financial control. Under operational control they'd be Scope 1.",
+        "ar": "مستأجرة وبنشغلها ومش محسوبة في النطاق 1/2 ← النطاق 3 فئة 8 (جدول 5.7). ده لأننا بنعتمد السيطرة المالية، ولو السيطرة التشغيلية كانت هتبقى النطاق 1."
+      },
+      "source": "T57_LEASE",
+      "isoReason": {
+        "en": "With financial control the fleet is indirect: Category 3 (transport) or 4 (services used, B.5.3). Under operational control it would be Category 1.",
+        "ar": "مع السيطرة المالية الأسطول غير مباشر: الفئة 3 (نقل) أو 4 (خدمات مستخدمة). مع السيطرة التشغيلية هيبقى الفئة 1."
+      },
+      "isoSource": "ISO_B41",
+      "wisdom": {
+        "talk": "This is THE judgment call of the day. Same van, different answer depending on the consolidation approach. That's why the board note told you 'financial control'.",
+        "misconception": "\"We drive it, so it's always Scope 1.\" True under operational control, not under financial control with an operating lease.",
+        "clause": "Scope 3 Std Table 5.7 row 2 (Cat 8 'not already included in scope 1 or 2') + Corporate Std leased-assets guidance (Appendix F) for the consolidation approach; Calc Guidance Table 6.1 row 4; ISO B.4.1 EXAMPLE, B.5.4 b)",
+        "follow": {
+          "S1": "Ask them: who controls the van day to day? And which approach did the board say we use?",
+          "S2": "Ask them: does this van run on purchased electricity?"
+        }
+      }
+    },
+    {
+      "id": "generator",
+      "icon": "🛢️",
+      "pos": [
+        400,
+        300
+      ],
+      "transport": false,
+      "name": {
+        "en": "Diesel backup generator (power cuts)",
+        "ar": "مولد ديزل احتياطي (وقت انقطاع الكهربا)"
+      },
+      "desc": {
+        "en": "Our own generator runs on diesel whenever the grid goes down.",
+        "ar": "المولد بتاعنا بيشتغل ديزل كل ما الكهربا تقطع."
+      },
+      "scope": "S1",
+      "cat": null,
+      "iso": [
+        1
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "We burn the fuel in our own equipment, so it's Scope 1, even though it makes electricity.",
+        "ar": "إحنا اللي بنحرق الوقود في معداتنا = النطاق 1، حتى لو بيطلع كهربا."
+      },
+      "source": "CORP_S1",
+      "isoReason": {
+        "en": "Stationary combustion in our equipment → Category 1.",
+        "ar": "احتراق ثابت في معداتنا ← الفئة 1."
+      },
+      "isoSource": "ISO_B2",
+      "wisdom": {
+        "talk": "Electricity you GENERATE yourself from fuel is Scope 1. Only electricity you PURCHASE is Scope 2.",
+        "misconception": "\"It produces electricity, so Scope 2.\"",
+        "clause": "Corporate Standard Ch. 4 (stationary combustion); ISO B.2.1 (stationary sources incl. electricity generators) and B.2.2 a)",
+        "follow": {
+          "S2": "Ask them: did we buy this electricity from anyone?",
+          "S3": "Ask them: whose generator is it?"
+        }
+      }
+    },
+    {
+      "id": "courier",
+      "icon": "📦",
+      "pos": [
+        360,
+        660
+      ],
+      "transport": true,
+      "name": {
+        "en": "The courier Nile Loaf pays",
+        "ar": "شركة الشحن اللي نايل لوف بتدفعلها"
+      },
+      "desc": {
+        "en": "'Wasla Express' delivers our bread to distant shops. Their vans, our invoice.",
+        "ar": "«وصلة إكسبريس» بتوصل عيشنا للفروع البعيدة. عربياتهم وإحنا اللي بندفع."
+      },
+      "scope": "S3",
+      "cat": "4",
+      "iso": [
+        3
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Transport service we purchase, in vehicles we don't own → Scope 3 Cat 4, even for outbound deliveries.",
+        "ar": "خدمة نقل بنشتريها في عربيات مش بتاعتنا ← النطاق 3 فئة 4، حتى لو توصيل لبره."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Freight services paid for by the organization → Category 3.",
+        "ar": "خدمات شحن بتدفعها المنظمة ← الفئة 3."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "Trap: it's OUTBOUND (to our shops/customers) but it's Cat 4, not Cat 9, because WE pay for it. For sold products going out, who pays decides: we pay → Cat 4, we don't → Cat 9. (Inbound from tier-1 suppliers is Cat 4 regardless.)",
+        "misconception": "\"Outbound = downstream = Cat 9.\" Cat 9 is only transport we don't pay for.",
+        "clause": "Scope 3 Std Table 5.7 row 7 (purchased transport services incl. outbound logistics = Cat 4); ISO B.4.2 a)",
+        "follow": {
+          "S1": "Ask them: whose van is it, and who buys its diesel?",
+          "S2": "Ask them: is this purchased electricity?"
+        }
+      }
+    },
+    {
+      "id": "mill_truck",
+      "icon": "🚚",
+      "pos": [
+        300,
+        480
+      ],
+      "transport": true,
+      "name": {
+        "en": "The mill's truck delivering flour to us",
+        "ar": "عربية المطحن اللي بتوصلنا الدقيق"
+      },
+      "desc": {
+        "en": "Delta Mills (our direct supplier) trucks flour to our bakery. Delivery is invoiced to us.",
+        "ar": "مطاحن الدلتا (مورّدنا المباشر) بتوصل الدقيق للمخبز. التوصيل عليه فاتورة لينا."
+      },
+      "scope": "S3",
+      "cat": "4",
+      "iso": [
+        3
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Transport between a tier-1 supplier and our operations, in vehicles we don't own → Cat 4.",
+        "ar": "نقل بين المورد المباشر وعملياتنا في عربيات مش بتاعتنا ← فئة 4."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Latest transport from supplier to us → Category 3 (upstream transport).",
+        "ar": "آخر نقل من المورد لينا ← الفئة 3 (نقل المنبع)."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "Inbound from a tier-1 supplier = Cat 4. Compare with the next card, the truck one step further upstream.",
+        "misconception": "\"It's the supplier's truck, so it's in Cat 1 with the flour.\" Only transport upstream of tier 1 sits in Cat 1.",
+        "clause": "Scope 3 Std Table 5.7 row 6 (tier-1 supplier → own operations, vehicles not owned/controlled = Cat 4); ISO B.4.2 a)",
+        "follow": {
+          "S1": "Ask them: do we own that truck?"
+        }
+      }
+    },
+    {
+      "id": "wheat_truck",
+      "icon": "🌾",
+      "pos": [
+        130,
+        170
+      ],
+      "transport": true,
+      "name": {
+        "en": "The truck bringing wheat to the mill",
+        "ar": "العربية اللي بتجيب القمح للمطحن"
+      },
+      "desc": {
+        "en": "A farm cooperative trucks wheat to Delta Mills. We never see this truck.",
+        "ar": "جمعية زراعية بتنقل القمح لمطاحن الدلتا. إحنا عمرنا ما شفنا العربية دي."
+      },
+      "scope": "S3",
+      "cat": "1",
+      "iso": [
+        4
+      ],
+      "isoAlso": [
+        3
+      ],
+      "reason": {
+        "en": "Upstream of our tier-1 supplier → already inside the flour's cradle-to-gate footprint → Cat 1.",
+        "ar": "قبل المورد المباشر ← محسوب أصلاً في بصمة الدقيق من المهد للبوابة ← فئة 1."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Transport between suppliers is part of purchased goods (Category 4). ISO lets you report all supply-chain transport in Category 3 instead, as long as you don't double count.",
+        "ar": "النقل بين الموردين جزء من السلع المشتراة (الفئة 4). ISO بيسمح بوضع كل نقل سلسلة الإمداد في الفئة 3 بشرط عدم الحساب المزدوج."
+      },
+      "isoSource": "ISO_B5",
+      "wisdom": {
+        "talk": "Same kind of truck as the last card, different category. The tier-2 → tier-1 leg is already in the flour's footprint. Count it twice and you've double counted.",
+        "misconception": "\"All upstream trucks are Cat 4.\" Table 5.7 row 3 puts tier-2 → tier-1 transport in Cat 1.",
+        "clause": "Scope 3 Std Table 5.7 row 3; ISO B.4.2 a) + Figure B.1 (double counting)",
+        "follow": {
+          "S1": "Ask them: is this truck in our building or our fleet?"
+        }
+      }
+    },
+    {
+      "id": "van_factory",
+      "icon": "🏭",
+      "pos": [
+        1330,
+        200
+      ],
+      "transport": true,
+      "name": {
+        "en": "Manufacturing our 2 new vans",
+        "ar": "تصنيع الفانين الجداد بتوعنا"
+      },
+      "desc": {
+        "en": "The steel, battery and assembly emissions of the 2 new vans we bought this year.",
+        "ar": "انبعاثات الحديد والبطارية والتجميع للفانين اللي اشتريناهم السنة دي."
+      },
+      "scope": "S3",
+      "cat": "2",
+      "iso": [
+        4
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Cradle-to-gate emissions of vehicles we purchase → Cat 2 Capital goods.",
+        "ar": "انبعاثات تصنيع العربيات اللي بنشتريها ← فئة 2 السلع الرأسمالية."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Capital goods (vehicles) → Category 4, products used by the organization.",
+        "ar": "سلع رأسمالية (عربيات) ← الفئة 4 منتجات بتستخدمها المنظمة."
+      },
+      "isoSource": "ISO_B5",
+      "wisdom": {
+        "talk": "Driving the van is Scope 1 or 2. BUILDING the van is Scope 3 Cat 2, reported in full in the year we buy it (GHG Protocol; ISO B.5.2 b) also allows amortizing it over the asset's life).",
+        "misconception": "\"It's our van, so Scope 1.\" The factory isn't ours. In ISO, someone may quote B.4.1 ('construction of the transport equipment' in Category 3); that refers to third-party transport. Vehicles WE buy are capital goods, B.5.2 b) → Category 4.",
+        "clause": "Scope 3 Std Table 5.7 row 4 (production of vehicles → Cat 2); ISO B.5.2 b)",
+        "follow": {
+          "S1": "Ask them: is the van factory inside our boundary?"
+        }
+      }
+    },
+    {
+      "id": "diesel_delivery",
+      "icon": "⛽",
+      "pos": [
+        1180,
+        400
+      ],
+      "transport": true,
+      "name": {
+        "en": "Tanker delivering diesel to our depot",
+        "ar": "التانك اللي بيوصل الديزل للجراج"
+      },
+      "desc": {
+        "en": "The fuel company's tanker truck brings the diesel we later burn in our vans.",
+        "ar": "عربية شركة البترول بتجيب الديزل اللي بنحرقه بعدين في فاناتنا."
+      },
+      "scope": "S3",
+      "cat": "3",
+      "iso": [
+        3
+      ],
+      "isoAlso": [
+        4
+      ],
+      "reason": {
+        "en": "Transporting fuels we consume → Cat 3 Fuel- and energy-related activities.",
+        "ar": "نقل الوقود اللي بنستهلكه ← فئة 3 أنشطة الوقود والطاقة."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Fuel transportation upstream of our energy → Category 3 (B.4.1). Or count it as the fuel's upstream (Category 4, B.5.2 a)). Choose one and don't double count.",
+        "ar": "نقل الوقود ← الفئة 3 (B.4.1)، أو كجزء من منبع الوقود (الفئة 4، B.5.2 a)). اختار واحدة بس من غير حساب مزدوج."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "The tricky one. It's transport, but GHG Protocol puts fuel transport in Cat 3, not Cat 4. Burning the diesel is Scope 1, and getting it to us is Cat 3.",
+        "misconception": "\"It's a truck delivering to us, so Cat 4.\" Table 5.7 row 5 has a specific home for transport of fuels and energy.",
+        "clause": "Scope 3 Std Table 5.7 row 5 ('Transportation of fuels and energy consumed' → Cat 3)",
+        "follow": {
+          "S1": "Ask them: do we own the tanker?"
+        }
+      }
+    },
+    {
+      "id": "flights",
+      "icon": "✈️",
+      "pos": [
+        1460,
+        110
+      ],
+      "transport": true,
+      "name": {
+        "en": "Staff flights to a food trade fair",
+        "ar": "سفر الموظفين بالطيارة لمعرض أغذية"
+      },
+      "desc": {
+        "en": "6 staff fly Cairo ↔ Dubai on a commercial airline for a trade fair.",
+        "ar": "6 موظفين مسافرين القاهرة ↔ دبي على خطوط تجارية لمعرض."
+      },
+      "scope": "S3",
+      "cat": "6",
+      "iso": [
+        3
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Employees travelling for business in vehicles operated by third parties → Cat 6.",
+        "ar": "موظفين مسافرين للشغل في وسائل بيشغلها غيرنا ← فئة 6."
+      },
+      "source": "T61",
+      "isoReason": {
+        "en": "Business travel → Category 3 (transportation).",
+        "ar": "سفر العمل ← الفئة 3 (النقل)."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "Business travel is the classic Cat 6. ISO also lets you include hotel nights linked to the trip.",
+        "misconception": "\"We paid for the tickets, so Cat 4.\" Cat 4 is goods transport; people travelling for work is Cat 6.",
+        "clause": "Calc Guidance Table 6.1 row 2; ISO B.4.2 e)",
+        "follow": {
+          "S1": "Ask them: does Nile Loaf own an airline?"
+        }
+      }
+    },
+    {
+      "id": "commuting",
+      "icon": "🚌",
+      "pos": [
+        1260,
+        770
+      ],
+      "transport": true,
+      "name": {
+        "en": "Staff commuting to the bakeries",
+        "ar": "تنقل الموظفين من وإلى المخابز"
+      },
+      "desc": {
+        "en": "Bakers take microbuses, the metro or their own cars to and from work.",
+        "ar": "الخبازين بيركبوا ميكروباص أو مترو أو عربياتهم رايحين جايين الشغل."
+      },
+      "scope": "S3",
+      "cat": "7",
+      "iso": [
+        3
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Transport of employees between home and work → Cat 7.",
+        "ar": "نقل الموظفين بين البيت والشغل ← فئة 7."
+      },
+      "source": "T61",
+      "isoReason": {
+        "en": "Employee commuting → Category 3.",
+        "ar": "تنقل الموظفين ← الفئة 3."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "Commuting is Cat 7 even though it's employees' own cars, and ISO even allows home-working energy to be considered here.",
+        "misconception": "\"Not our cars, not our problem.\" It's in the value chain.",
+        "clause": "Calc Guidance Table 6.1 row 3; ISO B.4.2 c)",
+        "follow": {
+          "S1": "Ask them: who owns the microbus?"
+        }
+      }
+    },
+    {
+      "id": "app_delivery",
+      "icon": "🛵",
+      "pos": [
+        700,
+        790
+      ],
+      "transport": true,
+      "name": {
+        "en": "App deliveries the customer pays for",
+        "ar": "توصيل الأبلكيشن اللي العميل بيدفعه"
+      },
+      "desc": {
+        "en": "Customers order through a delivery app and pay the delivery fee themselves.",
+        "ar": "العملاء بيطلبوا من أبلكيشن توصيل وبيدفعوا رسوم التوصيل بنفسهم."
+      },
+      "scope": "S3",
+      "cat": "9",
+      "iso": [
+        3
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "Transport of sold products to the end consumer, not paid for by us → Cat 9.",
+        "ar": "نقل منتجاتنا للمستهلك من غير ما إحنا ندفع ← فئة 9."
+      },
+      "source": "T57",
+      "isoReason": {
+        "en": "Downstream transport not paid for by the organization → Category 3.",
+        "ar": "نقل للمصب مش مدفوع من المنظمة ← الفئة 3."
+      },
+      "isoSource": "ISO_B4",
+      "wisdom": {
+        "talk": "Compare with the courier: same bread, a vehicle we don't own, but the CUSTOMER pays here, so it's Cat 9 instead of Cat 4.",
+        "misconception": "\"Cat 4 and 9 depend on direction.\" For outbound deliveries they depend on who pays, not on direction.",
+        "clause": "Scope 3 Std Table 5.7 row 8 ('if not paid for by the reporting company' = Cat 9); ISO B.4.2 b)",
+        "follow": {
+          "S1": "Ask them: is the rider on our payroll?"
+        }
+      }
+    },
+    {
+      "id": "packaging",
+      "icon": "🗑️",
+      "pos": [
+        930,
+        800
+      ],
+      "transport": false,
+      "name": {
+        "en": "Customers throwing away our bread bags",
+        "ar": "العملاء بيرموا أكياس العيش بتاعتنا"
+      },
+      "desc": {
+        "en": "Plastic and paper bags from our bread end up in household waste.",
+        "ar": "أكياس البلاستيك والورق بتاعة عيشنا بتخلص في زبالة البيوت."
+      },
+      "scope": "S3",
+      "cat": "12",
+      "iso": [
+        5
+      ],
+      "isoAlso": [],
+      "reason": {
+        "en": "End-of-life of products (incl. packaging) we sold → Cat 12.",
+        "ar": "نهاية عمر المنتجات (ومنها التغليف) اللي بعناها ← فئة 12."
+      },
+      "source": "S3_T54",
+      "isoReason": {
+        "en": "End of life of the organization's products → Category 5.",
+        "ar": "نهاية عمر منتجات المنظمة ← الفئة 5."
+      },
+      "isoSource": "ISO_B6",
+      "wisdom": {
+        "talk": "Not transport, but here's the bridge to ISO Category 5: the ISO category for the life of our products after we sell them (use and end of life).",
+        "misconception": "\"Waste = GHG Protocol Cat 5.\" Scope 3 Cat 5 is waste from OUR operations; customers' disposal of sold products is Scope 3 Cat 12 (ISO Category 5).",
+        "clause": "Scope 3 Std Table 5.4 (Cat 12); ISO B.6.2 c)",
+        "follow": {
+          "S1": "Ask them: is the customer's bin inside our boundary?"
+        }
+      }
+    }
+  ],
+  "calcs": {
+    "calc_vans": {
+      "icon": "⛽",
+      "factor": "diesel",
+      "answer": 47.908,
+      "unit": "t CO₂e",
+      "scope": "S1",
+      "label": {
+        "en": "Own diesel vans",
+        "ar": "فانات الديزل المملوكة"
+      },
+      "doc": {
+        "kind": "invoice",
+        "from": {
+          "en": "Misr Fuel Station – Fleet Card statement 2026",
+          "ar": "محطة وقود مصر – كشف كارت الأسطول 2026"
+        },
+        "lines": [
+          {
+            "k": {
+              "en": "Fleet",
+              "ar": "الأسطول"
+            },
+            "v": {
+              "en": "6 owned diesel vans",
+              "ar": "6 فانات ديزل مملوكة"
+            }
+          },
+          {
+            "k": {
+              "en": "Diesel dispensed (Jan–Dec)",
+              "ar": "ديزل منصرف (يناير–ديسمبر)"
+            },
+            "v": {
+              "en": "18,000 litres",
+              "ar": "18,000 لتر"
+            },
+            "hl": true
+          },
+          {
+            "k": {
+              "en": "Amount paid",
+              "ar": "المبلغ المدفوع"
+            },
+            "v": {
+              "en": "EGP 306,000",
+              "ar": "306,000 جنيه"
+            }
+          }
+        ]
+      },
+      "formula": {
+        "en": "18,000 L × 2.66155 kg CO₂e/L ÷ 1,000 = 47.9 t CO₂e",
+        "ar": "18,000 لتر × 2.66155 كجم/لتر ÷ 1,000 = 47.9 طن"
+      },
+      "wisdom": {
+        "talk": "Fuel-based method with primary data: litres from the fuel card. The best data you'll ever get for Scope 1 transport.",
+        "misconception": "Using the EGP amount instead of litres. Spend is the weakest proxy.",
+        "clause": "Deck slide 9: fuel-based method; factor DESNZ 2025"
+      }
+    },
+    "calc_elec": {
+      "icon": "⚡",
+      "factor": "grid_eg",
+      "answer": 165.735,
+      "unit": "t CO₂e",
+      "scope": "S2",
+      "label": {
+        "en": "Grid electricity (location-based)",
+        "ar": "كهرباء الشبكة (حسب الموقع)"
+      },
+      "doc": {
+        "kind": "bill",
+        "from": {
+          "en": "North Cairo Electricity Distribution Co. – Annual statement",
+          "ar": "شركة شمال القاهرة لتوزيع الكهرباء – كشف سنوي"
+        },
+        "lines": [
+          {
+            "k": {
+              "en": "Bakeries & cold room",
+              "ar": "المخابز وغرفة التبريد"
+            },
+            "v": {
+              "en": "380,000 kWh",
+              "ar": "380,000 ك.و.س"
+            }
+          },
+          {
+            "k": {
+              "en": "Head office",
+              "ar": "المكتب الرئيسي"
+            },
+            "v": {
+              "en": "40,000 kWh",
+              "ar": "40,000 ك.و.س"
+            }
+          },
+          {
+            "k": {
+              "en": "Depot EV chargers (sub-meter)",
+              "ar": "شواحن الفانات الكهربا (عداد فرعي)"
+            },
+            "v": {
+              "en": "15,000 kWh",
+              "ar": "15,000 ك.و.س"
+            }
+          },
+          {
+            "k": {
+              "en": "TOTAL",
+              "ar": "الإجمالي"
+            },
+            "v": {
+              "en": "435,000 kWh",
+              "ar": "435,000 ك.و.س"
+            },
+            "hl": true
+          }
+        ]
+      },
+      "formula": {
+        "en": "435,000 kWh × 0.381 kg CO₂/kWh ÷ 1,000 = 165.7 t CO₂ (≈ CO₂e)",
+        "ar": "435,000 ك.و.س × 0.381 كجم/ك.و.س ÷ 1,000 = 165.7 طن CO₂ (≈ مكافئ)"
+      },
+      "wisdom": {
+        "talk": "Location-based Scope 2 with Egypt's grid average. The EV chargers are in here: that's where the electric vans' emissions went.",
+        "misconception": "Forgetting the EV sub-meter, or adding the generator's diesel here (that's Scope 1).",
+        "clause": "Scope 2 Guidance (location-based); EEHC 2024/25 grid factor"
+      }
+    },
+    "calc_fridge": {
+      "icon": "❄️",
+      "factor": "r134a",
+      "answer": 64.26,
+      "unit": "t CO₂e",
+      "scope": "S1",
+      "label": {
+        "en": "Cold-room refrigerant",
+        "ar": "غاز غرفة التبريد"
+      },
+      "doc": {
+        "kind": "log",
+        "from": {
+          "en": "CoolTech Services – Refrigerant top-up log, cold room #1",
+          "ar": "كول تك للخدمات – سجل تعبئة غاز التبريد، غرفة 1"
+        },
+        "lines": [
+          {
+            "k": {
+              "en": "Gas",
+              "ar": "الغاز"
+            },
+            "v": {
+              "en": "R-134a",
+              "ar": "R-134a"
+            }
+          },
+          {
+            "k": {
+              "en": "Mar 12",
+              "ar": "12 مارس"
+            },
+            "v": {
+              "en": "+14 kg",
+              "ar": "+14 كجم"
+            }
+          },
+          {
+            "k": {
+              "en": "Jul 03",
+              "ar": "3 يوليو"
+            },
+            "v": {
+              "en": "+16 kg",
+              "ar": "+16 كجم"
+            }
+          },
+          {
+            "k": {
+              "en": "Nov 20",
+              "ar": "20 نوفمبر"
+            },
+            "v": {
+              "en": "+12 kg",
+              "ar": "+12 كجم"
+            }
+          },
+          {
+            "k": {
+              "en": "Total topped up (= leaked)",
+              "ar": "إجمالي التعبئة (= المتسرب)"
+            },
+            "v": {
+              "en": "42 kg",
+              "ar": "42 كجم"
+            },
+            "hl": true
+          }
+        ]
+      },
+      "formula": {
+        "en": "42 kg × GWP 1,530 ÷ 1,000 = 64.3 t CO₂e",
+        "ar": "42 كجم × 1,530 ÷ 1,000 = 64.3 طن"
+      },
+      "wisdom": {
+        "talk": "42 kg of gas becomes 64 tonnes of CO₂e. Many students forget the GWP. Assumption: what we topped up equals what leaked.",
+        "misconception": "Reporting 42 kg as 0.042 t, i.e. forgetting × GWP.",
+        "clause": "IPCC AR6 GWP100 for HFC-134a = 1,530; screening method (top-up = leak)"
+      }
+    },
+    "calc_flights": {
+      "icon": "✈️",
+      "factor": "flight",
+      "answer": 1.873,
+      "unit": "t CO₂e",
+      "scope": "S3",
+      "label": {
+        "en": "Business flights (Cat 6)",
+        "ar": "سفر العمل (فئة 6)"
+      },
+      "doc": {
+        "kind": "sheet",
+        "from": {
+          "en": "Travel desk – Trade fair trip sheet",
+          "ar": "مكتب السفر – كشف رحلة المعرض"
+        },
+        "lines": [
+          {
+            "k": {
+              "en": "Route",
+              "ar": "الخط"
+            },
+            "v": {
+              "en": "Cairo (CAI) ↔ Dubai (DXB), return",
+              "ar": "القاهرة ↔ دبي، ذهاب وعودة"
+            }
+          },
+          {
+            "k": {
+              "en": "Travellers",
+              "ar": "عدد المسافرين"
+            },
+            "v": {
+              "en": "6, economy",
+              "ar": "6، درجة سياحية"
+            }
+          },
+          {
+            "k": {
+              "en": "Great-circle distance, one way",
+              "ar": "المسافة المباشرة، اتجاه واحد"
+            },
+            "v": {
+              "en": "2,420 km",
+              "ar": "2,420 كم"
+            },
+            "hl": true
+          }
+        ]
+      },
+      "formula": {
+        "en": "6 × 2 × 2,420 km = 29,040 p·km × 0.0645 kg/p·km ÷ 1,000 = 1.87 t CO₂e",
+        "ar": "6 × 2 × 2,420 = 29,040 راكب·كم × 0.0645 ÷ 1,000 = 1.87 طن"
+      },
+      "wisdom": {
+        "talk": "Two traps: forgetting the return leg, and forgetting it's per passenger. Also: this factor excludes radiative forcing. With RF it'd be noticeably higher.",
+        "misconception": "6 × 2,420 (forgot return) or 2 × 2,420 (forgot passengers).",
+        "clause": "Calc Guidance Table 6.1 (Cat 6); DESNZ 2025 air factor"
+      }
+    }
+  },
+  "methods": {
+    "id": "methods_courier",
+    "label": {
+      "en": "Courier (Cat 4), fuel-based",
+      "ar": "شركة الشحن (فئة 4) بالوقود"
+    },
+    "doc": {
+      "kind": "invoice",
+      "from": {
+        "en": "Wasla Express – Annual service invoice to Nile Loaf",
+        "ar": "وصلة إكسبريس – فاتورة الخدمة السنوية لنايل لوف"
+      },
+      "lines": [
+        {
+          "k": {
+            "en": "Diesel used on Nile Loaf routes",
+            "ar": "ديزل مستهلك على خطوط نايل لوف"
+          },
+          "v": {
+            "en": "4,800 litres",
+            "ar": "4,800 لتر"
+          },
+          "m": "fuel"
+        },
+        {
+          "k": {
+            "en": "Freight moved",
+            "ar": "الحمولة المنقولة"
+          },
+          "v": {
+            "en": "26,000 tonne·km",
+            "ar": "26,000 طن·كم"
+          },
+          "m": "distance"
+        },
+        {
+          "k": {
+            "en": "Total invoiced",
+            "ar": "إجمالي الفاتورة"
+          },
+          "v": {
+            "en": "EGP 1,650,000",
+            "ar": "1,650,000 جنيه"
+          },
+          "m": "spend"
+        }
+      ]
+    },
+    "options": {
+      "fuel": {
+        "name": {
+          "en": "Fuel-based",
+          "ar": "على أساس الوقود"
+        },
+        "factor": "diesel",
+        "answer": 12.775,
+        "formula": {
+          "en": "4,800 L × 2.66155 ÷ 1,000 = 12.8 t",
+          "ar": "4,800 × 2.66155 ÷ 1,000 = 12.8 طن"
+        },
+        "hint": {
+          "en": "litres × kg CO₂e per litre",
+          "ar": "لترات × كجم لكل لتر"
+        }
+      },
+      "distance": {
+        "name": {
+          "en": "Distance-based",
+          "ar": "على أساس المسافة"
+        },
+        "factor": "van_tkm",
+        "answer": 16.027,
+        "formula": {
+          "en": "26,000 t·km × 0.61643 ÷ 1,000 = 16.0 t",
+          "ar": "26,000 × 0.61643 ÷ 1,000 = 16.0 طن"
+        },
+        "hint": {
+          "en": "tonne·km × kg CO₂e per tonne·km",
+          "ar": "طن·كم × كجم لكل طن·كم"
+        }
+      },
+      "spend": {
+        "name": {
+          "en": "Spend-based",
+          "ar": "على أساس الإنفاق"
+        },
+        "factor": "eeio_truck",
+        "answer": 19.635,
+        "formula": {
+          "en": "EGP 1,650,000 ÷ 50 = USD 33,000 × 0.595 ÷ 1,000 = 19.6 t",
+          "ar": "1,650,000 ÷ 50 = 33,000 دولار × 0.595 ÷ 1,000 = 19.6 طن"
+        },
+        "hint": {
+          "en": "EGP → USD (÷ 50), then × kg CO₂e per USD",
+          "ar": "جنيه ← دولار (÷ 50) وبعدين × كجم لكل دولار"
+        }
+      }
+    },
+    "inventoryUses": "fuel",
+    "wisdom": {
+      "talk": "Same trips, three answers: 12.8, 16.0, 19.6 t. The fuel-based number uses the courier's own data. Spend-based uses a US trucking-industry average per dollar and gets inflation and exchange rates mixed in. That's why the methods form a data-quality hierarchy.",
+      "misconception": "\"Pick the highest to be conservative\" or \"they're all equally valid\". Use the most specific data you can get and disclose the method.",
+      "clause": "Deck slide 9 (methods); GHG Protocol Scope 3 Calc Guidance Ch. 4 (Cat 4 methods)"
+    }
+  },
+  "prefilled": [
+    {
+      "id": "pre_gas",
+      "scope": "S1",
+      "label": {
+        "en": "Oven gas (pre-filled)",
+        "ar": "غاز الأفران (محسوب مسبقًا)"
+      },
+      "value": 135.062,
+      "calc": "2,400 GJ × 56.276 kg CO₂e/GJ (IPCC 2006 + AR6)"
+    },
+    {
+      "id": "pre_flour",
+      "scope": "S3",
+      "label": {
+        "en": "Purchased flour, Cat 1 (pre-filled)",
+        "ar": "الدقيق المشترى فئة 1 (محسوب مسبقًا)"
+      },
+      "value": 540,
+      "calc": "1,200 t flour × 0.45 kg CO₂e/kg (Delta Mills declaration, fictional)"
+    }
+  ],
+  "levers": [
+    {
+      "id": "ev",
+      "icon": "🔌",
+      "cost": 40,
+      "name": {
+        "en": "Electrify the 6 diesel vans",
+        "ar": "تحويل الـ6 فانات الديزل لكهربا"
+      },
+      "effect": {
+        "en": "Scope 1 −47.9 t, Scope 2 +17.1 t",
+        "ar": "النطاق 1 −47.9 طن، النطاق 2 +17.1 طن"
+      }
+    },
+    {
+      "id": "leak",
+      "icon": "🔧",
+      "cost": 15,
+      "name": {
+        "en": "Fix refrigerant leaks",
+        "ar": "إصلاح تسريب غاز التبريد"
+      },
+      "effect": {
+        "en": "Scope 1 −80% of leaks",
+        "ar": "النطاق 1 −80% من التسريب"
+      }
+    },
+    {
+      "id": "ppa",
+      "icon": "📜",
+      "cost": 20,
+      "name": {
+        "en": "Green electricity contract",
+        "ar": "عقد كهرباء خضراء"
+      },
+      "effect": {
+        "en": "Market-based Scope 2 → 0",
+        "ar": "النطاق 2 حسب السوق ← صفر"
+      }
+    },
+    {
+      "id": "solar",
+      "icon": "☀️",
+      "cost": 35,
+      "name": {
+        "en": "Rooftop solar (25% of power)",
+        "ar": "طاقة شمسية على السطح (25%)"
+      },
+      "effect": {
+        "en": "Grid kWh −25%",
+        "ar": "كهرباء الشبكة −25%"
+      }
+    },
+    {
+      "id": "courier_ev",
+      "icon": "🛺",
+      "cost": 15,
+      "name": {
+        "en": "Courier switches to EVs / rail",
+        "ar": "شركة الشحن تتحول لكهربا/قطر"
+      },
+      "effect": {
+        "en": "Cat 4 courier −60%",
+        "ar": "الشحن فئة 4 −60%"
+      }
+    },
+    {
+      "id": "shuttle",
+      "icon": "🚌",
+      "cost": 10,
+      "name": {
+        "en": "Staff commuting shuttle",
+        "ar": "أتوبيس لنقل الموظفين"
+      },
+      "effect": {
+        "en": "Cat 7: not yet measured!",
+        "ar": "فئة 7: لسه ما اتقاستش!"
+      }
+    },
+    {
+      "id": "supplier",
+      "icon": "🤝",
+      "cost": 30,
+      "name": {
+        "en": "Engage the flour mill",
+        "ar": "الشراكة مع مطحن الدقيق"
+      },
+      "effect": {
+        "en": "Flour footprint −15%",
+        "ar": "بصمة الدقيق −15%"
+      }
+    }
+  ],
+  "boardModel": {
+    "budget": 100,
+    "dieselLitres": 18000,
+    "vanLPerKm": 0.1,
+    "evKWhPerKm": 0.25,
+    "gridKWh": 435000,
+    "leakCut": 0.8,
+    "solarShare": 0.25,
+    "courierCut": 0.6,
+    "flourT": 1200,
+    "flourPcf": 0.45,
+    "flourPcfEngaged": 0.3825,
+    "note": "Game assumptions for Chapter 4 (see FACTORS.md). Teams are ranked on LOCATION-based reduction; market-based shown alongside."
+  },
+  "scenes": [
+    {
+      "id": "lobby",
+      "type": "lobby"
+    },
+    {
+      "id": "coldopen",
+      "type": "vote",
+      "points": 50,
+      "time": 30,
+      "source": "EDGAR_EG",
+      "q": {
+        "en": "Egypt emitted 336 Mt CO₂eq in 2023. How much is that per person?",
+        "ar": "مصر طلّعت 336 مليون طن مكافئ CO₂ سنة 2023. يعني كام للفرد؟"
+      },
+      "options": [
+        {
+          "id": "a",
+          "t": {
+            "en": "0.3 t",
+            "ar": "0.3 طن"
+          }
+        },
+        {
+          "id": "b",
+          "t": {
+            "en": "3.1 t",
+            "ar": "3.1 طن"
+          }
+        },
+        {
+          "id": "c",
+          "t": {
+            "en": "13 t",
+            "ar": "13 طن"
+          }
+        },
+        {
+          "id": "d",
+          "t": {
+            "en": "31 t",
+            "ar": "31 طن"
+          }
+        }
+      ],
+      "correct": "b",
+      "reveal": [
+        {
+          "en": "3.1 t CO₂eq per Egyptian (335.968 Mt ÷ 108.1 M people). World average: 6.59 t.",
+          "ar": "3.1 طن لكل مصري (335.968 مليون طن ÷ 108.1 مليون نسمة). المتوسط العالمي: 6.59 طن."
+        },
+        {
+          "en": "But Egypt's TRANSPORT emissions are up +221% since 1990, faster than any other sector except power.",
+          "ar": "لكن انبعاثات النقل في مصر زادت +221% من 1990، أسرع من أي قطاع ما عدا الكهرباء."
+        },
+        {
+          "en": "World total 2023: 53.0 Gt CO₂eq (excl. land use), a new record.",
+          "ar": "إجمالي العالم 2023: 53.0 جيجا طن (بدون استخدام الأراضي)، رقم قياسي جديد."
+        }
+      ],
+      "revealSource": "EDGAR_EG + EDGAR_GLOBAL",
+      "wisdom": {
+        "talk": "Per person, Egypt is below half the world average. But transport has tripled since 1990 (+221%). Bakeries live on trucks, so today we follow the vans.",
+        "misconception": "Mixing up Mt and t: 336 Mt ÷ 108 M people = 3.1 t.",
+        "clause": "EDGAR 2024, Egypt page (p. 114): 335.968 Mt, 3.107 t/cap, Transport +221% vs 1990, all sectors +128%"
+      }
+    },
+    {
+      "id": "story_hired",
+      "type": "story",
+      "lines": [
+        {
+          "en": "Welcome to Nile Loaf! I'm Nour. We bake 200,000 loaves a day across Greater Cairo.",
+          "ar": "أهلاً بيكم في نايل لوف! أنا نور. بنخبز 200 ألف رغيف في اليوم في القاهرة الكبرى."
+        },
+        {
+          "en": "You're my new sustainability team. Congratulations, and sorry.",
+          "ar": "إنتو فريق الاستدامة الجديد بتاعي. مبروك… ومعلش."
+        },
+        {
+          "en": "The board meets TODAY. They want our first carbon inventory and a plan to cut it.",
+          "ar": "مجلس الإدارة مجتمع النهارده. عايزين أول جرد كربون لينا وخطة نقلله."
+        },
+        {
+          "en": "Every answer you give goes to our Chief Auditor. Nothing is official until she stamps it.",
+          "ar": "كل إجابة هتروح لكبيرة المدققين. مفيش حاجة رسمية غير لما هي تختمها."
+        }
+      ],
+      "showConsolidation": true
+    },
+    {
+      "id": "poll_bigscope",
+      "type": "vote",
+      "poll": true,
+      "time": 20,
+      "q": {
+        "en": "Prediction: which scope will be the BIGGEST for a bakery chain like Nile Loaf?",
+        "ar": "توقّع: أنهي نطاق هيبقى الأكبر لسلسلة مخابز زي نايل لوف؟"
+      },
+      "options": [
+        {
+          "id": "S1",
+          "t": {
+            "en": "Scope 1",
+            "ar": "النطاق 1"
+          }
+        },
+        {
+          "id": "S2",
+          "t": {
+            "en": "Scope 2",
+            "ar": "النطاق 2"
+          }
+        },
+        {
+          "id": "S3",
+          "t": {
+            "en": "Scope 3",
+            "ar": "النطاق 3"
+          }
+        }
+      ],
+      "wisdom": {
+        "talk": "Don't reveal the answer. We'll check this prediction against the real inventory after Chapter 3.",
+        "misconception": "Most people pick Scope 1 because it's the most visible.",
+        "clause": "Payoff on the Inventory screen"
+      }
+    },
+    {
+      "id": "ch1_intro",
+      "type": "story",
+      "chapter": 1,
+      "title": {
+        "en": "Chapter 1 · The Walkthrough",
+        "ar": "الفصل 1 · الجولة"
+      },
+      "lines": [
+        {
+          "en": "Let's walk the company. I'll light up four places at a time.",
+          "ar": "يلا نلف على الشركة. هنوّر أربع أماكن كل مرة."
+        },
+        {
+          "en": "Sort each one: Scope 1, 2 or 3. Name the Scope 3 category for a bonus.",
+          "ar": "صنّفوا كل واحد: نطاق 1 ولا 2 ولا 3. ولو 3، قولوا الفئة وخدوا بونص."
+        },
+        {
+          "en": "Careful: half of these are vans and trucks. Not every truck is Scope 3.",
+          "ar": "خلّوا بالكم: نص الحاجات دي فانات وعربيات نقل… ومش كل عربية نطاق 3."
+        }
+      ]
+    },
+    {
+      "id": "ch1_a",
+      "type": "classify",
+      "mode": "scope",
+      "time": 75,
+      "title": {
+        "en": "Batch 1 · Our own operations",
+        "ar": "الدفعة 1 · عملياتنا"
+      },
+      "items": [
+        "oven_gas",
+        "own_diesel_vans",
+        "grid_power",
+        "own_ev_vans"
+      ],
+      "ceo": {
+        "en": "Start at home: our ovens, our vans, our depot.",
+        "ar": "نبدأ من البيت: أفراننا وفاناتنا وجراجنا."
+      }
+    },
+    {
+      "id": "ch1_b",
+      "type": "classify",
+      "mode": "scope",
+      "time": 75,
+      "title": {
+        "en": "Batch 2 · Cold room, lease & courier",
+        "ar": "الدفعة 2 · التبريد والإيجار والشحن"
+      },
+      "items": [
+        "fridge_leak",
+        "leased_vans",
+        "generator",
+        "courier"
+      ],
+      "ceo": {
+        "en": "Now it gets spicy. Watch who owns, who drives, who pays.",
+        "ar": "دلوقتي هتسخن. ركزوا مين بيملك ومين بيسوق ومين بيدفع."
+      }
+    },
+    {
+      "id": "ch1_c",
+      "type": "classify",
+      "mode": "scope",
+      "time": 75,
+      "title": {
+        "en": "Batch 3 · Upstream",
+        "ar": "الدفعة 3 · المنبع"
+      },
+      "items": [
+        "mill_truck",
+        "wheat_truck",
+        "van_factory",
+        "diesel_delivery"
+      ],
+      "ceo": {
+        "en": "Upstream of our ovens… four transport cases, four different answers?",
+        "ar": "قبل ما نوصل لأفراننا… أربع حالات نقل، وأربع إجابات مختلفة؟"
+      }
+    },
+    {
+      "id": "ch1_d",
+      "type": "classify",
+      "mode": "scope",
+      "time": 75,
+      "title": {
+        "en": "Batch 4 · People & customers",
+        "ar": "الدفعة 4 · الناس والعملاء"
+      },
+      "items": [
+        "flights",
+        "commuting",
+        "app_delivery",
+        "packaging"
+      ],
+      "ceo": {
+        "en": "Last stop: our people and the bread after it leaves our hands.",
+        "ar": "آخر محطة: ناسنا، والعيش بعد ما يخرج من إيدينا."
+      }
+    },
+    {
+      "id": "wordcloud",
+      "type": "wordcloud",
+      "time": 30,
+      "q": {
+        "en": "One word: how do you feel about Scope 3?",
+        "ar": "كلمة واحدة: إحساسك إيه ناحية النطاق 3؟"
+      },
+      "wisdom": {
+        "talk": "Read two or three words out loud. Scope 3 is often the majority of a company's footprint (57% even in our partial inventory) and the hardest to measure. Both feelings are justified.",
+        "misconception": "",
+        "clause": ""
+      }
+    },
+    {
+      "id": "ch2_intro",
+      "type": "story",
+      "chapter": 2,
+      "title": {
+        "en": "Chapter 2 · Two Rulebooks",
+        "ar": "الفصل 2 · كتابين قواعد"
+      },
+      "lines": [
+        {
+          "en": "Plot twist: our European buyer wants the inventory per ISO 14064-1.",
+          "ar": "مفاجأة: العميل الأوروبي عايز الجرد حسب ISO 14064-1."
+        },
+        {
+          "en": "Same company, same trucks, but six categories instead of three scopes.",
+          "ar": "نفس الشركة ونفس العربيات… بس ست فئات بدل تلات نطاقات."
+        },
+        {
+          "en": "Quick round. Drop each source into an ISO category.",
+          "ar": "جولة سريعة. حطّوا كل مصدر في فئة ISO."
+        }
+      ]
+    },
+    {
+      "id": "ch2_iso",
+      "type": "classify",
+      "mode": "iso",
+      "time": 90,
+      "title": {
+        "en": "ISO 14064-1 · Six categories",
+        "ar": "ISO 14064-1 · ست فئات"
+      },
+      "items": [
+        "own_diesel_vans",
+        "own_ev_vans",
+        "courier",
+        "leased_vans",
+        "wheat_truck",
+        "flights",
+        "van_factory",
+        "packaging"
+      ],
+      "source": "ISO_524",
+      "insight": {
+        "en": "GHG Protocol spreads transport across Scope 1, 2 and 3 (Cat 1, 2, 3, 4, 6, 7, 8, 9). ISO 14064-1 gives most transport services their own Category 3. Fuel burnt in vehicles you own goes to Category 1; transport already inside purchased goods, and building vehicles, sit in Category 4.",
+        "ar": "بروتوكول GHG بيوزّع النقل على النطاقات 1 و2 و3 (فئات 1، 2، 3، 4، 6، 7، 8، 9). ISO 14064-1 بيدّي معظم خدمات النقل فئة خاصة بيها: الفئة 3. الوقود المحروق في عربياتك يروح للفئة 1، والنقل اللي جوّه السلع المشتراة وتصنيع العربيات في الفئة 4."
+      },
+      "wisdom": {
+        "talk": "The key insight: two rulebooks, same reality. ISO gives transport its own category (5.2.4 c), while GHG Protocol scatters it by ownership and who pays.",
+        "misconception": "\"ISO categories are just Scopes renumbered.\" Category 3 cuts across GHG Protocol's Scope 3 categories.",
+        "clause": "ISO 14064-1:2018 5.2.4 a)–f), Annex B.4"
+      }
+    },
+    {
+      "id": "ch3_intro",
+      "type": "story",
+      "chapter": 3,
+      "title": {
+        "en": "Chapter 3 · The Evidence Files",
+        "ar": "الفصل 3 · ملفات الأدلة"
+      },
+      "lines": [
+        {
+          "en": "Classifying is half the job. The board wants TONNES.",
+          "ar": "التصنيف نص الشغل. المجلس عايز أطنان."
+        },
+        {
+          "en": "I'll send real documents to your phones. Activity × emission factor (× GWP if it's a gas).",
+          "ar": "هبعتلكم مستندات حقيقية على موبايلاتكم. النشاط × معامل الانبعاث (× GWP لو غاز)."
+        },
+        {
+          "en": "Answer in tonnes CO₂e. Within ±5% counts.",
+          "ar": "الإجابة بالطن مكافئ CO₂. فرق ±5% مقبول."
+        }
+      ]
+    },
+    {
+      "id": "calc_vans",
+      "type": "calc",
+      "calc": "calc_vans",
+      "time": 90,
+      "title": {
+        "en": "Evidence #1 · The fuel card",
+        "ar": "الدليل 1 · كارت البنزينة"
+      }
+    },
+    {
+      "id": "calc_elec",
+      "type": "calc",
+      "calc": "calc_elec",
+      "time": 90,
+      "title": {
+        "en": "Evidence #2 · The electricity bill",
+        "ar": "الدليل 2 · فاتورة الكهرباء"
+      }
+    },
+    {
+      "id": "calc_fridge",
+      "type": "calc",
+      "calc": "calc_fridge",
+      "time": 90,
+      "title": {
+        "en": "Evidence #3 · The refrigerant log",
+        "ar": "الدليل 3 · سجل غاز التبريد"
+      }
+    },
+    {
+      "id": "calc_flights",
+      "type": "calc",
+      "calc": "calc_flights",
+      "time": 90,
+      "title": {
+        "en": "Evidence #4 · The trip sheet",
+        "ar": "الدليل 4 · كشف السفر"
+      }
+    },
+    {
+      "id": "methods_courier",
+      "type": "methods",
+      "time": 100,
+      "title": {
+        "en": "One trip, three methods",
+        "ar": "رحلة واحدة… تلات طرق"
+      },
+      "ceo": {
+        "en": "Wasla Express sent ONE invoice. You're split into three teams: fuel, distance, spend. Same trips. Let's see.",
+        "ar": "وصلة إكسبريس بعتت فاتورة واحدة. اتقسمتوا تلات فرق: وقود، مسافة، إنفاق. نفس الرحلات… نشوف."
+      }
+    },
+    {
+      "id": "inventory",
+      "type": "inventory",
+      "title": {
+        "en": "Nile Loaf's footprint so far",
+        "ar": "بصمة نايل لوف لحد دلوقتي"
+      },
+      "wisdom": {
+        "talk": "Scope 3 is the biggest, and the flour alone outweighs everything we burn. Compare with the room's prediction from the start.",
+        "misconception": "\"Our own fleet is our biggest problem.\" It's the most visible, not the biggest.",
+        "clause": "Inventory = S1 + S2 (location) + quantified S3. Commuting and other categories are not yet measured."
+      }
+    },
+    {
+      "id": "poll_method",
+      "type": "vote",
+      "poll": true,
+      "time": 20,
+      "q": {
+        "en": "Which courier number goes in the board report?",
+        "ar": "أنهي رقم للشحن يدخل تقرير المجلس؟"
+      },
+      "options": [
+        {
+          "id": "fuel",
+          "t": {
+            "en": "Fuel-based 12.8 t",
+            "ar": "الوقود 12.8 طن"
+          }
+        },
+        {
+          "id": "distance",
+          "t": {
+            "en": "Distance-based 16.0 t",
+            "ar": "المسافة 16.0 طن"
+          }
+        },
+        {
+          "id": "spend",
+          "t": {
+            "en": "Spend-based 19.6 t",
+            "ar": "الإنفاق 19.6 طن"
+          }
+        },
+        {
+          "id": "avg",
+          "t": {
+            "en": "The average of all three",
+            "ar": "متوسط التلاتة"
+          }
+        }
+      ],
+      "wisdom": {
+        "talk": "We used fuel-based: it's the courier's own, specific data. Averaging methods mixes good data with bad. Disclose the method and improve data quality over time.",
+        "misconception": "Averaging the three. That's not a recognised method.",
+        "clause": "Deck slide 9; Scope 3 Calc Guidance (data quality)"
+      }
+    },
+    {
+      "id": "ch4_intro",
+      "type": "story",
+      "chapter": 4,
+      "title": {
+        "en": "Chapter 4 · The Board Meeting",
+        "ar": "الفصل 4 · اجتماع المجلس"
+      },
+      "lines": [
+        {
+          "en": "The board is in the room. Each team gets 100 coins.",
+          "ar": "المجلس وصل. كل فريق معاه 100 عملة."
+        },
+        {
+          "en": "Pick your reduction levers. Your team's plan = the levers most of you pick.",
+          "ar": "اختاروا أدوات التخفيض. خطة فريقكم = الأدوات اللي أغلبكم يختارها."
+        },
+        {
+          "en": "We judge on what the atmosphere sees: location-based tonnes.",
+          "ar": "الحكم على اللي الجو بيشوفه: الأطنان حسب الموقع."
+        }
+      ]
+    },
+    {
+      "id": "board",
+      "type": "board",
+      "time": 90,
+      "title": {
+        "en": "The Board Meeting",
+        "ar": "اجتماع المجلس"
+      },
+      "honest": [
+        {
+          "en": "⚡ Electric vans don't make emissions vanish. They MOVE from Scope 1 to Scope 2 (on Egypt's gas-heavy grid).",
+          "ar": "⚡ الفانات الكهربا مش بتخفي الانبعاثات… بتنقلها من النطاق 1 للنطاق 2 (على شبكة مصر اللي معتمدة على الغاز)."
+        },
+        {
+          "en": "📜 A green electricity contract changes MARKET-based Scope 2, not LOCATION-based Scope 2. You must report both.",
+          "ar": "📜 عقد الكهرباء الخضراء بيغيّر النطاق 2 حسب السوق، مش حسب الموقع. ولازم تبلّغ الاتنين."
+        },
+        {
+          "en": "🚌 The shuttle might be great, but we never measured commuting, so we can't show a number. You can't manage what you don't measure.",
+          "ar": "🚌 الأتوبيس ممكن يكون ممتاز… بس إحنا ما قسناش التنقل، فمفيش رقم. اللي ما يتقاسش ما يتداراش."
+        }
+      ],
+      "wisdom": {
+        "talk": "Read the honest moments slowly. The leaderboard uses location-based, so the green contract scored zero. Ask: is that fair? (Scope 2 Guidance requires dual reporting.)",
+        "misconception": "\"Buy certificates and you're done.\"",
+        "clause": "Scope 2 Guidance: dual reporting (location- and market-based)"
+      }
+    },
+    {
+      "id": "finale",
+      "type": "finale",
+      "takeaways": [
+        {
+          "en": "Ownership and control decide the scope, not the activity. A van can be Scope 1, 2 or 3.",
+          "ar": "الملكية والسيطرة هي اللي بتحدد النطاق، مش النشاط. الفان ممكن يبقى نطاق 1 أو 2 أو 3."
+        },
+        {
+          "en": "Same reality, two rulebooks: GHG Protocol spreads transport across scopes, ISO 14064-1 gathers most transport services in Category 3.",
+          "ar": "نفس الواقع، كتابين قواعد: بروتوكول GHG بيوزّع النقل على النطاقات، وISO 14064-1 بيجمع معظم خدمات النقل في الفئة 3."
+        },
+        {
+          "en": "Your number depends on your method. Prefer specific activity data (fuel > distance > spend, per the Scope 3 Calculation Guidance) and disclose it.",
+          "ar": "الرقم بيعتمد على الطريقة. فضّل بيانات النشاط المحددة (وقود > مسافة > إنفاق، حسب إرشادات حساب النطاق 3) وأفصح عنها."
+        }
+      ]
+    }
+  ]
+}

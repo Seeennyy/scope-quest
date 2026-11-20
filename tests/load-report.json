@@ -1,0 +1,60 @@
+{
+  "at": "2026-11-20T22:34:42.858Z",
+  "pass": true,
+  "players": 250,
+  "joinWallMs": 380,
+  "joinP95": 59,
+  "hostCmdToAllPhones": {
+    "n": 35000,
+    "p50": 12,
+    "p95": 83,
+    "p99": 85,
+    "max": 94
+  },
+  "tapToProjector": {
+    "n": 3750,
+    "p50": 40,
+    "p95": 77,
+    "p99": 80,
+    "max": 82
+  },
+  "answers": 8500,
+  "answerErrors": 0,
+  "disconnects": 0,
+  "errors": 0,
+  "gameMs": 57328,
+  "serverRssMB": 123,
+  "finalScene": "finale",
+  "topTeam": {
+    "id": "koshary",
+    "members": 42,
+    "avg": 3304,
+    "bonus": 300,
+    "score": 3604
+  },
+  "csvRows": 250,
+  "statsRows": 30,
+  "slowestCommands": [
+    {
+      "scene": "ch2_iso:confirm",
+      "ms": 94
+    },
+    {
+      "scene": "ch2_iso:next",
+      "ms": 91
+    },
+    {
+      "scene": "ch1_a:start",
+      "ms": 87
+    },
+    {
+      "scene": "board:next",
+      "ms": 86
+    },
+    {
+      "scene": "ch1_b:next",
+      "ms": 85
+    }
+  ],
+  "errorSamples": []
+}
