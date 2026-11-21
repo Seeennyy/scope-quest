@@ -88,6 +88,7 @@ function writeSnapshot() {
 // ---------------- http ----------------
 const app = express();
 app.disable('x-powered-by');
+app.set('trust proxy', true); // behind Caddy / Railway / Render: use the real https scheme for the QR link
 app.use(compression());
 app.use(express.json({ limit: '2mb' }));
 app.use('/assets', express.static(path.join(CLIENT_DIR, 'assets'), { immutable: true, maxAge: '30d' }));

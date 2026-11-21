@@ -33,7 +33,7 @@ Update: `git pull && ./deploy.sh`. Logs: `docker compose logs -f app`. New sessi
 
 ### Fallback hosts (if the droplet is unavailable)
 - **Render**: New → Web Service → this repo → Runtime *Docker* (uses the Dockerfile) → add env vars `HOST_KEY`, `HOST_PIN`, `PUBLIC_URL` → add a **Disk** mounted at `/app/data` (otherwise a restart loses the snapshot). Free instances sleep, so use a paid instance on lecture day.
-- **Railway**: New project → Deploy from GitHub → it detects the Dockerfile → add the same env vars → add a **Volume** at `/app/data` → Settings → Networking → generate domain.
+- **Railway** (config in `railway.json`): New Project → Deploy from GitHub repo → pick this repo → Variables: `HOST_KEY`, `HOST_PIN`, `RAILWAY_RUN_UID=0` → right-click the service → Attach volume at **`/app/data`** → Settings → Networking → Generate Domain → add `PUBLIC_URL=https://<that-domain>`. The Dockerfile must not contain a `VOLUME` line, because Railway rejects it.
 - Both terminate HTTPS for you, so Caddy isn't needed. WebSockets work on both.
 
 ### Run locally
