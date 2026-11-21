@@ -10,6 +10,8 @@ export interface Item {
   wisdom?: Wisdom & { follow?: Record<string, string> };
   // data-type activity (ISO 14064-1 3.2.2–3.2.4): SS site-specific, P primary (not site-specific), S secondary
   dtype?: string; dHalf?: string[]; dReason?: L10n; dSource?: string;
+  // system-boundary activity (ISO 14064-1 3.4.7–3.4.8): IN inside the organizational boundary, REP outside but reported, OUT not reported
+  btype?: string; bReason?: L10n; bSource?: string;
 }
 export interface Bin { id: string; icon: string; t: L10n; hint: L10n; cls: string }
 export interface Wisdom { talk: string; misconception: string; clause: string }
@@ -24,7 +26,7 @@ export interface Scene {
   id: string; type: 'lobby' | 'story' | 'vote' | 'classify' | 'wordcloud' | 'calc' | 'methods' | 'inventory' | 'board' | 'finale';
   title?: L10n; chapter?: number; time?: number; points?: number; poll?: boolean;
   q?: L10n; options?: { id: string; t: L10n }[]; correct?: string; reveal?: L10n[]; revealSource?: string; source?: string;
-  lines?: L10n[]; showConsolidation?: boolean; mode?: 'scope' | 'iso' | 'data'; drag?: boolean; bins?: Bin[]; steps?: ('podium' | 'top' | 'report' | 'takeaways')[]; items?: string[]; ceo?: L10n; insight?: L10n;
+  lines?: L10n[]; showConsolidation?: boolean; mode?: 'scope' | 'iso' | 'data' | 'boundary'; drag?: boolean; bins?: Bin[]; steps?: ('podium' | 'top' | 'report' | 'takeaways')[]; items?: string[]; ceo?: L10n; insight?: L10n;
   calc?: string; honest?: L10n[]; takeaways?: L10n[]; wisdom?: Wisdom;
 }
 

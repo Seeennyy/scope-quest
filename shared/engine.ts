@@ -261,9 +261,13 @@ export function voteSplit(s: GameState, sceneId: string) {
 }
 export function correctChoices(sc: Scene, it: Item): string[] {
   if (sc.mode === 'iso') return [...(it.iso || []), ...(it.isoAlso || [])].map(String);
-  if (sc.mode === 'data') return [it.dtype!];
+  const kf = keyFields(sc); if (kf) return [(it as any)[kf[0]]];
   return [it.scope!];
 }
+// Answer-key / reason / source fields for the drag-only modes.
+export const KEY_FIELDS: Record<string, [string, string, string]> = { data: ['dtype', 'dReason', 'dSource'], boundary: ['btype', 'bReason', 'bSource'] };
+export const keyFields = (sc: Scene) => KEY_FIELDS[sc.mode || ''] as [string, string, string] | undefined;
+export function reasonKey(sc: Scene): [string, string] { const kf = keyFields(sc); return kf ? [kf[1], kf[2]] : sc.mode === 'iso' ? ['isoReason', 'isoSource'] : ['reason', 'source']; }
 // Choices a player may pick in a classify scene.
 export function binIds(sc: Scene): string[] {
   if (sc.bins?.length) return sc.bins.map(b => b.id);
@@ -460,9 +464,11 @@ export function personalCard(s: GameState, c: Content, pid: string) {
   let classified = 0, total = 0, transportOk = 0, transportTot = 0, calcOk = 0, catOk = 0, dataOk = 0, dataTot = 0;
   const calcScenes = c.scenes.filter(sc => sc.type === 'calc' || sc.type === 'methods').length;
   for (const sc of c.scenes) {
-    if (sc.type === 'classify' && sc.mode === 'data') for (const id of sc.items!) {
+    if (sc.type === 'classify' && keyFields(sc)) for (const id of sc.items!) {
       if (!s.confirmedItems[sc.id]?.includes(id)) continue;
-      total++; dataTot++; if (s.results[sc.id]?.[pid]?.items?.[id]?.ok) { classified++; dataOk++; }
+      const ok = !!s.results[sc.id]?.[pid]?.items?.[id]?.ok;
+      total++; if (ok) classified++;
+      if (sc.mode === 'data') { dataTot++; if (ok) dataOk++; }
     }
     if (sc.type === 'classify' && sc.mode === 'scope') for (const id of sc.items!) {
       if (!s.confirmedItems[sc.id]?.includes(id)) continue;

@@ -1,6 +1,7 @@
 // Baskets / choices for a classify scene, with display labels.
 import type { Content, Lang, Scene } from '../../../shared/types';
 import { tr } from './i18n';
+import { keyFields, reasonKey } from '../../../shared/engine';
 
 export interface BinView { id: string; icon: string; label: string; hint: string; cls: string }
 
@@ -14,8 +15,8 @@ export const binLabel = (bins: BinView[], id?: string) => { const b = bins.find(
 // Correct basket(s) for an item (full content only: host/screen).
 export function answerOf(sc: Scene, it: any): string[] {
   if (sc.mode === 'iso') return [...(it.iso || []), ...(it.isoAlso || [])].map(String);
-  if (sc.mode === 'data') return [it.dtype];
+  const kf = keyFields(sc); if (kf) return [it[kf[0]]];
   return [it.scope];
 }
-export const reasonOf = (sc: Scene, it: any) => sc.mode === 'data' ? it.dReason : sc.mode === 'iso' ? it.isoReason : it.reason;
-export const sourceOf = (sc: Scene, it: any) => sc.mode === 'data' ? it.dSource : sc.mode === 'iso' ? it.isoSource : it.source;
+export const reasonOf = (sc: Scene, it: any) => it[reasonKey(sc)[0]];
+export const sourceOf = (sc: Scene, it: any) => it[reasonKey(sc)[1]];

@@ -2,11 +2,12 @@
 
 A live GHG accounting game for a lecture hall (30–150+ people on their own phones, no app, no account). The audience works for **Nile Loaf**, a fictional Cairo bakery chain. The instructor plays the **Chief Auditor**: nothing is official until she stamps it.
 
-**The version in use has two activities** (about 20 minutes):
-1. **Sort the scopes.** Each phone gets 9 emission sources as cards and drags each one into a **Scope 1 / Scope 2 / Scope 3** basket.
-2. **What kind of data is it?** 9 pieces of data, dragged into **Site-specific / Primary / Secondary** baskets (ISO 14064-1:2018, 3.2.2–3.2.4).
+**The version in use has three activities** (about 25–30 minutes):
+1. **System boundaries.** 9 cards (facilities, suppliers, neighbours…) dragged into **Inside our boundary / Outside, but reported / Not in our report** (ISO 14064-1:2018, 3.4.7–3.4.8, 5.1, 5.2.3; Nile Loaf uses financial control).
+2. **Sort the scopes.** 9 emission sources dragged into **Scope 1 / Scope 2 / Scope 3** baskets.
+3. **What kind of data is it?** 9 pieces of data, dragged into **Site-specific / Primary / Secondary** baskets (ISO 14064-1:2018, 3.2.2–3.2.4).
 
-After each activity the projector reveals card by card how many people put it in each basket, then a **results summary** shows the % of the room that got every card right. The finale shows the team podium, the top players and three takeaways. The full 23-scene game (cold open, ISO categories, calculations, board meeting) is kept in `content/content-full-23-scenes.json`: copy it over `content/content.json` to bring it back.
+After each activity the projector reveals card by card how many people put it in each basket, then a **results summary** shows the % of the room that got every card right. The finale shows the team podium, the top players and three takeaways (one per activity). The full 23-scene game (cold open, ISO categories, calculations, board meeting) is kept in `content/content-full-23-scenes.json`: copy it over `content/content.json` to bring it back.
 
 | View | URL | Who |
 |---|---|---|

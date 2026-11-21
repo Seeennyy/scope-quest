@@ -6,11 +6,32 @@ Status: ✅ = checked against the source PDF in `C:\Projects\GHG Project` · �
 
 ---
 
-## 0. The version in use: two activities (`content/content.json`)
+## 0. The version in use: three activities (`content/content.json`)
 
-The game now runs **lobby → Activity 1 → Activity 2 → finale** (podium, top players, takeaways). The full 23-scene game is kept in `content/content-full-23-scenes.json`, and sections 1–6 below describe it.
+The game now runs **lobby → Activity 1 (boundaries) → Activity 2 (scopes) → Activity 3 (data types) → finale** (podium, top players, takeaways). The full 23-scene game is kept in `content/content-full-23-scenes.json`, and sections 1–6 below describe it.
 
-### Activity 1: Sort the scopes (drag into Scope 1 / 2 / 3)
+### Activity 1: System boundaries (drag into Inside / Outside but reported / Not in our report)
+
+Definitions, ISO 14064-1:2018 (checked against the scan):
+- **3.4.7 organizational boundary:** grouping of activities or facilities in which the organization exercises operational or financial control or has an equity share. **5.1:** consolidate by *control* (all emissions of facilities you control) or *equity share* (your portion).
+- **3.4.8 reporting boundary:** emissions/removals from within the organizational boundary, plus the significant indirect emissions that are a consequence of the organization's operations. **5.2.3:** set your own significance criteria; significant indirect emissions are reported, and excluding one must be justified.
+- The cards state that Nile Loaf uses **financial control**.
+
+| Card | Basket | Basis |
+|---|---|---|
+| Our own bakeries in Cairo | **Inside** | 3.4.7: owned and controlled facilities |
+| Joint-venture bakery in Giza (we own 60%, set its financial policies) | **Inside** (100%) | 5.1 a) control approach; equity share would count 60% |
+| Our own delivery vans | **Inside** | 3.4.7: owned and operated vehicles |
+| The power plant that makes our electricity | **Outside, but reported** | 3.4.8, 5.2.3: indirect emissions from imported energy |
+| Delta Mills making our flour | **Outside, but reported** | 3.4.8, 5.2.3: significant indirect (biggest purchase) |
+| The courier delivering our bread | **Outside, but reported** | 3.4.8, 5.2.3: transport service we buy |
+| The textile factory next door | **Not in our report** | not controlled, not caused by our operations |
+| Our bakers cooking at home on weekends | **Not in our report** | not caused by our operations (their commute *is* reported) |
+| The Alexandria bakery we sold last year | **Not in our report** | sold before this reporting year: no control or stake |
+
+- **J18 "Outside, but reported" = the reporting boundary.** ISO lets each organization set its own significance criteria (5.2.3), so the 3 "reported" cards are deliberately big or obvious (electricity, the main raw material, outbound transport). A small, insignificant indirect source could legitimately be excluded with a justification; the game has no such card to avoid an argument with no single answer.
+
+### Activity 2: Sort the scopes (drag into Scope 1 / 2 / 3)
 
 | Card | Basket | Basis |
 |---|---|---|
@@ -26,7 +47,7 @@ The game now runs **lobby → Activity 1 → Activity 2 → finale** (podium, to
 
 Points: 100 for the right basket + up to 20 for speed. There's no category bonus in this version.
 
-### Activity 2: What kind of data is it? (drag into Site-specific / Primary / Secondary)
+### Activity 3: What kind of data is it? (drag into Site-specific / Primary / Secondary)
 
 Definitions, ISO 14064-1:2018 (checked against the scan):
 - **3.2.2 primary data:** quantified value of a process or activity from a direct measurement, or a calculation based on direct measurements. Note 1: it can be an emission factor and/or activity data.

@@ -1,58 +1,58 @@
 {
-  "at": "2026-11-21T19:15:06.295Z",
+  "at": "2026-11-21T22:33:53.787Z",
   "pass": true,
   "players": 250,
-  "joinWallMs": 396,
-  "joinP95": 61,
+  "joinWallMs": 503,
+  "joinP95": 80,
   "hostCmdToAllPhones": {
-    "n": 12250,
+    "n": 18000,
     "p50": 14,
-    "p95": 85,
-    "p99": 90,
-    "max": 93
+    "p95": 84,
+    "p99": 98,
+    "max": 105
   },
   "tapToProjector": {
-    "n": 500,
+    "n": 750,
     "p50": 41,
     "p95": 77,
     "p99": 79,
-    "max": 79
+    "max": 83
   },
-  "answers": 4500,
+  "answers": 6750,
   "answerErrors": 0,
   "disconnects": 0,
   "errors": 0,
-  "gameMs": 11019,
-  "serverRssMB": 111,
+  "gameMs": 16209,
+  "serverRssMB": 113,
   "finalScene": "finale",
   "topTeam": {
-    "id": "taameya",
-    "members": 41,
-    "avg": 1791,
+    "id": "scarab",
+    "members": 42,
+    "avg": 2617,
     "bonus": 0,
-    "score": 1791
+    "score": 2617
   },
   "csvRows": 250,
-  "statsRows": 18,
+  "statsRows": 27,
   "slowestCommands": [
     {
-      "scene": "act1:next",
-      "ms": 93
+      "scene": "boundaries:next",
+      "ms": 105
+    },
+    {
+      "scene": "boundaries:confirm",
+      "ms": 101
     },
     {
       "scene": "act1:confirm",
-      "ms": 92
-    },
-    {
-      "scene": "act2:next",
       "ms": 91
     },
     {
-      "scene": "act1:confirm",
-      "ms": 90
+      "scene": "act1:next",
+      "ms": 91
     },
     {
-      "scene": "act1:confirm",
+      "scene": "act1:next",
       "ms": 89
     }
   ],

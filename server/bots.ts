@@ -1,6 +1,6 @@
 // Rehearsal bots: server-side players that answer with a realistic mix of right & wrong.
 import type { Content, GameState } from '../shared/types';
-import { addPlayer, sceneOf, itemById, methodOf, binIds } from '../shared/engine';
+import { addPlayer, sceneOf, itemById, methodOf, binIds, correctChoices } from '../shared/engine';
 
 const NAMES = ['Mona', 'Karim', 'Yara', 'Omar', 'Salma', 'Hany', 'Nada', 'Ziad', 'Farida', 'Tarek', 'Laila', 'Amr', 'Dina', 'Youssef', 'Rana', 'Sherif', 'Hoda', 'Mostafa', 'Aya', 'Khaled', 'Noha', 'Adham', 'Malak', 'Seif', 'Habiba', 'Ali', 'Jana', 'Hassan', 'Mariam', 'Fady'];
 const WORDS = ['scary', 'huge', 'hidden', 'messy', 'important', 'complex', 'everywhere', 'invisible', 'مرعب', 'مهم', 'صعب', 'overwhelming', 'curious', 'unfair'];
@@ -31,8 +31,8 @@ export function scheduleBots(s: GameState, c: Content, submit: (pid: string, pay
       sc.items!.forEach((id, i) => later(() => {
         const it = itemById(c, id);
         let choice: string; let cat: string | undefined;
-        if (sc.mode === 'data') {
-          choice = chance(skill) ? it.dtype! : pick(binIds(sc));
+        if (sc.mode === 'data' || sc.mode === 'boundary') {
+          choice = chance(skill) ? correctChoices(sc, it)[0] : pick(binIds(sc));
         } else if (sc.mode === 'iso') {
           choice = chance(skill) ? String(it.iso![0]) : pick(['1', '2', '3', '4', '5', '6']);
         } else {

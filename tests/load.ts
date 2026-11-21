@@ -92,7 +92,7 @@ const pct = (xs: number[], p: number) => { if (!xs.length) return 0; const s = x
       if (sc.type === 'classify') {
         for (const id of sc.items) {
           const it = content.items.find((x: any) => x.id === id);
-          const c = sc.mode === 'data' ? (Math.random() < 0.7 ? it.dtype : rand(['SS', 'P', 'S'])) : sc.mode === 'iso' ? String(Math.random() < 0.7 ? it.iso[0] : rand([1, 2, 3, 4, 5, 6])) : (Math.random() < 0.7 ? it.scope : rand(['S1', 'S2', 'S3']));
+          const c = sc.bins ? (Math.random() < 0.7 ? (it.dtype || it.btype || it.scope) : rand(sc.bins.map((b: any) => b.id))) : sc.mode === 'iso' ? String(Math.random() < 0.7 ? it.iso[0] : rand([1, 2, 3, 4, 5, 6])) : (Math.random() < 0.7 ? it.scope : rand(['S1', 'S2', 'S3']));
           if (id === sc.items[sc.items.length - 1]) emits.push(Date.now());
           await emitAnswer(p, { scene: sc.id, item: id, c, cat: c === 'S3' && !sc.drag ? (it.cat || '4') : undefined });
         }

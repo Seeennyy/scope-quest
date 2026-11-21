@@ -2,13 +2,13 @@
 import type { Content, GameState } from './types';
 import {
   sceneOf, itemById, itemSplit, voteSplit, leaderboard, inventory, boardResults, words, calcBands,
-  answeredCount, activePlayers, personalCard, methodOf, activeTeams, isContested, correctChoices, footprint, playerScore,
+  answeredCount, activePlayers, personalCard, methodOf, activeTeams, isContested, correctChoices, footprint, playerScore, reasonKey,
 } from './engine';
 
 // Strip answer keys & instructor notes from content for the audience.
 export function publicContent(c: Content): Content {
   const x: Content = JSON.parse(JSON.stringify(c));
-  for (const it of x.items) { delete it.scope; delete it.cat; delete it.iso; delete it.isoAlso; delete it.reason; delete it.isoReason; delete it.wisdom; delete it.source; delete it.isoSource; delete it.dtype; delete it.dHalf; delete it.dReason; delete it.dSource; }
+  for (const it of x.items) { delete it.scope; delete it.cat; delete it.iso; delete it.isoAlso; delete it.reason; delete it.isoReason; delete it.wisdom; delete it.source; delete it.isoSource; delete it.dtype; delete it.dHalf; delete it.dReason; delete it.dSource; delete it.btype; delete it.bReason; delete it.bSource; }
   for (const k of Object.values(x.calcs)) { delete k.answer; delete k.formula; delete k.wisdom; delete (k as any).scope; }
   for (const o of Object.values(x.methods.options)) { delete o.answer; delete o.formula; }
   delete x.methods.wisdom;
@@ -26,8 +26,7 @@ function revealedKeys(s: GameState, c: Content) {
     for (const id of done) {
       const it = itemById(c, id);
       out.items[id] = { scope: it.scope, cat: it.cat, iso: it.iso, isoAlso: it.isoAlso, reason: it.reason, isoReason: it.isoReason, source: c.sources[it.source!], isoSource: c.sources[it.isoSource!],
-        ans: correctChoices(sc, it), why: sc.mode === 'data' ? it.dReason : sc.mode === 'iso' ? it.isoReason : it.reason,
-        src: c.sources[(sc.mode === 'data' ? it.dSource : sc.mode === 'iso' ? it.isoSource : it.source)!] };
+        ans: correctChoices(sc, it), why: (it as any)[reasonKey(sc)[0]], src: c.sources[(it as any)[reasonKey(sc)[1]]] };
     }
   } else if (done.length) {
     if (sc.type === 'vote') out.vote = { correct: sc.correct, reveal: sc.reveal, source: sc.revealSource ? sc.revealSource.split(' + ').map(k => c.sources[k.trim()] || k).join(' · ') : undefined };
@@ -140,7 +139,7 @@ export function statsReport(s: GameState, c: Content) {
       const good = correctChoices(sc, it);
       const ok = Object.entries(sp.counts).filter(([k]) => good.includes(k)).reduce((a, [, v]) => a + v, 0);
       const wrong = Object.entries(sp.counts).filter(([k]) => !good.includes(k)).sort((a, b) => b[1] - a[1])[0];
-      rows.push({ scene: sc.id, item: id, label: `${sc.mode === 'iso' ? 'ISO' : sc.mode === 'data' ? 'Data type' : 'Scope'}: ${it.name.en}`, correctPct: Math.round(100 * ok / n), n, topWrong: wrong ? `${wrong[0]} (${Math.round(100 * wrong[1] / n)}%)` : undefined });
+      rows.push({ scene: sc.id, item: id, label: `${sc.mode === 'iso' ? 'ISO' : sc.mode === 'data' ? 'Data type' : sc.mode === 'boundary' ? 'Boundary' : 'Scope'}: ${it.name.en}`, correctPct: Math.round(100 * ok / n), n, topWrong: wrong ? `${wrong[0]} (${Math.round(100 * wrong[1] / n)}%)` : undefined });
     }
     if (sc.type === 'calc' || sc.type === 'methods' || (sc.type === 'vote' && !sc.poll)) {
       const ans = s.answers[sc.id] || {}; const n = Object.keys(ans).length; if (!n) continue;

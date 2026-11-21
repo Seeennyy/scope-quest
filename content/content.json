@@ -103,7 +103,9 @@
     "ISO_323": "ISO 14064-1:2018, 3.2.3: site-specific data = primary data obtained within the organizational boundary (all site-specific data are primary)",
     "ISO_324": "ISO 14064-1:2018, 3.2.4: secondary data = from sources other than primary data, e.g. databases and published literature",
     "ISO_C2": "ISO 14064-1:2018, 3.2.2–3.2.3 + Annex C.2: primary vs secondary depends on who collected the data; site-specific depends on whether it comes from our own source",
-    "ISO_C5": "ISO 14064-1:2018, 3.2.4 + Annex C.5: non-site-specific data include literature data (e.g. default emission factors), calculated data and estimates"
+    "ISO_C5": "ISO 14064-1:2018, 3.2.4 + Annex C.5: non-site-specific data include literature data (e.g. default emission factors), calculated data and estimates",
+    "ISO_347": "ISO 14064-1:2018, 3.4.7 + 5.1: organizational boundary = facilities/activities where we have operational or financial control (or an equity share); consolidate by control or equity share",
+    "ISO_348": "ISO 14064-1:2018, 3.4.8 + 5.2.3: reporting boundary = emissions inside the organizational boundary + significant indirect emissions that are a consequence of our operations"
   },
   "factors": [
     {
@@ -1245,6 +1247,294 @@
           "SS": "Ask them: whose factory is it?"
         }
       }
+    },
+    {
+      "id": "b_bakeries",
+      "icon": "🥖",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Our own bakeries in Cairo",
+        "ar": "مخابزنا اللي بنملكها في القاهرة"
+      },
+      "desc": {
+        "en": "Four bakeries that Nile Loaf owns and runs: the ovens, the cold rooms, the lights.",
+        "ar": "أربع مخابز «نايل لوف» بتملكها وبتشغّلها: الأفران وغرف التبريد والإضاءة."
+      },
+      "btype": "IN",
+      "bReason": {
+        "en": "We own and control these facilities, so they're inside our organizational boundary. Their emissions are our direct emissions.",
+        "ar": "إحنا بنملك ونتحكم في المنشآت دي، يبقى هي جوه الحدود التنظيمية. انبعاثاتها هي انبعاثاتنا المباشرة."
+      },
+      "bSource": "ISO_347",
+      "wisdom": {
+        "talk": "Start every inventory by listing the facilities you control. That list IS the organizational boundary.",
+        "misconception": "\"Boundaries are about geography.\" They're about control or ownership, not the map.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "REP": "Ask them: who controls these bakeries?",
+          "OUT": "Ask them: if not us, whose report would these ovens be in?"
+        }
+      }
+    },
+    {
+      "id": "b_jv",
+      "icon": "🤝",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Joint-venture bakery in Giza (we own 60%)",
+        "ar": "مخبز مشترك في الجيزة (بنملك 60%)"
+      },
+      "desc": {
+        "en": "Nile Loaf owns 60% and sets its financial policies. Nile Loaf uses the financial control approach.",
+        "ar": "«نايل لوف» بتملك 60% وبتحدد سياساته المالية. و«نايل لوف» بتستخدم منهج السيطرة المالية."
+      },
+      "btype": "IN",
+      "bReason": {
+        "en": "Under financial control we have control, so the whole joint venture is inside the boundary and we count 100% of its emissions. Under the equity share approach we'd count 60%.",
+        "ar": "بمنهج السيطرة المالية إحنا مسيطرين، يبقى المشروع المشترك كله جوه الحدود ونحسب 100% من انبعاثاته. بمنهج حصة الملكية كنا هنحسب 60% بس."
+      },
+      "bSource": "ISO_347",
+      "wisdom": {
+        "talk": "The consolidation approach decides the boundary (ISO 5.1): control = 100% of what you control; equity share = your % of everything you own.",
+        "misconception": "\"We own 60%, so it's 60% inside.\" That's the equity share approach, not financial control.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "OUT": "Ask them: who sets this bakery's financial policies?",
+          "REP": "Ask them: is it a supplier, or a facility we control?"
+        }
+      }
+    },
+    {
+      "id": "b_vans",
+      "icon": "🚐",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Our own delivery vans",
+        "ar": "فانات التوصيل بتاعتنا"
+      },
+      "desc": {
+        "en": "Nile Loaf owns the vans, employs the drivers and buys the diesel.",
+        "ar": "«نايل لوف» بتملك الفانات وبتشغّل السواقين وبتشتري الديزل."
+      },
+      "btype": "IN",
+      "bReason": {
+        "en": "Vehicles we own and operate are inside our organizational boundary, so their fuel is a direct emission.",
+        "ar": "العربيات اللي بنملكها وبنشغّلها جوه حدودنا التنظيمية، يبقى الوقود بتاعها انبعاث مباشر."
+      },
+      "bSource": "ISO_347",
+      "wisdom": {
+        "talk": "Mobile sources count too: a boundary isn't only buildings.",
+        "misconception": "\"Vans drive outside our walls, so they're outside the boundary.\" The boundary follows control, not the walls.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "REP": "Ask them: who owns and runs these vans?",
+          "OUT": "Ask them: who pays for the diesel?"
+        }
+      }
+    },
+    {
+      "id": "b_power",
+      "icon": "⚡",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "The power plant that makes our electricity",
+        "ar": "محطة الكهربا اللي بتنتج الكهربا بتاعتنا"
+      },
+      "desc": {
+        "en": "A state-owned gas power plant. We buy electricity from the grid it feeds.",
+        "ar": "محطة كهربا بالغاز مملوكة للدولة. إحنا بنشتري الكهربا من الشبكة اللي بتغذيها."
+      },
+      "btype": "REP",
+      "bReason": {
+        "en": "The plant is outside our organizational boundary, but the emissions from the electricity we buy are a consequence of our operations, and significant. So they're inside our reporting boundary as indirect emissions (Scope 2).",
+        "ar": "المحطة بره حدودنا التنظيمية، بس انبعاثات الكهربا اللي بنشتريها نتيجة لعملياتنا ومهمة. يبقى جوه حدود التقرير كانبعاثات غير مباشرة (النطاق 2)."
+      },
+      "bSource": "ISO_348",
+      "wisdom": {
+        "talk": "Two boundaries: organizational (what we control) and reporting (what we report). This card is outside the first, inside the second.",
+        "misconception": "\"Not our plant, so not our problem.\" We report the share caused by our purchases.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: do we control the power plant?",
+          "OUT": "Ask them: would the plant burn that gas if we didn't buy the electricity?"
+        }
+      }
+    },
+    {
+      "id": "b_mill",
+      "icon": "🌾",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Delta Mills making our flour",
+        "ar": "«مطاحن الدلتا» وهي بتطحن الدقيق بتاعنا"
+      },
+      "desc": {
+        "en": "An independent mill that sells us 1,200 tonnes of flour a year, our biggest purchase.",
+        "ar": "مطحنة مستقلة بتبيعلنا 1200 طن دقيق في السنة، أكبر حاجة بنشتريها."
+      },
+      "btype": "REP",
+      "bReason": {
+        "en": "Outside our organizational boundary (we don't control the mill), but the emissions from making our flour are a significant indirect emission of our operations, so we report them.",
+        "ar": "بره حدودنا التنظيمية (مش بنتحكم في المطحنة)، بس انبعاثات طحن الدقيق بتاعنا انبعاث غير مباشر مهم لعملياتنا، يبقى بنبلّغ عنه."
+      },
+      "bSource": "ISO_348",
+      "wisdom": {
+        "talk": "ISO 5.2.3: you set significance criteria (size, influence, data access), and significant indirect emissions must be reported or the exclusion justified.",
+        "misconception": "\"It's the mill's emissions, so they report it, not us.\" Both report it: direct for them, indirect for us.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: do we control Delta Mills?",
+          "OUT": "Ask them: is our biggest purchase too small to matter?"
+        }
+      }
+    },
+    {
+      "id": "b_courier",
+      "icon": "📦",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "The courier delivering our bread",
+        "ar": "شركة الشحن اللي بتوصّل عيشنا"
+      },
+      "desc": {
+        "en": "Wasla Express, an independent company Nile Loaf pays to deliver to distant shops.",
+        "ar": "«وصلة إكسبريس»، شركة مستقلة «نايل لوف» بتدفعلها عشان توصّل للمحلات البعيدة."
+      },
+      "btype": "REP",
+      "bReason": {
+        "en": "Their vans are outside our organizational boundary, but the deliveries happen because we buy the service. A significant indirect emission: we report it.",
+        "ar": "عربياتهم بره حدودنا التنظيمية، بس التوصيل بيحصل عشان إحنا بنشتري الخدمة. انبعاث غير مباشر مهم: بنبلّغ عنه."
+      },
+      "bSource": "ISO_348",
+      "wisdom": {
+        "talk": "Compare with our own vans: same job, different boundary.",
+        "misconception": "\"We pay for it, so it's inside our organizational boundary.\" Paying for a service doesn't give us control of the courier.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: who owns and runs the courier's vans?",
+          "OUT": "Ask them: would these trips happen without our order?"
+        }
+      }
+    },
+    {
+      "id": "b_neighbour",
+      "icon": "🏭",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "The textile factory next door",
+        "ar": "مصنع النسيج اللي جنبنا"
+      },
+      "desc": {
+        "en": "It shares our street in Shubra. We don't buy from it, sell to it or control it.",
+        "ar": "في نفس شارعنا في شبرا. مش بنشتري منه ولا بنبيعله ولا بنتحكم فيه."
+      },
+      "btype": "OUT",
+      "bReason": {
+        "en": "Being nearby doesn't matter: we don't control it and its emissions aren't a consequence of our operations. Not in our report.",
+        "ar": "إنه قريب ده مش فارق: إحنا مش بنتحكم فيه وانبعاثاته مش نتيجة لعملياتنا. مش في تقريرنا."
+      },
+      "bSource": "ISO_348",
+      "wisdom": {
+        "talk": "Boundaries are about control and consequence, not location.",
+        "misconception": "\"It's next to our bakery, so it's inside our boundary.\" Location isn't the test.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: do we control the factory?",
+          "REP": "Ask them: is any of its activity caused by us?"
+        }
+      }
+    },
+    {
+      "id": "b_homes",
+      "icon": "🏠",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Our bakers cooking at home on weekends",
+        "ar": "خبّازينا وهما بيطبخوا في بيوتهم في الإجازة"
+      },
+      "desc": {
+        "en": "The gas our staff burn in their own kitchens on their days off.",
+        "ar": "الغاز اللي موظفينا بيحرقوه في مطابخهم في أيام الإجازة."
+      },
+      "btype": "OUT",
+      "bReason": {
+        "en": "Their personal lives aren't a consequence of our operations. We report their commute to work (indirect), but not their home cooking.",
+        "ar": "حياتهم الشخصية مش نتيجة لعملياتنا. بنبلّغ عن مواصلاتهم للشغل (غير مباشر)، لكن مش عن الطبيخ في البيت."
+      },
+      "bSource": "ISO_348",
+      "wisdom": {
+        "talk": "Contrast with commuting: travel to work exists because of the job; weekend cooking doesn't.",
+        "misconception": "\"They're our people, so everything they emit is ours.\" Only what our operations cause.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: do we control our staff's kitchens?",
+          "REP": "Ask them: would this cooking stop if they changed jobs?"
+        }
+      }
+    },
+    {
+      "id": "b_sold",
+      "icon": "🔑",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "The Alexandria bakery we sold last year",
+        "ar": "مخبز إسكندرية اللي بعناه السنة اللي فاتت"
+      },
+      "desc": {
+        "en": "Sold to another company before this inventory year started. We have no stake or control any more.",
+        "ar": "اتباع لشركة تانية قبل سنة الجرد دي ما تبدأ. ماعدش لينا فيه ملكية ولا سيطرة."
+      },
+      "btype": "OUT",
+      "bReason": {
+        "en": "Boundaries are set for the reporting year. It left our organizational boundary when we sold it; its emissions now belong to the new owner.",
+        "ar": "الحدود بتتحدد لسنة التقرير. المخبز خرج من حدودنا التنظيمية لما بعناه؛ انبعاثاته دلوقتي بتاعة المالك الجديد."
+      },
+      "bSource": "ISO_347",
+      "wisdom": {
+        "talk": "Boundaries change over time: selling or buying facilities can trigger a base-year recalculation.",
+        "misconception": "\"It used to be ours, so we keep counting it.\" Not after the sale.",
+        "clause": "ISO 14064-1 3.4.7, 3.4.8, 5.1, 5.2.3",
+        "follow": {
+          "IN": "Ask them: do we still own or control it this year?",
+          "REP": "Ask them: is anything it does now caused by our operations?"
+        }
+      }
     }
   ],
   "calcs": {
@@ -1759,14 +2049,81 @@
       "type": "lobby"
     },
     {
+      "id": "boundaries",
+      "type": "classify",
+      "mode": "boundary",
+      "drag": true,
+      "time": 100,
+      "title": {
+        "en": "Activity 1 · System boundaries",
+        "ar": "النشاط 1 · حدود النظام"
+      },
+      "ceo": {
+        "en": "We use financial control. For each card: inside our organizational boundary, outside but still in our report, or not in our report at all?",
+        "ar": "إحنا بنستخدم السيطرة المالية. كل كارت: جوه حدودنا التنظيمية، ولا بره بس في تقريرنا، ولا مش في تقريرنا خالص؟"
+      },
+      "items": [
+        "b_bakeries",
+        "b_power",
+        "b_neighbour",
+        "b_jv",
+        "b_mill",
+        "b_homes",
+        "b_vans",
+        "b_sold",
+        "b_courier"
+      ],
+      "bins": [
+        {
+          "id": "IN",
+          "icon": "🏠",
+          "t": {
+            "en": "Inside our boundary",
+            "ar": "جوه حدودنا"
+          },
+          "hint": {
+            "en": "Facilities & activities we control (direct)",
+            "ar": "منشآت وأنشطة بنتحكم فيها (مباشر)"
+          },
+          "cls": "bin"
+        },
+        {
+          "id": "REP",
+          "icon": "📝",
+          "t": {
+            "en": "Outside, but reported",
+            "ar": "بره، بس في التقرير"
+          },
+          "hint": {
+            "en": "Significant indirect emissions our operations cause",
+            "ar": "انبعاثات غير مباشرة مهمة بتسببها عملياتنا"
+          },
+          "cls": "brep"
+        },
+        {
+          "id": "OUT",
+          "icon": "🚫",
+          "t": {
+            "en": "Not in our report",
+            "ar": "مش في تقريرنا"
+          },
+          "hint": {
+            "en": "Not ours, not caused by our operations",
+            "ar": "مش بتاعتنا ومش بسبب عملياتنا"
+          },
+          "cls": "bout"
+        }
+      ]
+    },
+    {
       "id": "act1",
       "type": "classify",
       "mode": "scope",
       "drag": true,
       "time": 90,
       "title": {
-        "en": "Activity 1 · Sort the scopes",
-        "ar": "النشاط 1 · رتّب النطاقات"
+        "en": "Activity 2 · Sort the scopes",
+        "ar": "النشاط 2 · رتّب النطاقات"
       },
       "ceo": {
         "en": "Drag each emission source into the right basket: Scope 1, 2 or 3.",
@@ -1832,8 +2189,8 @@
       "drag": true,
       "time": 120,
       "title": {
-        "en": "Activity 2 · What kind of data is it?",
-        "ar": "النشاط 2 · نوع البيانات إيه؟"
+        "en": "Activity 3 · What kind of data is it?",
+        "ar": "النشاط 3 · نوع البيانات إيه؟"
       },
       "ceo": {
         "en": "Drag each piece of data into its basket. Ask: who measured it, and where?",
@@ -1903,16 +2260,16 @@
       ],
       "takeaways": [
         {
-          "en": "Ownership and control decide the scope: what we own or control and burn is Scope 1, energy we buy is Scope 2, the rest of the value chain is Scope 3.",
-          "ar": "الملكية والسيطرة هي اللي بتحدد النطاق: اللي بنملكه أو بنتحكم فيه وبيحرق = نطاق 1، الطاقة اللي بنشتريها = نطاق 2، وباقي سلسلة القيمة = نطاق 3."
+          "en": "Boundaries first: the organizational boundary is what we control (here, by financial control). The reporting boundary adds the significant indirect emissions our operations cause.",
+          "ar": "الحدود الأول: الحدود التنظيمية = اللي بنتحكم فيه (هنا بالسيطرة المالية). وحدود التقرير بتضيف الانبعاثات غير المباشرة المهمة اللي بتسببها عملياتنا."
         },
         {
-          "en": "Primary data come from a direct measurement, or a calculation based on one. When it's measured inside our own boundary (our invoices, our meters), it's site-specific. All site-specific data are primary.",
-          "ar": "البيانات الأولية جاية من قياس مباشر أو حساب مبني عليه. ولو متقاسة جوه حدودنا (فواتيرنا وعدّاداتنا) تبقى خاصة بالموقع. وكل البيانات الخاصة بالموقع أولية."
+          "en": "Scopes: what we own or control and burn is Scope 1, energy we buy is Scope 2, the rest of the value chain is Scope 3.",
+          "ar": "النطاقات: اللي بنملكه أو بنتحكم فيه وبيحرق = نطاق 1، الطاقة اللي بنشتريها = نطاق 2، وباقي سلسلة القيمة = نطاق 3."
         },
         {
-          "en": "Secondary data come from databases and published literature, like conversion factors and defaults. Use them when measuring isn't practical, and record where they came from.",
-          "ar": "البيانات الثانوية جاية من قواعد البيانات والمراجع المنشورة، زي معاملات التحويل والقيم الافتراضية. نستخدمها لما القياس مايبقاش عملي، ونسجّل مصدرها."
+          "en": "Data: primary data are measured; measured inside our own boundary (our invoices, our meters) they're site-specific. Secondary data come from databases and literature, like conversion factors.",
+          "ar": "البيانات: الأولية متقاسة؛ ولو متقاسة جوه حدودنا (فواتيرنا وعدّاداتنا) تبقى خاصة بالموقع. والثانوية من قواعد البيانات والمراجع، زي معاملات التحويل."
         }
       ]
     }

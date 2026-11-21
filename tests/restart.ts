@@ -13,7 +13,7 @@ const PORT = 3201;
   const act = JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '../content/content.json'), 'utf8'));
   const sc = act.scenes.find((x: any) => x.id === 'act1');
   const key = (id: string) => act.items.find((i: any) => i.id === id).scope;
-  await h.cmd({ type: 'next' }); await h.cmd({ type: 'start' });
+  await h.cmd({ type: 'goto', idx: act.scenes.findIndex((x: any) => x.id === 'act1') }); await h.cmd({ type: 'start' });
   for (const p of ps.slice(0, 20)) for (const item of sc.items) await new Promise(r => p.s.emit('answer', { scene: 'act1', item, c: key(item) }, r));
   await sleep(300);
   const before = h.last();

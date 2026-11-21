@@ -4,7 +4,7 @@ import type { Content, HostCmd, Scene } from '../../../shared/types';
 import { connect, fetchContent, qs, secondsLeft } from '../lib/net';
 import { tr, num } from '../lib/i18n';
 import { useNow } from '../ui/bits';
-import { finaleSteps } from '../../../shared/engine';
+import { finaleSteps, correctChoices } from '../../../shared/engine';
 
 const PIN_KEY = 'sq-pin';
 
@@ -139,7 +139,7 @@ function RunTab({ v, c, sc, cmd }: any) {
 function Wisdom({ v, c, sc }: any) {
   let w: any = sc.wisdom; let head = '';
   if (sc.type === 'classify' && v.phase === 'confirmed' && sc.drag) return null;
-  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.icon} ${it.name.en} → ${sc.mode === 'data' ? ({ SS: 'Site-specific', P: 'Primary (not site-specific)', S: 'Secondary' } as any)[it.dtype] + (it.dHalf ? ' (Primary = half points)' : '') : sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
+  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.icon} ${it.name.en} → ${sc.bins ? sc.bins.find((b: any) => b.id === correctChoices(sc, it)[0])?.t.en + (it.dHalf ? ' (Primary = half points)' : '') : sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
   if (sc.type === 'calc') { const k = c.calcs[sc.calc]; w = k.wisdom; head = `Answer: ${num(k.answer, 2)} t · ${k.formula.en}`; }
   if (sc.type === 'methods') { w = c.methods.wisdom; head = Object.entries(c.methods.options).map(([k, o]: any) => `${k} ${num(o.answer, 1)} t`).join(' · '); }
   if (sc.type === 'vote' && sc.correct) head = `Answer: ${sc.options.find((o: any) => o.id === sc.correct).t.en}`;

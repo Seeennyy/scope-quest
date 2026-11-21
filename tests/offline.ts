@@ -27,7 +27,7 @@ net.createServer(c => {
     await pg.goto(`http://localhost:${PROXY}/?r=${room}`); await pg.waitForSelector('input');
     await pg.type('input', 'Offliner'); await pg.click('.btn-primary'); await pg.waitForSelector('.ph-score');
     await h.cmd({ type: 'next' }); await h.cmd({ type: 'start' }); await sleep(400);
-    await pg.waitForSelector('.basket'); await pg.evaluate(() => (document.querySelector('.basket') as HTMLElement).click()); // card 1 (oven gas) → Scope 1 basket
+    await pg.waitForSelector('.basket'); await pg.evaluate(() => (document.querySelector('.basket') as HTMLElement).click()); // card 1 (our own bakeries) → Inside basket
     await sleep(300); await h.cmd({ type: 'close' }); await h.cmd({ type: 'next' }); await h.cmd({ type: 'confirm' }); await sleep(500);
     const scoreBefore = await pg.$eval('.ph-score', e => (e as HTMLElement).innerText);
     const tokenBefore = await pg.evaluate(() => localStorage.getItem('sq-token'));

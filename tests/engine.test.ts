@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { newState, addPlayer, hostCommand, submitAnswer, scoreCalc, footprint, inventory, leaderboard, computeTeamPlans, sceneOf } from '../shared/engine';
+import { newState, addPlayer, hostCommand, submitAnswer, scoreCalc, footprint, inventory, leaderboard, computeTeamPlans, sceneOf, reasonKey } from '../shared/engine';
 import { publicContent, screenView } from '../shared/views';
 // c = the 2-activity version in use; cf = the full 23-scene version kept as a backup (still supported by the engine)
 const c = JSON.parse(fs.readFileSync(path.join(__dirname, '../content/content.json'), 'utf8'));
@@ -35,7 +35,7 @@ t('half of Chapter 1 sources are transport, all 16 present', () => {
 });
 t('public content hides every answer key', () => {
   const p = JSON.stringify(publicContent(c));
-  for (const k of ['"scope":"S', '"reason"', '"wisdom"', '"answer"', '"correct"', '"formula"', '"iso":[', '"cat":', '"dtype"', '"dReason"', '"dHalf"']) assert.ok(!p.includes(k), k);
+  for (const k of ['"scope":"S', '"reason"', '"wisdom"', '"answer"', '"correct"', '"formula"', '"iso":[', '"cat":', '"dtype"', '"dReason"', '"dHalf"', '"btype"', '"bReason"']) assert.ok(!p.includes(k), k);
 });
 t('classify scoring: scope, category bonus, only after Confirm', () => {
   const s = newState('1234', 0);
@@ -76,18 +76,19 @@ t('back/forward never leaves the scene list', () => {
   for (let i = 0; i < 300; i++) hostCommand(s, c, { type: 'back' }, i);
   assert.equal(s.sceneIdx, 0);
 });
-t('two activities only: lobby → scopes → data types → finale', () => {
-  assert.deepEqual(c.scenes.map((x: any) => x.id), ['lobby', 'act1', 'act2', 'finale']);
+t('three activities only: lobby → boundaries → scopes → data types → finale', () => {
+  assert.deepEqual(c.scenes.map((x: any) => x.id), ['lobby', 'boundaries', 'act1', 'act2', 'finale']);
   for (const sc of c.scenes.filter((x: any) => x.type === 'classify')) {
     assert.ok(sc.drag && sc.bins.length === 3);
     const ids = sc.bins.map((b: any) => b.id);
     const per: Record<string, number> = {};
     for (const id of sc.items) {
       const it = c.items.find((i: any) => i.id === id); assert.ok(it, id);
-      const ans = sc.mode === 'data' ? it.dtype : it.scope; assert.ok(ids.includes(ans), `${id} → ${ans}`);
+      const ans = sc.mode === 'data' ? it.dtype : sc.mode === 'boundary' ? it.btype : it.scope; assert.ok(ids.includes(ans), `${id} → ${ans}`);
       per[ans] = (per[ans] || 0) + 1;
-      assert.ok(c.sources[sc.mode === 'data' ? it.dSource : it.source], `source for ${id}`);
-      assert.ok((sc.mode === 'data' ? it.dReason : it.reason).ar, `arabic reason ${id}`);
+      const [rk, sk] = reasonKey(sc);
+      assert.ok(c.sources[it[sk]], `source for ${id}`);
+      assert.ok(it[rk].ar, `arabic reason ${id}`);
     }
     assert.deepEqual(Object.values(per), [3, 3, 3], `${sc.id} has 3 cards per basket`);
   }
@@ -110,9 +111,9 @@ t('data types: site-specific full points, "primary" half, secondary 0; only at C
 });
 t('drag activity ends on a results summary; "All → summary" confirms every card', () => {
   const s = newState('1234', 0); const a = addPlayer(s, c, 'Ana', 0);
-  hostCommand(s, c, { type: 'next' }, 0); assert.equal(sceneOf(s, c).id, 'act1');
+  hostCommand(s, c, { type: 'goto', idx: c.scenes.findIndex((x: any) => x.id === 'act1') }, 0); assert.equal(sceneOf(s, c).id, 'act1');
   hostCommand(s, c, { type: 'start' }, 0);
-  for (const id of c.scenes[1].items) submitAnswer(s, c, a.id, { scene: 'act1', item: id, c: c.items.find((i: any) => i.id === id).scope }, 500);
+  for (const id of c.scenes.find((x: any) => x.id === 'act1').items) submitAnswer(s, c, a.id, { scene: 'act1', item: id, c: c.items.find((i: any) => i.id === id).scope }, 500);
   hostCommand(s, c, { type: 'confirmAll' }, 1000);
   assert.equal(s.phase, 'confirmed'); assert.equal(s.confirmedItems.act1.length, 9);
   assert.ok(s.results.act1[a.id].pts >= 900);
@@ -127,5 +128,16 @@ t('drag activity ends on a results summary; "All → summary" confirms every car
   hostCommand(s, c, { type: 'next' }, 2000); assert.equal(sceneOf(s, c).id, 'finale');
   for (let i = 0; i < 5; i++) hostCommand(s, c, { type: 'next' }, 2100 + i);
   assert.equal(s.step, 2); // podium, top, takeaways
+});
+t('boundaries: JV under financial control is inside; scoring only at Confirm', () => {
+  const s = newState('1234', 0); const [a, b] = ['Ana', 'Bo'].map(x => addPlayer(s, c, x, 0));
+  hostCommand(s, c, { type: 'next' }, 0); assert.equal(sceneOf(s, c).id, 'boundaries');
+  hostCommand(s, c, { type: 'start' }, 0);
+  assert.equal(submitAnswer(s, c, a.id, { scene: 'boundaries', item: 'b_jv', c: 'IN' }, 500), null);
+  assert.equal(submitAnswer(s, c, b.id, { scene: 'boundaries', item: 'b_jv', c: 'REP' }, 500), null);
+  assert.equal(submitAnswer(s, c, b.id, { scene: 'boundaries', item: 'b_jv', c: 'SS' }, 500), 'bad-choice');
+  hostCommand(s, c, { type: 'confirmAll' }, 1000);
+  assert.ok(s.results.boundaries[a.id].items!.b_jv.pts >= 100); assert.equal(s.results.boundaries[b.id].items!.b_jv.pts, 0);
+  assert.equal(s.phase, 'confirmed');
 });
 console.log(`${n} engine tests passed`);

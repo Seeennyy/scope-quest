@@ -84,7 +84,7 @@ async function run(lang: string, browser: Browser) {
   await shot('lobby');
 
   for (const act of content.scenes.filter((s: any) => s.type === 'classify')) {
-    const key = (id: string) => act.mode === 'data' ? itemOf(id).dtype : itemOf(id).scope;
+    const key = (id: string) => itemOf(id).dtype || itemOf(id).btype || itemOf(id).scope;
     await next(); await shot(`${act.id}-intro`, ['screen', 'phone'], 500);
     await h.cmd({ type: 'start' }); await sleep(600);
     await shot(`${act.id}-phone-first-card`, ['phone'], 200);
