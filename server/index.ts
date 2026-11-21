@@ -20,7 +20,8 @@ const HOST_PIN = process.env.HOST_PIN || '1234';
 const PUBLIC_URL = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
 const SNAPSHOT_MS = Number(process.env.SNAPSHOT_MS || 2000);
 const CLIENT_DIR = path.join(ROOT, 'dist', 'client');
-fs.mkdirSync(DATA_DIR, { recursive: true });
+try { fs.mkdirSync(DATA_DIR, { recursive: true }); fs.accessSync(DATA_DIR, fs.constants.W_OK); }
+catch (e: any) { console.error(`WARNING: data dir ${DATA_DIR} is not writable (${e.code}). The game runs, but a restart will lose scores. On Railway set RAILWAY_RUN_UID=0 and mount the volume at /app/data.`); }
 
 const log = (...a: any[]) => console.log(new Date().toISOString(), ...a);
 const safeEq = (a: string, b: string) => { const x = Buffer.from(String(a)); const y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); };
@@ -289,7 +290,8 @@ function autoAdvance(now: number) {
   } else closedAt = 0;
 }
 setInterval(flush, 80);
-setInterval(() => { try { writeSnapshot(); } catch (e) { log('snapshot failed', e); } }, SNAPSHOT_MS);
+let lastSnapErr = 0;
+setInterval(() => { try { writeSnapshot(); } catch (e: any) { if (Date.now() - lastSnapErr > 60000) { lastSnapErr = Date.now(); log('snapshot failed (data dir not writable?)', e?.code || e); } } }, SNAPSHOT_MS);
 const shutdown = () => { try { snapDirty = true; writeSnapshot(); } catch { } process.exit(0); };
 process.on('SIGTERM', shutdown); process.on('SIGINT', shutdown);
 
