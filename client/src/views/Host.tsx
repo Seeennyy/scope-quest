@@ -4,6 +4,7 @@ import type { Content, HostCmd, Scene } from '../../../shared/types';
 import { connect, fetchContent, qs, secondsLeft } from '../lib/net';
 import { tr, num } from '../lib/i18n';
 import { useNow } from '../ui/bits';
+import { finaleSteps } from '../../../shared/engine';
 
 const PIN_KEY = 'sq-pin';
 
@@ -68,14 +69,18 @@ function primaryAction(sc: Scene, v: any): { label: string; cmd: HostCmd; cls?: 
     case 'lobby': return { label: '▶ Start the show', cmd: next };
     case 'story': return { label: v.step < (sc.lines!.length - 1) ? '▶ Next line' : '▶ Next scene', cmd: next };
     case 'inventory': return { label: v.step < 1 ? '▶ Compare with prediction' : '▶ Next scene', cmd: next };
-    case 'finale': return { label: ['▶ Top individuals', '▶ Inventory report', '▶ Takeaways', '🎉 The end'][v.step], cmd: next };
+    case 'finale': {
+      const st = finaleSteps(sc); const nx = st[v.step + 1];
+      return { label: nx ? ({ podium: '▶ Team podium', top: '▶ Top individuals', report: '▶ Inventory report', takeaways: '▶ Takeaways' } as any)[nx] : '🎉 The end', cmd: next };
+    }
   }
   if (v.phase === 'intro') return { label: '⏱ Start timer', cmd: { type: 'start' } };
   if (v.phase === 'answering') return { label: '🔒 Lock answers', cmd: { type: 'close' } };
   if (sc.type === 'classify') {
-    if (v.phase === 'closed') return { label: '📊 Show split (item 1)', cmd: next };
-    if (v.revealSub === 'split' || v.revealSub === 'debate') return { label: '✔ CONFIRM', cmd: { type: 'confirm' }, cls: 'stamp-btn' };
-    return { label: v.revealItem < sc.items!.length - 1 ? `📊 Show split (item ${v.revealItem + 2})` : '▶ Next scene', cmd: next };
+    if (v.phase === 'closed') return { label: '📊 Show split (card 1)', cmd: next };
+    if (v.phase === 'confirmed') return { label: '▶ Next activity', cmd: next };
+    if (v.revealSub === 'split' || v.revealSub === 'debate') return { label: `✔ CONFIRM card ${v.revealItem + 1}`, cmd: { type: 'confirm' }, cls: 'stamp-btn' };
+    return { label: v.revealItem < sc.items!.length - 1 ? `📊 Show split (card ${v.revealItem + 2})` : sc.drag ? '📊 Results summary' : '▶ Next scene', cmd: next };
   }
   if (sc.type === 'board') {
     if (v.phase === 'closed') return { label: '📋 Show team plans', cmd: next };
@@ -108,6 +113,7 @@ function RunTab({ v, c, sc, cmd }: any) {
         {isQ && <button onClick={() => cmd({ type: 'addTime', s: 15 })}>+15 s</button>}
         {isQ && <button onClick={() => cmd({ type: 'close' })}>🔒 Lock</button>}
         {sc.type === 'classify' && <button onClick={() => cmd({ type: 'debate' })}>🎤 Debate</button>}
+        {sc.type === 'classify' && sc.drag && v.phase !== 'confirmed' && <button onClick={() => { if (confirm('Confirm ALL remaining cards and jump to the results summary?')) cmd({ type: 'confirmAll' }); }}>⏩ All → summary</button>}
         {isQ && <button className="stamp-mini" onClick={() => cmd({ type: 'confirm' })}>✔ Confirm</button>}
         <button onClick={() => cmd({ type: 'skip' })}>⏭ Skip</button>
         <button className={v.overlay === 'leaderboard' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'leaderboard' })}>🏆 Board</button>
@@ -132,7 +138,8 @@ function RunTab({ v, c, sc, cmd }: any) {
 
 function Wisdom({ v, c, sc }: any) {
   let w: any = sc.wisdom; let head = '';
-  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.icon} ${it.name.en} → ${sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
+  if (sc.type === 'classify' && v.phase === 'confirmed' && sc.drag) return null;
+  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.icon} ${it.name.en} → ${sc.mode === 'data' ? ({ SS: 'Site-specific', P: 'Primary (not site-specific)', S: 'Secondary' } as any)[it.dtype] + (it.dHalf ? ' (Primary = half points)' : '') : sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
   if (sc.type === 'calc') { const k = c.calcs[sc.calc]; w = k.wisdom; head = `Answer: ${num(k.answer, 2)} t · ${k.formula.en}`; }
   if (sc.type === 'methods') { w = c.methods.wisdom; head = Object.entries(c.methods.options).map(([k, o]: any) => `${k} ${num(o.answer, 1)} t`).join(' · '); }
   if (sc.type === 'vote' && sc.correct) head = `Answer: ${sc.options.find((o: any) => o.id === sc.correct).t.en}`;
@@ -145,14 +152,14 @@ function Wisdom({ v, c, sc }: any) {
       {w?.talk && <p className="w-talk">{w.talk}</p>}
       {w?.misconception && <p className="w-mis">⚠️ {w.misconception}</p>}
       {w?.clause && <p className="w-cl">📚 {w.clause}</p>}
-      {st && st.pct > 0 && <p className="w-stat">📊 <b>{st.pct}%</b> chose <b>{st.choice}</b>. {st.follow}</p>}
+      {st && st.pct > 0 && <p className="w-stat">📊 <b>{st.pct}%</b> chose <b>{sc.bins?.find((b: any) => b.id === st.choice)?.t.en || st.choice}</b>. {st.follow}</p>}
       {sc.type === 'calc' || sc.type === 'methods' ? v.bands && <p className="w-stat">📊 {v.bands.bands.ok} within 5% · {v.bands.bands.close} close · {v.bands.bands.slip} kg-slip · {v.bands.bands.off} off</p> : null}
     </div>);
 }
 
 function NameCalling({ v, sc, c }: any) {
   const names = v.focus?.names; if (!names || !Object.keys(names).length) return null;
-  const lab = (k: string) => sc.type === 'vote' ? (sc.options.find((o: any) => o.id === k)?.t.en || k) : sc.mode === 'iso' ? `ISO ${k}` : k;
+  const lab = (k: string) => sc.type === 'vote' ? (sc.options.find((o: any) => o.id === k)?.t.en || k) : sc.bins ? (sc.bins.find((b: any) => b.id === k)?.t.en || k) : sc.mode === 'iso' ? `ISO ${k}` : k;
   return (
     <details className="h-card names" open={v.phase === 'reveal'}>
       <summary>🙋 Who picked what (call on people)</summary>

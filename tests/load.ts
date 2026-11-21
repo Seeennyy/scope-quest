@@ -81,7 +81,7 @@ const pct = (xs: number[], p: number) => { if (!xs.length) return 0; const s = x
     if (sc.type === 'story') { for (let k = 1; k < sc.lines.length; k++) await cmd({ type: 'next' }); continue; }
     if (sc.type === 'lobby') continue;
     if (sc.type === 'inventory') { await cmd({ type: 'next' }); continue; }
-    if (sc.type === 'finale') { for (let k = 0; k < 3; k++) await cmd({ type: 'next' }); continue; }
+    if (sc.type === 'finale') { for (let k = 0; k < (sc.steps?.length || 4) - 1; k++) await cmd({ type: 'next' }); continue; }
     // answer scenes: start timer
     await cmd({ type: 'start' });
     const before = screenLog.length;
@@ -92,9 +92,9 @@ const pct = (xs: number[], p: number) => { if (!xs.length) return 0; const s = x
       if (sc.type === 'classify') {
         for (const id of sc.items) {
           const it = content.items.find((x: any) => x.id === id);
-          const c = sc.mode === 'iso' ? String(Math.random() < 0.7 ? it.iso[0] : rand([1, 2, 3, 4, 5, 6])) : (Math.random() < 0.7 ? it.scope : rand(['S1', 'S2', 'S3']));
+          const c = sc.mode === 'data' ? (Math.random() < 0.7 ? it.dtype : rand(['SS', 'P', 'S'])) : sc.mode === 'iso' ? String(Math.random() < 0.7 ? it.iso[0] : rand([1, 2, 3, 4, 5, 6])) : (Math.random() < 0.7 ? it.scope : rand(['S1', 'S2', 'S3']));
           if (id === sc.items[sc.items.length - 1]) emits.push(Date.now());
-          await emitAnswer(p, { scene: sc.id, item: id, c, cat: c === 'S3' ? (it.cat || '4') : undefined });
+          await emitAnswer(p, { scene: sc.id, item: id, c, cat: c === 'S3' && !sc.drag ? (it.cat || '4') : undefined });
         }
         return;
       }
@@ -114,6 +114,7 @@ const pct = (xs: number[], p: number) => { if (!xs.length) return 0; const s = x
     await cmd({ type: 'close' });
     if (sc.type === 'classify') {
       for (let k = 0; k < sc.items.length; k++) { await cmd({ type: 'next' }); if (k === 0) await cmd({ type: 'debate' }); await cmd({ type: 'confirm' }); }
+      if (sc.drag) await cmd({ type: 'next' }); // results summary
     } else if (sc.type === 'board') { await cmd({ type: 'next' }); await cmd({ type: 'next' }); await cmd({ type: 'next' }); await cmd({ type: 'next' }); await cmd({ type: 'confirm' }); }
     else if (sc.type === 'wordcloud') { await cmd({ type: 'next' }); }
     else { await cmd({ type: 'next' }); if (!sc.poll) await cmd({ type: 'confirm' }); }

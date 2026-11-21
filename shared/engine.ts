@@ -31,7 +31,7 @@ function enterScene(s: GameState, c: Content, idx: number, now: number, restore 
     const done = s.confirmedItems[sc.id];
     if (restore && done && done.length) {
       s.phase = 'confirmed';
-      if (sc.type === 'classify') { s.revealItem = (sc.items!.length - 1); s.revealSub = 'confirmed'; s.phase = 'reveal'; }
+      if (sc.type === 'classify') { s.revealItem = (sc.items!.length - 1); s.revealSub = 'confirmed'; s.phase = sc.drag && done.length >= sc.items!.length ? 'confirmed' : 'reveal'; }
     } else if (restore && s.answers[sc.id] && Object.keys(s.answers[sc.id]).length) {
       s.phase = 'closed';
     } else s.phase = 'intro';
@@ -88,6 +88,7 @@ export function hostCommand(s: GameState, c: Content, cmd: HostCmd, now: number)
       break;
     case 'debate': startDebate(s, c, now); break;
     case 'confirm': confirm(s, c, now); break;
+    case 'confirmAll': confirmAll(s, c, now); break;
     case 'overlay': s.overlay = s.overlay === cmd.v ? null : cmd.v; break;
     case 'setting': (s.settings as any)[cmd.key] = cmd.v; break;
     case 'lang': s.settings.lang = cmd.v; break;
@@ -117,7 +118,7 @@ function next(s: GameState, c: Content, now: number) {
     case 'lobby': go(); return;
     case 'story': if (s.step < (sc.lines?.length || 1) - 1) s.step++; else go(); return;
     case 'inventory': if (s.step < 1) s.step++; else go(); return;
-    case 'finale': if (s.step < 3) s.step++; return;
+    case 'finale': if (s.step < finaleSteps(sc).length - 1) s.step++; return;
   }
   // answer scenes
   if (s.phase === 'intro') { startTimer(s, sc, now); return; }
@@ -128,10 +129,12 @@ function next(s: GameState, c: Content, now: number) {
       if (s.revealSub === 'split' || s.revealSub === 'debate') { confirm(s, c, now); return; }
       if (s.revealSub === 'confirmed') {
         if (s.revealItem < sc.items!.length - 1) { s.revealItem++; s.revealSub = 'split'; s.debate = null; }
+        else if (sc.drag) { s.phase = 'confirmed'; s.debate = null; } // results summary
         else go();
       }
       return;
     }
+    if (s.phase === 'confirmed') { go(); return; }
   }
   if (sc.type === 'board') {
     if (s.phase === 'closed') { s.phase = 'reveal'; s.step = 0; return; }
@@ -155,6 +158,7 @@ function next(s: GameState, c: Content, now: number) {
 function back(s: GameState, c: Content, now: number) {
   const sc = sceneOf(s, c);
   if ((sc.type === 'story' || sc.type === 'finale' || sc.type === 'inventory') && s.step > 0) { s.step--; return; }
+  if (sc.type === 'classify' && s.phase === 'confirmed') { s.phase = 'reveal'; s.revealItem = sc.items!.length - 1; s.revealSub = 'confirmed'; return; }
   if (sc.type === 'classify' && s.phase === 'reveal' && s.revealItem > 0) { s.revealItem--; s.revealSub = 'confirmed'; return; }
   if (s.sceneIdx > 0) {
     enterScene(s, c, s.sceneIdx - 1, now, true);
@@ -210,11 +214,10 @@ export function submitAnswer(s: GameState, c: Content, pid: string, payload: any
   const rec: AnswerRec = prev ? { ...prev } : { at: now };
   if (sc.type === 'classify') {
     const id = String(payload.item); if (!sc.items!.includes(id)) return 'bad-item';
-    const valid = sc.mode === 'iso' ? ['1', '2', '3', '4', '5', '6'] : ['S1', 'S2', 'S3'];
-    if (!valid.includes(String(payload.c))) return 'bad-choice';
+    if (!binIds(sc).includes(String(payload.c))) return 'bad-choice';
     rec.items = { ...(rec.items || {}) };
     const cat = payload.cat && c.categories.ghgp[payload.cat] ? String(payload.cat) : (rec.items[id]?.cat);
-    rec.items[id] = { c: String(payload.c), cat: payload.c === 'S3' ? cat : undefined, at: now };
+    rec.items[id] = { c: String(payload.c), cat: payload.c === 'S3' && sc.mode === 'scope' ? cat : undefined, at: now };
   } else if (sc.type === 'vote') {
     if (!sc.options!.some(o => o.id === payload.c)) return 'bad-choice';
     rec.c = payload.c; rec.at = now;
@@ -258,8 +261,16 @@ export function voteSplit(s: GameState, sceneId: string) {
 }
 export function correctChoices(sc: Scene, it: Item): string[] {
   if (sc.mode === 'iso') return [...(it.iso || []), ...(it.isoAlso || [])].map(String);
+  if (sc.mode === 'data') return [it.dtype!];
   return [it.scope!];
 }
+// Choices a player may pick in a classify scene.
+export function binIds(sc: Scene): string[] {
+  if (sc.bins?.length) return sc.bins.map(b => b.id);
+  return sc.mode === 'iso' ? ['1', '2', '3', '4', '5', '6'] : ['S1', 'S2', 'S3'];
+}
+export const FINALE_STEPS = ['podium', 'top', 'report', 'takeaways'] as const;
+export function finaleSteps(sc: Scene) { return sc.steps?.length ? sc.steps : [...FINALE_STEPS]; }
 export function isContested(counts: Record<string, number>) {
   const tot = Object.values(counts).reduce((a, b) => a + b, 0); if (!tot) return false;
   return Math.max(...Object.values(counts)) / tot < 0.6;
@@ -314,10 +325,11 @@ function confirm(s: GameState, c: Content, now: number) {
       if (r.items[itemId]) continue;
       if (!x) { r.items[itemId] = { ok: false, pts: 0 }; continue; }
       const good = ok.includes(x.c);
-      let pts = good ? 100 + speedBonus(s, x.at, 20) : 0;
+      const half = !good && sc.mode === 'data' && !!it.dHalf?.includes(x.c);
+      let pts = good ? 100 + speedBonus(s, x.at, 20) : half ? 50 : 0;
       let catOk: boolean | undefined;
       if (good && sc.mode === 'scope' && it.scope === 'S3' && x.cat) { catOk = x.cat === it.cat; if (catOk) pts += 50; }
-      r.items[itemId] = { ok: good, catOk, pts };
+      r.items[itemId] = { ok: good, half: half || undefined, catOk, pts };
       r.pts = Object.values(r.items).reduce((acc, z) => acc + z.pts, 0);
     }
     const ci = (s.confirmedItems[sc.id] ||= []);
@@ -350,6 +362,18 @@ function confirm(s: GameState, c: Content, now: number) {
   }
   s.confirmedItems[sc.id] = ['*'];
   s.phase = 'confirmed';
+}
+
+// Confirm every remaining card of a classify scene at once and jump to the results summary.
+function confirmAll(s: GameState, c: Content, now: number) {
+  const sc = sceneOf(s, c);
+  if (sc.type !== 'classify') { confirm(s, c, now); return; }
+  if (s.phase === 'answering' || s.phase === 'intro') closeAnswers(s, c, now);
+  if (s.phase === 'closed') { s.phase = 'reveal'; s.revealItem = 0; s.revealSub = 'split'; }
+  if (s.phase !== 'reveal') return;
+  for (let i = 0; i < sc.items!.length; i++) { s.revealItem = i; s.revealSub = 'split'; confirm(s, c, now); }
+  s.revealItem = sc.items!.length - 1; s.debate = null;
+  s.phase = sc.drag ? 'confirmed' : 'reveal';
 }
 
 export function playerScore(s: GameState, pid: string) {
@@ -433,8 +457,13 @@ export function boardResults(s: GameState, c: Content) {
 
 // ---------- badges / personal card ----------
 export function personalCard(s: GameState, c: Content, pid: string) {
-  let classified = 0, total = 0, transportOk = 0, transportTot = 0, calcOk = 0, catOk = 0;
+  let classified = 0, total = 0, transportOk = 0, transportTot = 0, calcOk = 0, catOk = 0, dataOk = 0, dataTot = 0;
+  const calcScenes = c.scenes.filter(sc => sc.type === 'calc' || sc.type === 'methods').length;
   for (const sc of c.scenes) {
+    if (sc.type === 'classify' && sc.mode === 'data') for (const id of sc.items!) {
+      if (!s.confirmedItems[sc.id]?.includes(id)) continue;
+      total++; dataTot++; if (s.results[sc.id]?.[pid]?.items?.[id]?.ok) { classified++; dataOk++; }
+    }
     if (sc.type === 'classify' && sc.mode === 'scope') for (const id of sc.items!) {
       if (!s.confirmedItems[sc.id]?.includes(id)) continue;
       total++; const r = s.results[sc.id]?.[pid]?.items?.[id];
@@ -450,7 +479,8 @@ export function personalCard(s: GameState, c: Content, pid: string) {
   if (calcOk >= 3) badge = { en: 'Calculator Ace', ar: 'بطل الحسابات' };
   if (catOk >= 5) badge = { en: 'Category Sleuth', ar: 'محقق الفئات' };
   if (transportTot && transportOk / transportTot >= 0.8) badge = { en: 'Transport Detective', ar: 'محقق النقل' };
-  if (total && classified === total && calcOk >= 4) badge = { en: "Auditor's Apprentice", ar: 'تلميذ المدققة' };
+  if (dataTot && dataOk / dataTot >= 0.8) badge = { en: 'Data Detective', ar: 'محقق البيانات' };
+  if (total && classified === total && calcOk >= Math.min(4, calcScenes)) badge = { en: "Auditor's Apprentice", ar: 'تلميذ المدققة' };
   const lb = leaderboard(s, c);
   const rank = lb.players.findIndex(p => p.id === pid) + 1;
   const teamRank = lb.teams.findIndex(t => t.id === s.players[pid]?.teamId) + 1;

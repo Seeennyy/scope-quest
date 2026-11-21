@@ -19,12 +19,13 @@ const content = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/content.json
     if (sc.type === 'lobby') continue;
     if (sc.type === 'story') { for (let k = 1; k < sc.lines.length; k++) await h.cmd({ type: 'next' }); continue; }
     if (sc.type === 'inventory') { await h.cmd({ type: 'next' }); log.push(`${sc.id}: total ${h.last().inventory?.total?.toFixed(1)} t`); continue; }
-    if (sc.type === 'finale') { for (let k = 0; k < 3; k++) await h.cmd({ type: 'next' }); continue; }
+    if (sc.type === 'finale') { for (let k = 0; k < (sc.steps?.length || 4) - 1; k++) await h.cmd({ type: 'next' }); continue; }
     await h.cmd({ type: 'start' });
     await h.waitFor(v => v.counts.answered >= 40, 8000).catch(() => errs.push(`${sc.id}: bots did not all answer (${h.last().counts.answered})`));
     const answered = h.last().counts.answered;
     await h.cmd({ type: 'close' });
     if (sc.type === 'classify') for (let k = 0; k < sc.items.length; k++) { await h.cmd({ type: 'next' }); if (h.last().focus?.contested) await h.cmd({ type: 'debate' }); await h.cmd({ type: 'confirm' }); }
+    if (sc.type === 'classify' && sc.drag) { await h.cmd({ type: 'next' }); const sm = h.last().summary || []; log.push(`${sc.id} summary: ${sm.length} cards, avg ${Math.round(sm.reduce((x: number, r: any) => x + r.pct, 0) / (sm.length || 1))}% correct, phase ${h.last().phase}`); if (h.last().phase !== 'confirmed' || sm.length !== sc.items.length) errs.push(`${sc.id}: no summary`); }
     else if (sc.type === 'board') { for (let k = 0; k < 4; k++) await h.cmd({ type: 'next' }); }
     else if (sc.type === 'wordcloud') await h.cmd({ type: 'next' });
     else { await h.cmd({ type: 'next' }); if (!sc.poll) await h.cmd({ type: 'confirm' }); }
@@ -40,7 +41,7 @@ const content = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/content.json
   console.log(`top 3: ${v.leaderboard.top.slice(0, 3).map((p: any) => `${p.name} ${p.score}`).join(', ')}`);
   console.log(`hardest 3 questions: ${stats.rows.slice(0, 3).map((r: any) => `${r.label} ${r.correctPct}%`).join(' | ')}`);
   console.log(`CSV rows: ${csv.trim().split('\n').length - 1}`);
-  const ok = !errs.length && v.scene.id === 'finale' && v.step === 3 && v.leaderboard.top[0].score > 0 && csv.trim().split('\n').length === 41;
+  const ok = !errs.length && v.scene.id === 'finale' && v.step === (content.scenes.at(-1).steps?.length || 4) - 1 && v.leaderboard.top[0].score > 0 && csv.trim().split('\n').length === 41;
   if (errs.length) console.log('ERRORS', errs);
   console.log(ok ? 'REHEARSAL TEST PASS' : 'REHEARSAL TEST FAIL');
   srv.kill(); process.exit(ok ? 0 : 1);

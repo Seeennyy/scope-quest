@@ -6,6 +6,7 @@ import { useLang, tr, ui, num } from '../lib/i18n';
 import { sfx, buzz } from '../lib/sound';
 import { Calculator } from '../ui/Calculator';
 import { DocCard, FactorCard } from '../ui/DocCard';
+import { binsOf, binLabel } from '../lib/bins';
 
 type Pub = any; type Me = any;
 const TOKEN_KEY = 'sq-token';
@@ -206,6 +207,7 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
     : [{ id: 'S1', label: lang === 'ar' ? 'نطاق 1' : 'Scope 1', cls: 's1' }, { id: 'S2', label: lang === 'ar' ? 'نطاق 2' : 'Scope 2', cls: 's2' }, { id: 'S3', label: lang === 'ar' ? 'نطاق 3' : 'Scope 3', cls: 's3' }];
 
   if (pub.phase === 'intro') return <Intro lang={lang} title={tr(sc.title, lang)} />;
+  if (pub.phase === 'answering' && sc.drag) return <DragView sc={sc} pub={pub} me={me} content={content} lang={lang} sock={sock} items={items} />;
 
   if (pub.phase === 'answering') {
     const done = items.every((it: any) => merged[it.id]);
@@ -255,6 +257,27 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
   const res = me.result?.items || {};
   const order = [...items].sort((a: any, b: any) => (rv[b.id] ? 1 : 0) - (rv[a.id] ? 1 : 0));
   const latest = sc.items[pub.revealItem];
+  const bins = binsOf(sc, content, lang);
+  if (sc.drag) return (
+    <div className="q">
+      {!Object.keys(rv).length && <Waiting lang={lang} />}
+      {pub.phase === 'confirmed' && <div className="sum-me">{ui('yourScore', lang)}: <b>{Object.values(res).filter((x: any) => x.ok).length}/{items.length}</b> ✅ · +{me.result?.pts || 0}</div>}
+      <div className="results">
+        {order.map((it: any) => {
+          const r = rv[it.id]; const mine = merged[it.id]; const rr = res[it.id];
+          const st = r ? (rr?.ok ? 'ok' : rr?.half ? 'half' : 'no') : 'pending';
+          return (
+            <div key={it.id} className={`res ${st} ${latest === it.id && r && pub.phase !== 'confirmed' ? 'latest' : ''}`}>
+              <div className="res-top"><span>{it.icon} {tr(it.name, lang)}</span><span className="res-mine">{mine ? binLabel(bins, mine.c) : '—'}</span></div>
+              {r ? <>
+                <div className="res-verdict">{rr?.ok ? '✅' : rr?.half ? '🟡' : '❌'} {r.ans.map((x: string) => binLabel(bins, x)).join(' / ')} {rr?.pts ? <b>+{rr.pts}</b> : null} {rr?.half ? <span className="bonus">{ui('halfRight', lang)}</span> : null}</div>
+                <div className="res-why">{tr(r.why, lang)}</div>
+                <div className="src">📚 {r.src}</div>
+              </> : <div className="res-wait">⚖️ …</div>}
+            </div>);
+        })}
+      </div>
+    </div>);
   return (
     <div className="q">
       {!Object.keys(rv).length && <Waiting lang={lang} />}
@@ -270,6 +293,68 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
                 <div className="res-why">{tr(iso ? r.isoReason : r.reason, lang)}</div>
                 <div className="src">📚 {iso ? r.isoSource : r.source}</div>
               </> : <div className="res-wait">⚖️ …</div>}
+            </div>);
+        })}
+      </div>
+    </div>);
+}
+
+// ---------------- drag cards into baskets ----------------
+function DragView({ sc, pub, me, content, lang, sock, items }: any) {
+  const bins = binsOf(sc, content, lang);
+  const ans = me.answer?.items || {};
+  const [local, setLocal] = useState<Record<string, string>>({});
+  const placed = (id: string): string | undefined => local[id] ?? ans[id]?.c;
+  const [pickId, setPickId] = useState<string | null>(null);
+  const [drag, setDrag] = useState<{ sx: number; sy: number; dx: number; dy: number; over: string | null } | null>(null);
+  const [pulse, setPulse] = useState<string | null>(null);
+  const [err, setErr] = useState('');
+  const binRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const open = items.filter((it: any) => !placed(it.id));
+  const it = pickId ? items.find((x: any) => x.id === pickId) : open[0];
+  const nPlaced = items.length - open.length;
+
+  const hit = (x: number, y: number) => {
+    for (const b of bins) { const r = binRefs.current[b.id]?.getBoundingClientRect(); if (r && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) return b.id; }
+    return null;
+  };
+  const drop = async (binId: string) => {
+    if (!it) return;
+    const id = it.id;
+    setLocal(l => ({ ...l, [id]: binId })); setPickId(null); setPulse(binId); sfx.blip();
+    setTimeout(() => setPulse(p => (p === binId ? null : p)), 500);
+    const r = await send(sock, { scene: sc.id, item: id, c: binId });
+    if (r && r.ok === false) { setErr(r.error === 'closed' ? ui('timeUp', lang) : '⚠️ ' + (r.error || '')); setLocal(l => { const n = { ...l }; delete n[id]; return n; }); }
+    else setErr('');
+  };
+  const onDown = (e: React.PointerEvent) => { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); setDrag({ sx: e.clientX, sy: e.clientY, dx: 0, dy: 0, over: null }); };
+  const onMove = (e: React.PointerEvent) => { if (!drag) return; setDrag({ ...drag, dx: e.clientX - drag.sx, dy: e.clientY - drag.sy, over: hit(e.clientX, e.clientY) }); };
+  const onUp = (e: React.PointerEvent) => { if (!drag) return; const b = hit(e.clientX, e.clientY); setDrag(null); if (b) drop(b); };
+
+  return (
+    <div className="q drag">
+      <TimerPill pub={pub} />
+      <div className="drag-progress" dir="ltr">{nPlaced}/{items.length} ✅</div>
+      <div className="drag-zone">
+        {it ? <div key={it.id} className={`card-item drag-card ${drag ? 'dragging' : ''}`} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => setDrag(null)}
+          style={drag ? { transform: `translate(${drag.dx}px, ${drag.dy}px) rotate(${Math.max(-12, Math.min(12, drag.dx / 18))}deg) scale(${drag.over ? .45 : .92})`, opacity: drag.over ? .85 : 1 } : undefined}>
+          <div className="ci-icon">{it.icon}</div>
+          <h2>{tr(it.name, lang)}</h2>
+          <p>{tr(it.desc, lang)}</p>
+          <div className="drag-hint">👇 {ui('dragHint', lang)}</div>
+        </div> : <div className="all-sorted"><div className="big-emoji">🧺</div><h2>{ui('allSorted', lang)}</h2><p className="muted">{ui('tapToMove', lang)}</p></div>}
+      </div>
+      {err && <div className="drag-err">{err}</div>}
+      <div className={`baskets n${bins.length}`}>
+        {bins.map(b => {
+          const inside = items.filter((x: any) => placed(x.id) === b.id);
+          return (
+            <div key={b.id} ref={el => { binRefs.current[b.id] = el; }} role="button" tabIndex={0} aria-label={b.label}
+              className={`basket ${b.cls} ${drag?.over === b.id ? 'over' : ''} ${pulse === b.id ? 'got' : ''}`}
+              onClick={() => it && drop(b.id)} onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && it) drop(b.id); }}>
+              <div className="bk-head"><span className="bk-ico">{b.icon}</span><b>{b.label}</b></div>
+              <div className="bk-hint">{b.hint}</div>
+              <div className="bk-in">{inside.map((x: any) => <button key={x.id} className={`bk-chip ${pickId === x.id ? 'sel' : ''}`} title={tr(x.name, lang)} onClick={e => { e.stopPropagation(); setPickId(pickId === x.id ? null : x.id); }}>{x.icon}</button>)}</div>
             </div>);
         })}
       </div>

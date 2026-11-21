@@ -97,7 +97,13 @@
     "EDGAR": "JRC/EDGAR, GHG emissions of all world countries, 2024 report",
     "EDGAR_EG": "JRC/EDGAR 2024 booklet, Egypt country page (PDF p. 114)",
     "EDGAR_GLOBAL": "JRC/EDGAR 2024 booklet, Key conclusions (PDF p. 8) and global per-capita (PDF p. 17)",
-    "T57_LEASE": "GHG Protocol Scope 3 Std Table 5.7 row 2 + Corporate Standard leased-assets guidance (Appendix F): operating lease + financial control → Scope 3 Cat 8; operational control → Scope 1"
+    "T57_LEASE": "GHG Protocol Scope 3 Std Table 5.7 row 2 + Corporate Standard leased-assets guidance (Appendix F): operating lease + financial control → Scope 3 Cat 8; operational control → Scope 1",
+    "S2_GUID": "GHG Protocol Scope 2 Guidance (2015): purchased or acquired electricity, steam, heat and cooling = Scope 2",
+    "ISO_322": "ISO 14064-1:2018, 3.2.2: primary data = a direct measurement, or a calculation based on direct measurements",
+    "ISO_323": "ISO 14064-1:2018, 3.2.3: site-specific data = primary data obtained within the organizational boundary (all site-specific data are primary)",
+    "ISO_324": "ISO 14064-1:2018, 3.2.4: secondary data = from sources other than primary data, e.g. databases and published literature",
+    "ISO_C2": "ISO 14064-1:2018, 3.2.2–3.2.3 + Annex C.2: primary vs secondary depends on who collected the data; site-specific depends on whether it comes from our own source",
+    "ISO_C5": "ISO 14064-1:2018, 3.2.4 + Annex C.5: non-site-specific data include literature data (e.g. default emission factors), calculated data and estimates"
   },
   "factors": [
     {
@@ -909,6 +915,336 @@
           "S1": "Ask them: is the customer's bin inside our boundary?"
         }
       }
+    },
+    {
+      "id": "cooling_bought",
+      "icon": "🧊",
+      "pos": [
+        1500,
+        600
+      ],
+      "transport": false,
+      "name": {
+        "en": "Chilled water bought for the head office",
+        "ar": "مياه تبريد بنشتريها للمكتب الرئيسي"
+      },
+      "desc": {
+        "en": "Our head office in the New Capital buys chilled water from the district cooling plant next door.",
+        "ar": "مكتبنا في العاصمة الإدارية بيشتري مياه متلّجة من محطة التبريد المركزي اللي جنبه."
+      },
+      "scope": "S2",
+      "cat": null,
+      "reason": {
+        "en": "Cooling we buy from someone else is purchased energy, like electricity: Scope 2. The emissions happen at the cooling plant, but they exist because we buy that cooling.",
+        "ar": "التبريد اللي بنشتريه من حد تاني طاقة مشتراة زي الكهربا: نطاق 2. الانبعاثات بتطلع في محطة التبريد، بس هي موجودة عشان إحنا بنشتري التبريد ده."
+      },
+      "source": "S2_GUID",
+      "wisdom": {
+        "talk": "Scope 2 isn't only electricity: steam, heat and cooling you buy count too.",
+        "misconception": "\"Cooling isn't electricity, so it must be Scope 3.\" Purchased cooling is Scope 2.",
+        "clause": "Scope 2 Guidance §1; ISO Annex B.3",
+        "follow": {
+          "S1": "Ask them: do we own the chiller plant that makes the cold water?",
+          "S3": "Ask them: is it a product we buy, or energy we consume?"
+        }
+      }
+    },
+    {
+      "id": "d_gas_bill",
+      "icon": "🧾",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Our gas invoices for the ovens",
+        "ar": "فواتير الغاز بتاعة الأفران"
+      },
+      "desc": {
+        "en": "Monthly bills from the gas company, with the m³ read from the meter at our bakery.",
+        "ar": "فواتير شهرية من شركة الغاز، فيها الأمتار المكعبة من العدّاد اللي في مخبزنا."
+      },
+      "dtype": "SS",
+      "dReason": {
+        "en": "Invoices come from our meter. Measured at our own asset, inside our boundary, so it's site-specific. It is also primary data: all site-specific data are primary (ISO 14064-1, 3.2.3). Primary = half points, site-specific = full points.",
+        "ar": "الفواتير جاية من عدّادنا. متقاسة عند حاجة بتاعتنا جوه حدودنا، يبقى بيانات خاصة بالموقع. وهي كمان بيانات أولية: كل البيانات الخاصة بالموقع أولية (ISO 14064-1، 3.2.3). «أولية» = نص الدرجة، «خاصة بالموقع» = الدرجة كاملة."
+      },
+      "dSource": "ISO_323",
+      "wisdom": {
+        "talk": "Invoices are the classic primary data. The sharper word is site-specific: the meter is ours, inside our boundary.",
+        "misconception": "\"An invoice is just paperwork, so it's secondary.\" The number on it is a direct measurement at our own meter.",
+        "clause": "ISO 14064-1 3.2.2, 3.2.3",
+        "follow": {
+          "S": "Ask them: who measured these m³, and where is that meter?",
+          "P": "Good instinct! Now: is the meter inside or outside our boundary?"
+        }
+      },
+      "dHalf": [
+        "P"
+      ]
+    },
+    {
+      "id": "d_desnz",
+      "icon": "📚",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "The DESNZ conversion factor for diesel",
+        "ar": "معامل التحويل بتاع DESNZ للديزل"
+      },
+      "desc": {
+        "en": "2.66 kg CO₂e per litre, taken from the UK government's published factor database.",
+        "ar": "2.66 كجم CO₂e لكل لتر، من قاعدة بيانات المعاملات المنشورة بتاعة الحكومة البريطانية."
+      },
+      "dtype": "S",
+      "dReason": {
+        "en": "Nobody measured this for us. It comes from a published database, so it's secondary data (ISO 14064-1, 3.2.4). It's the 'conversion' step that turns our litres into CO₂e.",
+        "ar": "محدش قاسه عشاننا. ده من قاعدة بيانات منشورة، يبقى بيانات ثانوية (ISO 14064-1، 3.2.4). ده خطوة «التحويل» اللي بتحوّل اللترات بتاعتنا لـ CO₂e."
+      },
+      "dSource": "ISO_324",
+      "wisdom": {
+        "talk": "Most inventories mix the two: primary activity data (our litres) × a secondary factor (DESNZ).",
+        "misconception": "\"It's an official government number, so it's primary.\" Official ≠ primary. It wasn't measured from our activity.",
+        "clause": "ISO 14064-1 3.2.4; Annex C.5",
+        "follow": {
+          "SS": "Ask them: was this number measured at our bakery?",
+          "P": "Ask them: who measured it, and was it measured from our activity?"
+        }
+      }
+    },
+    {
+      "id": "d_courier_fuel",
+      "icon": "📦",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Fuel the courier actually burnt for us",
+        "ar": "الوقود اللي شركة الشحن حرقته فعلاً عشاننا"
+      },
+      "desc": {
+        "en": "Wasla Express sends us the litres from its own fuel logs for the trips that carried our bread.",
+        "ar": "«وصلة إكسبريس» بتبعتلنا اللترات من سجلات الوقود بتاعتها للرحلات اللي شالت عيشنا."
+      },
+      "dtype": "P",
+      "dReason": {
+        "en": "It's a direct measurement, so it's primary (3.2.2). But the courier collected it, outside our organizational boundary, so it's not site-specific (3.2.3).",
+        "ar": "دي قياسات مباشرة، يبقى بيانات أولية (3.2.2). بس اللي جمعها شركة الشحن، بره حدود مؤسستنا، يبقى مش خاصة بالموقع (3.2.3)."
+      },
+      "dSource": "ISO_C2",
+      "wisdom": {
+        "talk": "This is the gold standard for Scope 3: real measured data from the supplier, instead of averages.",
+        "misconception": "\"It's about our bread, so it's site-specific.\" The vans and the fuel logs are the courier's, not ours.",
+        "clause": "ISO 14064-1 3.2.2, 3.2.3; Annex C.2",
+        "follow": {
+          "SS": "Ask them: whose vans, whose fuel logs? Inside or outside our boundary?",
+          "S": "Ask them: is this from a database, or from real fuel logs?"
+        }
+      }
+    },
+    {
+      "id": "d_elec_meter",
+      "icon": "⚡",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Our electricity meter readings",
+        "ar": "قراءات عدّاد الكهربا بتاعنا"
+      },
+      "desc": {
+        "en": "Our maintenance team reads the kWh on the bakery's own meter every month.",
+        "ar": "فريق الصيانة بيقرا الكيلووات ساعة من عدّاد المخبز كل شهر."
+      },
+      "dtype": "SS",
+      "dReason": {
+        "en": "Read directly from our own meter. Measured at our own asset, inside our boundary, so it's site-specific. It is also primary data: all site-specific data are primary (ISO 14064-1, 3.2.3). Primary = half points, site-specific = full points.",
+        "ar": "متقرية مباشرة من عدّادنا. متقاسة عند حاجة بتاعتنا جوه حدودنا، يبقى بيانات خاصة بالموقع. وهي كمان بيانات أولية: كل البيانات الخاصة بالموقع أولية (ISO 14064-1، 3.2.3). «أولية» = نص الدرجة، «خاصة بالموقع» = الدرجة كاملة."
+      },
+      "dSource": "ISO_323",
+      "wisdom": {
+        "talk": "Same family as the invoices: direct measurement at our own site.",
+        "misconception": "\"The grid emissions happen at the power plant, so the data is secondary.\" The kWh is measured here; the grid factor is the secondary part.",
+        "clause": "ISO 14064-1 3.2.3",
+        "follow": {
+          "S": "Ask them: where does the kWh number come from?",
+          "P": "Close! Is this meter inside our boundary?"
+        }
+      },
+      "dHalf": [
+        "P"
+      ]
+    },
+    {
+      "id": "d_ipcc_leak",
+      "icon": "📖",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Default fridge leak rate from IPCC guidelines",
+        "ar": "معدل تسريب افتراضي للتلاجات من إرشادات IPCC"
+      },
+      "desc": {
+        "en": "We have no refill records for the old shop fridges, so we use a % per year leak rate from the IPCC guidelines.",
+        "ar": "معندناش سجلات تعبئة للتلاجات القديمة في المحلات، فبنستخدم نسبة تسريب سنوية من إرشادات IPCC."
+      },
+      "dtype": "S",
+      "dReason": {
+        "en": "A default value from published literature, not a measurement of our fridges: secondary data. ISO Annex C.5 names 'literature data (e.g. default emission factors)'.",
+        "ar": "قيمة افتراضية من مراجع منشورة، مش قياس لتلاجاتنا: بيانات ثانوية. ملحق ISO C.5 بيذكر «بيانات المراجع (زي معاملات الانبعاث الافتراضية)»."
+      },
+      "dSource": "ISO_C5",
+      "wisdom": {
+        "talk": "Defaults are fine when measuring isn't practical, but they should be recorded and justified.",
+        "misconception": "\"It's about our own fridges, so it's site-specific.\" The subject is ours, but the number isn't measured.",
+        "clause": "ISO 14064-1 3.2.4; Annex C.5",
+        "follow": {
+          "SS": "Ask them: did anyone weigh the gas that went into those fridges?",
+          "P": "Ask them: was this measured by anyone, or is it a default from a book?"
+        }
+      }
+    },
+    {
+      "id": "d_mill_pcf",
+      "icon": "🌾",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Delta Mills' footprint per tonne of flour",
+        "ar": "بصمة «مطاحن الدلتا» لكل طن دقيق"
+      },
+      "desc": {
+        "en": "Our flour supplier calculated it from its own metered gas and electricity, and shared the result with us.",
+        "ar": "مورّد الدقيق حسبها من الغاز والكهربا المتقاسة عنده، وبعتلنا النتيجة."
+      },
+      "dtype": "P",
+      "dReason": {
+        "en": "A calculation based on direct measurements is primary data (3.2.2). The meters belong to the mill, outside our boundary, so it's not site-specific.",
+        "ar": "حساب مبني على قياسات مباشرة = بيانات أولية (3.2.2). العدّادات بتاعة المطحنة، بره حدودنا، يبقى مش خاصة بالموقع."
+      },
+      "dSource": "ISO_C2",
+      "wisdom": {
+        "talk": "Primary data can be an emission factor too, not only activity data (3.2.2, Note 1).",
+        "misconception": "\"It's a calculated number, so it's secondary.\" A calculation from direct measurements is still primary.",
+        "clause": "ISO 14064-1 3.2.2 Note 1",
+        "follow": {
+          "S": "Ask them: is this an industry average, or the mill's own measured energy?",
+          "SS": "Ask them: whose meters produced this number?"
+        }
+      }
+    },
+    {
+      "id": "d_avg_commute",
+      "icon": "🚌",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Average commute taken from a published study",
+        "ar": "متوسط مسافة المواصلات من دراسة منشورة"
+      },
+      "desc": {
+        "en": "We didn't survey staff; we multiply headcount by the average km per worker from a published transport study.",
+        "ar": "ماعملناش استبيان للموظفين؛ بنضرب عدد الموظفين في متوسط الكيلومترات للعامل من دراسة نقل منشورة."
+      },
+      "dtype": "S",
+      "dReason": {
+        "en": "An estimate built from published literature, not measured from our staff: secondary data (ISO 14064-1, 3.2.4; Annex C.5 'estimates').",
+        "ar": "تقدير مبني على مراجع منشورة، مش متقاس من موظفينا: بيانات ثانوية (ISO 14064-1، 3.2.4؛ ملحق C.5 «تقديرات»)."
+      },
+      "dSource": "ISO_C5",
+      "wisdom": {
+        "talk": "A staff survey would turn this into primary data and lower the uncertainty.",
+        "misconception": "\"Headcount is our own data, so the whole thing is site-specific.\" The km per worker is a literature average.",
+        "clause": "ISO 14064-1 3.2.4; Annex C.5",
+        "follow": {
+          "SS": "Ask them: did we ask our own staff how far they travel?",
+          "P": "Ask them: who measured these kilometres?"
+        }
+      }
+    },
+    {
+      "id": "d_fridge_log",
+      "icon": "❄️",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Technician's refill log for our cold room",
+        "ar": "سجل الفني لتعبئة غرفة التبريد"
+      },
+      "desc": {
+        "en": "Kilograms of R-134a the technician weighed into our cold room, written in our logbook.",
+        "ar": "كيلوجرامات R-134a اللي الفني وزنها وعبّاها في غرفة التبريد، ومكتوبة في سجلنا."
+      },
+      "dtype": "SS",
+      "dReason": {
+        "en": "Weighed at our own cold room. Measured at our own asset, inside our boundary, so it's site-specific. It is also primary data: all site-specific data are primary (ISO 14064-1, 3.2.3). Primary = half points, site-specific = full points.",
+        "ar": "متوزنة عند غرفة التبريد بتاعتنا. متقاسة عند حاجة بتاعتنا جوه حدودنا، يبقى بيانات خاصة بالموقع. وهي كمان بيانات أولية: كل البيانات الخاصة بالموقع أولية (ISO 14064-1، 3.2.3). «أولية» = نص الدرجة، «خاصة بالموقع» = الدرجة كاملة."
+      },
+      "dSource": "ISO_323",
+      "wisdom": {
+        "talk": "Compare with the IPCC default card: same topic, very different data quality.",
+        "misconception": "\"The technician is a contractor, so it's not site-specific.\" What counts is where it was measured: our own cold room.",
+        "clause": "ISO 14064-1 3.2.3; Annex C.4",
+        "follow": {
+          "S": "Ask them: was this weighed, or taken from a book?",
+          "P": "Close! Where is the cold room, inside or outside our boundary?"
+        }
+      },
+      "dHalf": [
+        "P"
+      ]
+    },
+    {
+      "id": "d_bag_supplier",
+      "icon": "🛍️",
+      "pos": [
+        0,
+        0
+      ],
+      "transport": false,
+      "name": {
+        "en": "Bag maker's measured energy per 1,000 bags",
+        "ar": "طاقة مصنع الأكياس المتقاسة لكل 1000 كيس"
+      },
+      "desc": {
+        "en": "The packaging supplier meters the electricity its machines use and gives us the kWh per 1,000 bags.",
+        "ar": "مورّد التغليف بيقيس كهربا مكناته وبيدّينا الكيلووات ساعة لكل 1000 كيس."
+      },
+      "dtype": "P",
+      "dReason": {
+        "en": "Directly measured, so primary (3.2.2). Collected at the supplier's factory, outside our boundary, so not site-specific (3.2.3).",
+        "ar": "متقاسة مباشرة، يبقى أولية (3.2.2). اتجمعت في مصنع المورّد، بره حدودنا، يبقى مش خاصة بالموقع (3.2.3)."
+      },
+      "dSource": "ISO_C2",
+      "wisdom": {
+        "talk": "Supplier-specific primary data beats a database average for the same material.",
+        "misconception": "\"Anything from a supplier is secondary.\" Secondary means databases and literature, not 'someone else measured it'.",
+        "clause": "ISO 14064-1 3.2.2–3.2.4",
+        "follow": {
+          "S": "Ask them: is this from a database, or from the supplier's own meters?",
+          "SS": "Ask them: whose factory is it?"
+        }
+      }
     }
   ],
   "calcs": {
@@ -1423,498 +1759,160 @@
       "type": "lobby"
     },
     {
-      "id": "coldopen",
-      "type": "vote",
-      "points": 50,
-      "time": 30,
-      "source": "EDGAR_EG",
-      "q": {
-        "en": "Egypt emitted 336 Mt CO₂eq in 2023. How much is that per person?",
-        "ar": "مصر طلّعت 336 مليون طن مكافئ CO₂ سنة 2023. يعني كام للفرد؟"
-      },
-      "options": [
-        {
-          "id": "a",
-          "t": {
-            "en": "0.3 t",
-            "ar": "0.3 طن"
-          }
-        },
-        {
-          "id": "b",
-          "t": {
-            "en": "3.1 t",
-            "ar": "3.1 طن"
-          }
-        },
-        {
-          "id": "c",
-          "t": {
-            "en": "13 t",
-            "ar": "13 طن"
-          }
-        },
-        {
-          "id": "d",
-          "t": {
-            "en": "31 t",
-            "ar": "31 طن"
-          }
-        }
-      ],
-      "correct": "b",
-      "reveal": [
-        {
-          "en": "3.1 t CO₂eq per Egyptian (335.968 Mt ÷ 108.1 M people). World average: 6.59 t.",
-          "ar": "3.1 طن لكل مصري (335.968 مليون طن ÷ 108.1 مليون نسمة). المتوسط العالمي: 6.59 طن."
-        },
-        {
-          "en": "But Egypt's TRANSPORT emissions are up +221% since 1990, faster than any other sector except power.",
-          "ar": "لكن انبعاثات النقل في مصر زادت +221% من 1990، أسرع من أي قطاع ما عدا الكهرباء."
-        },
-        {
-          "en": "World total 2023: 53.0 Gt CO₂eq (excl. land use), a new record.",
-          "ar": "إجمالي العالم 2023: 53.0 جيجا طن (بدون استخدام الأراضي)، رقم قياسي جديد."
-        }
-      ],
-      "revealSource": "EDGAR_EG + EDGAR_GLOBAL",
-      "wisdom": {
-        "talk": "Per person, Egypt is below half the world average. But transport has tripled since 1990 (+221%). Bakeries live on trucks, so today we follow the vans.",
-        "misconception": "Mixing up Mt and t: 336 Mt ÷ 108 M people = 3.1 t.",
-        "clause": "EDGAR 2024, Egypt page (p. 114): 335.968 Mt, 3.107 t/cap, Transport +221% vs 1990, all sectors +128%"
-      }
-    },
-    {
-      "id": "story_hired",
-      "type": "story",
-      "lines": [
-        {
-          "en": "Welcome to Nile Loaf! I'm Nour. We bake 200,000 loaves a day across Greater Cairo.",
-          "ar": "أهلاً بيكم في نايل لوف! أنا نور. بنخبز 200 ألف رغيف في اليوم في القاهرة الكبرى."
-        },
-        {
-          "en": "You're my new sustainability team. Congratulations, and sorry.",
-          "ar": "إنتو فريق الاستدامة الجديد بتاعي. مبروك… ومعلش."
-        },
-        {
-          "en": "The board meets TODAY. They want our first carbon inventory and a plan to cut it.",
-          "ar": "مجلس الإدارة مجتمع النهارده. عايزين أول جرد كربون لينا وخطة نقلله."
-        },
-        {
-          "en": "Every answer you give goes to our Chief Auditor. Nothing is official until she stamps it.",
-          "ar": "كل إجابة هتروح لكبيرة المدققين. مفيش حاجة رسمية غير لما هي تختمها."
-        }
-      ],
-      "showConsolidation": true
-    },
-    {
-      "id": "poll_bigscope",
-      "type": "vote",
-      "poll": true,
-      "time": 20,
-      "q": {
-        "en": "Prediction: which scope will be the BIGGEST for a bakery chain like Nile Loaf?",
-        "ar": "توقّع: أنهي نطاق هيبقى الأكبر لسلسلة مخابز زي نايل لوف؟"
-      },
-      "options": [
-        {
-          "id": "S1",
-          "t": {
-            "en": "Scope 1",
-            "ar": "النطاق 1"
-          }
-        },
-        {
-          "id": "S2",
-          "t": {
-            "en": "Scope 2",
-            "ar": "النطاق 2"
-          }
-        },
-        {
-          "id": "S3",
-          "t": {
-            "en": "Scope 3",
-            "ar": "النطاق 3"
-          }
-        }
-      ],
-      "wisdom": {
-        "talk": "Don't reveal the answer. We'll check this prediction against the real inventory after Chapter 3.",
-        "misconception": "Most people pick Scope 1 because it's the most visible.",
-        "clause": "Payoff on the Inventory screen"
-      }
-    },
-    {
-      "id": "ch1_intro",
-      "type": "story",
-      "chapter": 1,
-      "title": {
-        "en": "Chapter 1 · The Walkthrough",
-        "ar": "الفصل 1 · الجولة"
-      },
-      "lines": [
-        {
-          "en": "Let's walk the company. I'll light up four places at a time.",
-          "ar": "يلا نلف على الشركة. هنوّر أربع أماكن كل مرة."
-        },
-        {
-          "en": "Sort each one: Scope 1, 2 or 3. Name the Scope 3 category for a bonus.",
-          "ar": "صنّفوا كل واحد: نطاق 1 ولا 2 ولا 3. ولو 3، قولوا الفئة وخدوا بونص."
-        },
-        {
-          "en": "Careful: half of these are vans and trucks. Not every truck is Scope 3.",
-          "ar": "خلّوا بالكم: نص الحاجات دي فانات وعربيات نقل… ومش كل عربية نطاق 3."
-        }
-      ]
-    },
-    {
-      "id": "ch1_a",
+      "id": "act1",
       "type": "classify",
       "mode": "scope",
-      "time": 75,
+      "drag": true,
+      "time": 90,
       "title": {
-        "en": "Batch 1 · Our own operations",
-        "ar": "الدفعة 1 · عملياتنا"
+        "en": "Activity 1 · Sort the scopes",
+        "ar": "النشاط 1 · رتّب النطاقات"
+      },
+      "ceo": {
+        "en": "Drag each emission source into the right basket: Scope 1, 2 or 3.",
+        "ar": "اسحب كل مصدر انبعاثات للسلة الصح: نطاق 1 أو 2 أو 3."
       },
       "items": [
         "oven_gas",
-        "own_diesel_vans",
         "grid_power",
-        "own_ev_vans"
-      ],
-      "ceo": {
-        "en": "Start at home: our ovens, our vans, our depot.",
-        "ar": "نبدأ من البيت: أفراننا وفاناتنا وجراجنا."
-      }
-    },
-    {
-      "id": "ch1_b",
-      "type": "classify",
-      "mode": "scope",
-      "time": 75,
-      "title": {
-        "en": "Batch 2 · Cold room, lease & courier",
-        "ar": "الدفعة 2 · التبريد والإيجار والشحن"
-      },
-      "items": [
-        "fridge_leak",
-        "leased_vans",
-        "generator",
-        "courier"
-      ],
-      "ceo": {
-        "en": "Now it gets spicy. Watch who owns, who drives, who pays.",
-        "ar": "دلوقتي هتسخن. ركزوا مين بيملك ومين بيسوق ومين بيدفع."
-      }
-    },
-    {
-      "id": "ch1_c",
-      "type": "classify",
-      "mode": "scope",
-      "time": 75,
-      "title": {
-        "en": "Batch 3 · Upstream",
-        "ar": "الدفعة 3 · المنبع"
-      },
-      "items": [
-        "mill_truck",
-        "wheat_truck",
-        "van_factory",
-        "diesel_delivery"
-      ],
-      "ceo": {
-        "en": "Upstream of our ovens… four transport cases, four different answers?",
-        "ar": "قبل ما نوصل لأفراننا… أربع حالات نقل، وأربع إجابات مختلفة؟"
-      }
-    },
-    {
-      "id": "ch1_d",
-      "type": "classify",
-      "mode": "scope",
-      "time": 75,
-      "title": {
-        "en": "Batch 4 · People & customers",
-        "ar": "الدفعة 4 · الناس والعملاء"
-      },
-      "items": [
-        "flights",
-        "commuting",
-        "app_delivery",
-        "packaging"
-      ],
-      "ceo": {
-        "en": "Last stop: our people and the bread after it leaves our hands.",
-        "ar": "آخر محطة: ناسنا، والعيش بعد ما يخرج من إيدينا."
-      }
-    },
-    {
-      "id": "wordcloud",
-      "type": "wordcloud",
-      "time": 30,
-      "q": {
-        "en": "One word: how do you feel about Scope 3?",
-        "ar": "كلمة واحدة: إحساسك إيه ناحية النطاق 3؟"
-      },
-      "wisdom": {
-        "talk": "Read two or three words out loud. Scope 3 is often the majority of a company's footprint (57% even in our partial inventory) and the hardest to measure. Both feelings are justified.",
-        "misconception": "",
-        "clause": ""
-      }
-    },
-    {
-      "id": "ch2_intro",
-      "type": "story",
-      "chapter": 2,
-      "title": {
-        "en": "Chapter 2 · Two Rulebooks",
-        "ar": "الفصل 2 · كتابين قواعد"
-      },
-      "lines": [
-        {
-          "en": "Plot twist: our European buyer wants the inventory per ISO 14064-1.",
-          "ar": "مفاجأة: العميل الأوروبي عايز الجرد حسب ISO 14064-1."
-        },
-        {
-          "en": "Same company, same trucks, but six categories instead of three scopes.",
-          "ar": "نفس الشركة ونفس العربيات… بس ست فئات بدل تلات نطاقات."
-        },
-        {
-          "en": "Quick round. Drop each source into an ISO category.",
-          "ar": "جولة سريعة. حطّوا كل مصدر في فئة ISO."
-        }
-      ]
-    },
-    {
-      "id": "ch2_iso",
-      "type": "classify",
-      "mode": "iso",
-      "time": 90,
-      "title": {
-        "en": "ISO 14064-1 · Six categories",
-        "ar": "ISO 14064-1 · ست فئات"
-      },
-      "items": [
-        "own_diesel_vans",
-        "own_ev_vans",
         "courier",
-        "leased_vans",
-        "wheat_truck",
+        "fridge_leak",
         "flights",
-        "van_factory",
-        "packaging"
+        "own_ev_vans",
+        "own_diesel_vans",
+        "commuting",
+        "cooling_bought"
       ],
-      "source": "ISO_524",
-      "insight": {
-        "en": "GHG Protocol spreads transport across Scope 1, 2 and 3 (Cat 1, 2, 3, 4, 6, 7, 8, 9). ISO 14064-1 gives most transport services their own Category 3. Fuel burnt in vehicles you own goes to Category 1; transport already inside purchased goods, and building vehicles, sit in Category 4.",
-        "ar": "بروتوكول GHG بيوزّع النقل على النطاقات 1 و2 و3 (فئات 1، 2، 3، 4، 6، 7، 8، 9). ISO 14064-1 بيدّي معظم خدمات النقل فئة خاصة بيها: الفئة 3. الوقود المحروق في عربياتك يروح للفئة 1، والنقل اللي جوّه السلع المشتراة وتصنيع العربيات في الفئة 4."
-      },
-      "wisdom": {
-        "talk": "The key insight: two rulebooks, same reality. ISO gives transport its own category (5.2.4 c), while GHG Protocol scatters it by ownership and who pays.",
-        "misconception": "\"ISO categories are just Scopes renumbered.\" Category 3 cuts across GHG Protocol's Scope 3 categories.",
-        "clause": "ISO 14064-1:2018 5.2.4 a)–f), Annex B.4"
-      }
-    },
-    {
-      "id": "ch3_intro",
-      "type": "story",
-      "chapter": 3,
-      "title": {
-        "en": "Chapter 3 · The Evidence Files",
-        "ar": "الفصل 3 · ملفات الأدلة"
-      },
-      "lines": [
+      "bins": [
         {
-          "en": "Classifying is half the job. The board wants TONNES.",
-          "ar": "التصنيف نص الشغل. المجلس عايز أطنان."
+          "id": "S1",
+          "icon": "🔥",
+          "t": {
+            "en": "Scope 1",
+            "ar": "نطاق 1"
+          },
+          "hint": {
+            "en": "Direct: what we own or control burns or leaks",
+            "ar": "مباشر: اللي بنملكه أو بنتحكم فيه بيحرق أو بيسرّب"
+          },
+          "cls": "s1"
         },
         {
-          "en": "I'll send real documents to your phones. Activity × emission factor (× GWP if it's a gas).",
-          "ar": "هبعتلكم مستندات حقيقية على موبايلاتكم. النشاط × معامل الانبعاث (× GWP لو غاز)."
+          "id": "S2",
+          "icon": "⚡",
+          "t": {
+            "en": "Scope 2",
+            "ar": "نطاق 2"
+          },
+          "hint": {
+            "en": "Energy we buy: electricity, steam, heat, cooling",
+            "ar": "طاقة بنشتريها: كهربا، بخار، حرارة، تبريد"
+          },
+          "cls": "s2"
         },
         {
-          "en": "Answer in tonnes CO₂e. Within ±5% counts.",
-          "ar": "الإجابة بالطن مكافئ CO₂. فرق ±5% مقبول."
+          "id": "S3",
+          "icon": "🔗",
+          "t": {
+            "en": "Scope 3",
+            "ar": "نطاق 3"
+          },
+          "hint": {
+            "en": "Everything else in our value chain",
+            "ar": "كل حاجة تانية في سلسلة القيمة"
+          },
+          "cls": "s3"
         }
       ]
     },
     {
-      "id": "calc_vans",
-      "type": "calc",
-      "calc": "calc_vans",
-      "time": 90,
+      "id": "act2",
+      "type": "classify",
+      "mode": "data",
+      "drag": true,
+      "time": 120,
       "title": {
-        "en": "Evidence #1 · The fuel card",
-        "ar": "الدليل 1 · كارت البنزينة"
-      }
-    },
-    {
-      "id": "calc_elec",
-      "type": "calc",
-      "calc": "calc_elec",
-      "time": 90,
-      "title": {
-        "en": "Evidence #2 · The electricity bill",
-        "ar": "الدليل 2 · فاتورة الكهرباء"
-      }
-    },
-    {
-      "id": "calc_fridge",
-      "type": "calc",
-      "calc": "calc_fridge",
-      "time": 90,
-      "title": {
-        "en": "Evidence #3 · The refrigerant log",
-        "ar": "الدليل 3 · سجل غاز التبريد"
-      }
-    },
-    {
-      "id": "calc_flights",
-      "type": "calc",
-      "calc": "calc_flights",
-      "time": 90,
-      "title": {
-        "en": "Evidence #4 · The trip sheet",
-        "ar": "الدليل 4 · كشف السفر"
-      }
-    },
-    {
-      "id": "methods_courier",
-      "type": "methods",
-      "time": 100,
-      "title": {
-        "en": "One trip, three methods",
-        "ar": "رحلة واحدة… تلات طرق"
+        "en": "Activity 2 · What kind of data is it?",
+        "ar": "النشاط 2 · نوع البيانات إيه؟"
       },
       "ceo": {
-        "en": "Wasla Express sent ONE invoice. You're split into three teams: fuel, distance, spend. Same trips. Let's see.",
-        "ar": "وصلة إكسبريس بعتت فاتورة واحدة. اتقسمتوا تلات فرق: وقود، مسافة، إنفاق. نفس الرحلات… نشوف."
-      }
-    },
-    {
-      "id": "inventory",
-      "type": "inventory",
-      "title": {
-        "en": "Nile Loaf's footprint so far",
-        "ar": "بصمة نايل لوف لحد دلوقتي"
+        "en": "Drag each piece of data into its basket. Ask: who measured it, and where?",
+        "ar": "اسحب كل معلومة للسلة بتاعتها. اسأل: مين قاسها، وفين؟"
       },
-      "wisdom": {
-        "talk": "Scope 3 is the biggest, and the flour alone outweighs everything we burn. Compare with the room's prediction from the start.",
-        "misconception": "\"Our own fleet is our biggest problem.\" It's the most visible, not the biggest.",
-        "clause": "Inventory = S1 + S2 (location) + quantified S3. Commuting and other categories are not yet measured."
-      }
-    },
-    {
-      "id": "poll_method",
-      "type": "vote",
-      "poll": true,
-      "time": 20,
-      "q": {
-        "en": "Which courier number goes in the board report?",
-        "ar": "أنهي رقم للشحن يدخل تقرير المجلس؟"
-      },
-      "options": [
-        {
-          "id": "fuel",
-          "t": {
-            "en": "Fuel-based 12.8 t",
-            "ar": "الوقود 12.8 طن"
-          }
-        },
-        {
-          "id": "distance",
-          "t": {
-            "en": "Distance-based 16.0 t",
-            "ar": "المسافة 16.0 طن"
-          }
-        },
-        {
-          "id": "spend",
-          "t": {
-            "en": "Spend-based 19.6 t",
-            "ar": "الإنفاق 19.6 طن"
-          }
-        },
-        {
-          "id": "avg",
-          "t": {
-            "en": "The average of all three",
-            "ar": "متوسط التلاتة"
-          }
-        }
+      "source": "ISO_322",
+      "items": [
+        "d_gas_bill",
+        "d_desnz",
+        "d_courier_fuel",
+        "d_elec_meter",
+        "d_ipcc_leak",
+        "d_mill_pcf",
+        "d_avg_commute",
+        "d_fridge_log",
+        "d_bag_supplier"
       ],
-      "wisdom": {
-        "talk": "We used fuel-based: it's the courier's own, specific data. Averaging methods mixes good data with bad. Disclose the method and improve data quality over time.",
-        "misconception": "Averaging the three. That's not a recognised method.",
-        "clause": "Deck slide 9; Scope 3 Calc Guidance (data quality)"
-      }
-    },
-    {
-      "id": "ch4_intro",
-      "type": "story",
-      "chapter": 4,
-      "title": {
-        "en": "Chapter 4 · The Board Meeting",
-        "ar": "الفصل 4 · اجتماع المجلس"
-      },
-      "lines": [
+      "bins": [
         {
-          "en": "The board is in the room. Each team gets 100 coins.",
-          "ar": "المجلس وصل. كل فريق معاه 100 عملة."
+          "id": "SS",
+          "icon": "🏭",
+          "t": {
+            "en": "Site-specific",
+            "ar": "خاصة بالموقع"
+          },
+          "hint": {
+            "en": "Primary data measured inside our own boundary",
+            "ar": "بيانات أولية متقاسة جوه حدودنا"
+          },
+          "cls": "dss"
         },
         {
-          "en": "Pick your reduction levers. Your team's plan = the levers most of you pick.",
-          "ar": "اختاروا أدوات التخفيض. خطة فريقكم = الأدوات اللي أغلبكم يختارها."
+          "id": "P",
+          "icon": "📏",
+          "t": {
+            "en": "Primary",
+            "ar": "أولية"
+          },
+          "hint": {
+            "en": "Measured directly, but outside our boundary",
+            "ar": "متقاسة مباشرةً، بس بره حدودنا"
+          },
+          "cls": "dp"
         },
         {
-          "en": "We judge on what the atmosphere sees: location-based tonnes.",
-          "ar": "الحكم على اللي الجو بيشوفه: الأطنان حسب الموقع."
+          "id": "S",
+          "icon": "📚",
+          "t": {
+            "en": "Secondary",
+            "ar": "ثانوية"
+          },
+          "hint": {
+            "en": "From databases, literature, defaults, estimates",
+            "ar": "من قواعد بيانات ومراجع وقيم افتراضية وتقديرات"
+          },
+          "cls": "ds"
         }
       ]
-    },
-    {
-      "id": "board",
-      "type": "board",
-      "time": 90,
-      "title": {
-        "en": "The Board Meeting",
-        "ar": "اجتماع المجلس"
-      },
-      "honest": [
-        {
-          "en": "⚡ Electric vans don't make emissions vanish. They MOVE from Scope 1 to Scope 2 (on Egypt's gas-heavy grid).",
-          "ar": "⚡ الفانات الكهربا مش بتخفي الانبعاثات… بتنقلها من النطاق 1 للنطاق 2 (على شبكة مصر اللي معتمدة على الغاز)."
-        },
-        {
-          "en": "📜 A green electricity contract changes MARKET-based Scope 2, not LOCATION-based Scope 2. You must report both.",
-          "ar": "📜 عقد الكهرباء الخضراء بيغيّر النطاق 2 حسب السوق، مش حسب الموقع. ولازم تبلّغ الاتنين."
-        },
-        {
-          "en": "🚌 The shuttle might be great, but we never measured commuting, so we can't show a number. You can't manage what you don't measure.",
-          "ar": "🚌 الأتوبيس ممكن يكون ممتاز… بس إحنا ما قسناش التنقل، فمفيش رقم. اللي ما يتقاسش ما يتداراش."
-        }
-      ],
-      "wisdom": {
-        "talk": "Read the honest moments slowly. The leaderboard uses location-based, so the green contract scored zero. Ask: is that fair? (Scope 2 Guidance requires dual reporting.)",
-        "misconception": "\"Buy certificates and you're done.\"",
-        "clause": "Scope 2 Guidance: dual reporting (location- and market-based)"
-      }
     },
     {
       "id": "finale",
       "type": "finale",
+      "steps": [
+        "podium",
+        "top",
+        "takeaways"
+      ],
       "takeaways": [
         {
-          "en": "Ownership and control decide the scope, not the activity. A van can be Scope 1, 2 or 3.",
-          "ar": "الملكية والسيطرة هي اللي بتحدد النطاق، مش النشاط. الفان ممكن يبقى نطاق 1 أو 2 أو 3."
+          "en": "Ownership and control decide the scope: what we own or control and burn is Scope 1, energy we buy is Scope 2, the rest of the value chain is Scope 3.",
+          "ar": "الملكية والسيطرة هي اللي بتحدد النطاق: اللي بنملكه أو بنتحكم فيه وبيحرق = نطاق 1، الطاقة اللي بنشتريها = نطاق 2، وباقي سلسلة القيمة = نطاق 3."
         },
         {
-          "en": "Same reality, two rulebooks: GHG Protocol spreads transport across scopes, ISO 14064-1 gathers most transport services in Category 3.",
-          "ar": "نفس الواقع، كتابين قواعد: بروتوكول GHG بيوزّع النقل على النطاقات، وISO 14064-1 بيجمع معظم خدمات النقل في الفئة 3."
+          "en": "Primary data come from a direct measurement, or a calculation based on one. When it's measured inside our own boundary (our invoices, our meters), it's site-specific. All site-specific data are primary.",
+          "ar": "البيانات الأولية جاية من قياس مباشر أو حساب مبني عليه. ولو متقاسة جوه حدودنا (فواتيرنا وعدّاداتنا) تبقى خاصة بالموقع. وكل البيانات الخاصة بالموقع أولية."
         },
         {
-          "en": "Your number depends on your method. Prefer specific activity data (fuel > distance > spend, per the Scope 3 Calculation Guidance) and disclose it.",
-          "ar": "الرقم بيعتمد على الطريقة. فضّل بيانات النشاط المحددة (وقود > مسافة > إنفاق، حسب إرشادات حساب النطاق 3) وأفصح عنها."
+          "en": "Secondary data come from databases and published literature, like conversion factors and defaults. Use them when measuring isn't practical, and record where they came from.",
+          "ar": "البيانات الثانوية جاية من قواعد البيانات والمراجع المنشورة، زي معاملات التحويل والقيم الافتراضية. نستخدمها لما القياس مايبقاش عملي، ونسجّل مصدرها."
         }
       ]
     }

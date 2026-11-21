@@ -9,13 +9,12 @@ const PORT = 3201;
   const h = await host(PORT);
   const ps: P[] = [];
   for (let i = 0; i < 30; i++) ps.push(await player(PORT, `Restart${i}`));
-  // cold open: everyone answers, half right
+  // Activity 1: start the timer, 20 of 30 players drop every card (all correct)
+  const act = JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '../content/content.json'), 'utf8'));
+  const sc = act.scenes.find((x: any) => x.id === 'act1');
+  const key = (id: string) => act.items.find((i: any) => i.id === id).scope;
   await h.cmd({ type: 'next' }); await h.cmd({ type: 'start' });
-  await Promise.all(ps.map((p, i) => new Promise(r => p.s.emit('answer', { scene: 'coldopen', c: i % 2 ? 'b' : 'a' }, r))));
-  await h.cmd({ type: 'close' }); await h.cmd({ type: 'next' }); await h.cmd({ type: 'confirm' });
-  // jump to Chapter 1 batch 1, start the timer, 20 of 30 players answer every card
-  await h.cmd({ type: 'goto', idx: 5 }); await h.cmd({ type: 'start' });
-  for (const p of ps.slice(0, 20)) for (const [item, c] of [['oven_gas', 'S1'], ['own_diesel_vans', 'S1'], ['grid_power', 'S2'], ['own_ev_vans', 'S2']]) await new Promise(r => p.s.emit('answer', { scene: 'ch1_a', item, c }, r));
+  for (const p of ps.slice(0, 20)) for (const item of sc.items) await new Promise(r => p.s.emit('answer', { scene: 'act1', item, c: key(item) }, r));
   await sleep(300);
   const before = h.last();
   const scoresBefore = Object.fromEntries(ps.map(p => [p.me.pid, p.me.score]));
@@ -41,13 +40,13 @@ const PORT = 3201;
   const samePids = ps.every(p => scoresBefore[p.me.pid] !== undefined);
   console.log(`AFTER restart (${tUp - tKill} ms down): scene=${after.scene.id} phase=${after.phase} answered=${after.counts.answered}/${after.counts.total} reconnected=${ps.filter(p => p.s.connected).length}/30 totalScore=${sumAfter} samePlayers=${samePids}`);
   // the remaining 10 can still answer, and the auditor can confirm
-  for (const p of ps.slice(20)) for (const [item, c] of [['oven_gas', 'S1'], ['own_diesel_vans', 'S3'], ['grid_power', 'S2'], ['own_ev_vans', 'S1']]) await new Promise(r => p.s.emit('answer', { scene: 'ch1_a', item, c }, r));
+  for (const p of ps.slice(20)) for (const item of sc.items) await new Promise(r => p.s.emit('answer', { scene: 'act1', item, c: 'S3' }, r));
   await sleep(300);
   const afterAns = h2.last().counts.answered;
   await h2.cmd({ type: 'close' }); await h2.cmd({ type: 'next' }); await h2.cmd({ type: 'confirm' });
   await sleep(300);
   const sumConfirmed = ps.reduce((a, p) => a + p.me.score, 0);
-  const ok = after.scene.id === 'ch1_a' && after.phase === 'answering' && after.counts.answered === before.counts.answered && sumAfter === sumBefore && samePids && ps.every(p => p.s.connected) && afterAns === 30 && sumConfirmed > sumAfter;
+  const ok = sumConfirmed > 0 && after.scene.id === 'act1' && after.phase === 'answering' && after.counts.answered === before.counts.answered && sumAfter === sumBefore && samePids && ps.every(p => p.s.connected) && afterAns === 30 && sumConfirmed > sumAfter;
   console.log(`after restart: late players answered -> ${afterAns}/30; confirm item 1 -> total score ${sumConfirmed}`);
   console.log(ok ? 'RESTART TEST PASS' : 'RESTART TEST FAIL');
   srv.kill(); process.exit(ok ? 0 : 1);

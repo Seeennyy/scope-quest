@@ -1,6 +1,12 @@
 # 🥖 Scope Quest: the Nile Loaf Carbon Inventory
 
-A live, story-driven GHG accounting game for a lecture hall (30–150+ people on their own phones, no app, no account). The audience becomes the sustainability team of **Nile Loaf**, a fictional Cairo bakery chain, and builds its first carbon inventory: classify sources into Scopes 1/2/3, translate them into ISO 14064-1's six categories, calculate CO₂e from realistic documents, compare three transport methods, and decide reduction levers at the board meeting. The instructor plays the **Chief Auditor**: nothing is official until she stamps it.
+A live GHG accounting game for a lecture hall (30–150+ people on their own phones, no app, no account). The audience works for **Nile Loaf**, a fictional Cairo bakery chain. The instructor plays the **Chief Auditor**: nothing is official until she stamps it.
+
+**The version in use has two activities** (about 20 minutes):
+1. **Sort the scopes.** Each phone gets 9 emission sources as cards and drags each one into a **Scope 1 / Scope 2 / Scope 3** basket.
+2. **What kind of data is it?** 9 pieces of data, dragged into **Site-specific / Primary / Secondary** baskets (ISO 14064-1:2018, 3.2.2–3.2.4).
+
+After each activity the projector reveals card by card how many people put it in each basket, then a **results summary** shows the % of the room that got every card right. The finale shows the team podium, the top players and three takeaways. The full 23-scene game (cold open, ISO categories, calculations, board meeting) is kept in `content/content-full-23-scenes.json`: copy it over `content/content.json` to bring it back.
 
 | View | URL | Who |
 |---|---|---|
@@ -63,7 +69,8 @@ Everything the audience sees or hears, plus every source, factor, answer key and
 - If you change a factor, also change the matching calc `answer` and `formula` (the wisdom card shows them to you). `npm run test:engine` re-checks that every answer equals activity × factor.
 
 ## Features
-- **Story:** CEO "Madame Nour" narrates (typewriter + sound). Cold open uses real EDGAR 2024 Egypt data. Four chapters, pulse polls, a word cloud, and a finale with podium, top individuals, a one-page inventory report, three takeaways and a personal result card on each phone.
+- **Drag-to-basket activities:** cards are dragged with a finger (or tapped, then a basket tapped: same result, and accessible). A card can be moved to another basket until answers are locked. The projector shows live basket counts, then per-card splits (Show split → Confirm), then a results summary with % correct per card and the most common wrong basket. Remote: **⏩ All → summary** confirms every remaining card at once.
+- **Finale:** team podium, top individuals, takeaways, and a personal result card on each phone. (The full version adds the story, cold open, polls, word cloud, calculations and a one-page inventory report.)
 - **Instructor control:** nothing advances unless pressed. Start/pause timer, +15 s, lock, show split, **Debate moment** (picks one nickname per side when no answer has more than 60%), **Confirm** (stamp + sound), leaderboard, skip, back, jump to any scene, blackout, QR overlay, auto-advance (opt-in), screen language EN/AR, mute.
 - **Wisdom cards** with live stats ("41% chose S1. Ask them who controls the van"), name-calling lists, Ask-the-Auditor queue with pin-to-screen, remove player, rehearsal bots, CSV export, stats page.
 - **Phones:** one big action per screen, thumb-size targets, vibration, Arabic RTL toggle, built-in calculator, automatic rejoin after lock/reload/signal loss (token in localStorage), late join anytime, profanity-filtered nicknames, answer keys never sent to phones before Confirm.
@@ -72,13 +79,14 @@ Everything the audience sees or hears, plus every source, factor, answer key and
 ## Tests
 ```bash
 npm run build
-npm run test:engine     # answer keys = activity × factor, scoring, board maths, no answer leaks
-npm run test:load       # 250 players play the full game over WebSockets; latency report
+npm run test:engine     # answer keys, scoring (incl. half points), summary, no answer leaks
+npm run test:load       # 250 players play the whole game over WebSockets; latency report
 npm run test:restart    # SIGKILL mid-question → restart → session + scores intact
 npx tsx tests/offline.ts   # real phone page loses network for 20 s → rejoins with score
 npm run test:e2e        # rehearsal mode: instructor + 40 bots to the finale
 npx tsx tests/perf.ts      # phone load time on throttled 4G + 4× CPU slowdown
-npx tsx tests/shots.ts all both   # screenshots of every screen (EN + AR, phone + 1080p + 720p)
+npx tsx tests/shots.ts both       # real mouse drags on a phone + screenshots (EN + AR, phone + 1080p + 720p)
+npx tsx tests/touch.ts            # finger (touch) drag into a basket on an emulated phone
 ```
 Results from the last run are in [TESTING.md](TESTING.md).
 

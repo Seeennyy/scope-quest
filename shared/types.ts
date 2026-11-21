@@ -8,7 +8,10 @@ export interface Item {
   scope?: 'S1' | 'S2' | 'S3'; cat?: string | null; iso?: number[]; isoAlso?: number[];
   reason?: L10n; source?: string; isoReason?: L10n; isoSource?: string;
   wisdom?: Wisdom & { follow?: Record<string, string> };
+  // data-type activity (ISO 14064-1 3.2.2–3.2.4): SS site-specific, P primary (not site-specific), S secondary
+  dtype?: string; dHalf?: string[]; dReason?: L10n; dSource?: string;
 }
+export interface Bin { id: string; icon: string; t: L10n; hint: L10n; cls: string }
 export interface Wisdom { talk: string; misconception: string; clause: string }
 export interface DocLine { k: L10n; v: L10n; hl?: boolean; m?: string }
 export interface Doc { kind: string; from: L10n; lines: DocLine[] }
@@ -21,7 +24,7 @@ export interface Scene {
   id: string; type: 'lobby' | 'story' | 'vote' | 'classify' | 'wordcloud' | 'calc' | 'methods' | 'inventory' | 'board' | 'finale';
   title?: L10n; chapter?: number; time?: number; points?: number; poll?: boolean;
   q?: L10n; options?: { id: string; t: L10n }[]; correct?: string; reveal?: L10n[]; revealSource?: string; source?: string;
-  lines?: L10n[]; showConsolidation?: boolean; mode?: 'scope' | 'iso'; items?: string[]; ceo?: L10n; insight?: L10n;
+  lines?: L10n[]; showConsolidation?: boolean; mode?: 'scope' | 'iso' | 'data'; drag?: boolean; bins?: Bin[]; steps?: ('podium' | 'top' | 'report' | 'takeaways')[]; items?: string[]; ceo?: L10n; insight?: L10n;
   calc?: string; honest?: L10n[]; takeaways?: L10n[]; wisdom?: Wisdom;
 }
 
@@ -56,7 +59,7 @@ export interface AnswerRec {
   levers?: string[];                // board
   w?: string;                       // wordcloud
 }
-export interface ResultRec { pts: number; ok?: boolean; close?: boolean; unitSlip?: boolean; items?: Record<string, { ok: boolean; catOk?: boolean; pts: number }> }
+export interface ResultRec { pts: number; ok?: boolean; close?: boolean; unitSlip?: boolean; items?: Record<string, { ok: boolean; half?: boolean; catOk?: boolean; pts: number }> }
 
 export interface Ask { id: string; pid: string; name: string; text: string; at: number }
 
@@ -82,7 +85,7 @@ export interface GameState {
 export type HostCmd =
   | { type: 'next' } | { type: 'back' } | { type: 'goto'; idx: number } | { type: 'skip' }
   | { type: 'start' } | { type: 'pause' } | { type: 'addTime'; s?: number } | { type: 'close' }
-  | { type: 'split' } | { type: 'debate' } | { type: 'confirm' }
+  | { type: 'split' } | { type: 'debate' } | { type: 'confirm' } | { type: 'confirmAll' }
   | { type: 'overlay'; v: GameState['overlay'] }
   | { type: 'setting'; key: 'autoAdvance' | 'screenOnly' | 'muted'; v: boolean }
   | { type: 'lang'; v: Lang }

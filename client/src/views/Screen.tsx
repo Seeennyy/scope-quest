@@ -6,7 +6,8 @@ import { sfx, setMuted } from '../lib/sound';
 import { CeoAvatar, Stamp, NileMap } from '../ui/art';
 import { Countdown, Confetti, Bars, ScopeStack, LeaderboardPanel, TeamName, useNow } from '../ui/bits';
 import { DocCard, FactorCard } from '../ui/DocCard';
-import { newState, hostCommand, tick } from '../../../shared/engine';
+import { newState, hostCommand, tick, finaleSteps } from '../../../shared/engine';
+import { binsOf, binLabel, answerOf, reasonOf, sourceOf } from '../lib/bins';
 import { screenView } from '../../../shared/views';
 
 export default function Screen() {
@@ -92,7 +93,7 @@ function Stage({ v, c, lang, join, skew, screenOnly }: { v: any; c: Content; lan
     prevConfirmed.current = sig;
   }, [sig]);
   if (v.overlay === 'blackout') return <div className="blackout" />;
-  const stamped = sc.type === 'classify' ? v.revealSub === 'confirmed' : sc.type === 'inventory' ? v.step >= 1 : sc.type === 'finale' ? v.step === 2 : (v.phase === 'confirmed' && !(sc.type === 'vote' && sc.poll));
+  const stamped = sc.type === 'classify' ? v.revealSub === 'confirmed' : sc.type === 'inventory' ? v.step >= 1 : sc.type === 'finale' ? finaleSteps(sc)[v.step] === 'report' : (v.phase === 'confirmed' && !(sc.type === 'vote' && sc.poll));
   const showCounter = ['vote', 'classify', 'calc', 'methods', 'board', 'wordcloud'].includes(sc.type) && (v.phase === 'answering' || v.phase === 'intro' || v.phase === 'closed');
   return (
     <>
@@ -156,7 +157,7 @@ function SceneStage({ sc, v, c, lang, join, skew, screenOnly }: any) {
         {sc.showConsolidation && v.step === sc.lines.length - 1 && <div className="board-note">📌 {tr(c.meta.consolidation, lang)}</div>}
       </div>);
     case 'vote': return <VoteStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
-    case 'classify': return sc.mode === 'iso' ? <IsoStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} /> : <ClassifyStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
+    case 'classify': return sc.drag ? <BasketStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} /> : sc.mode === 'iso' ? <IsoStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} /> : <ClassifyStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
     case 'wordcloud': return <WordStage sc={sc} v={v} lang={lang} />;
     case 'calc': return <CalcStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
     case 'methods': return <MethodsStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
@@ -266,16 +267,90 @@ function ClassifyStage({ sc, v, c, lang, screenOnly }: any) {
   );
 }
 
-function DebateCard({ d, lang, iso, c }: any) {
+function DebateCard({ d, lang, iso, c, labFn, clsFn }: any) {
   useEffect(() => { sfx.whoosh(); }, []);
-  const lab = (x: string) => iso ? tr(c.categories.iso[x], lang) : (lang === 'ar' ? `نطاق ${x[1]}` : `Scope ${x[1]}`);
+  const lab = (x: string) => labFn ? labFn(x) : iso ? tr(c.categories.iso[x], lang) : (lang === 'ar' ? `نطاق ${x[1]}` : `Scope ${x[1]}`);
   return (
     <div className="debate">
       <div className="debate-title">🎤 {ui('debate', lang)}</div>
       <div className="debate-vs">
-        {d.sides.length ? d.sides.map((s: any, i: number) => <React.Fragment key={s.pid}>{i === 1 && <div className="vs">VS</div>}<div className={`side-card ${iso ? 'iso' + s.choice : s.choice.toLowerCase()}`}><div className="sc-name">{s.name}</div><div className="sc-choice">{lab(s.choice)}</div><div className="sc-sub">{ui('defend', lang)}</div></div></React.Fragment>)
+        {d.sides.length ? d.sides.map((s: any, i: number) => <React.Fragment key={s.pid}>{i === 1 && <div className="vs">VS</div>}<div className={`side-card ${clsFn ? clsFn(s.choice) : iso ? 'iso' + s.choice : s.choice.toLowerCase()}`}><div className="sc-name">{s.name}</div><div className="sc-choice">{lab(s.choice)}</div><div className="sc-sub">{ui('defend', lang)}</div></div></React.Fragment>)
           : <div className="side-card">{lang === 'ar' ? 'مين عايز يدافع؟' : 'Who wants to defend their answer?'}</div>}
       </div>
+    </div>);
+}
+
+// ---------------- drag-to-basket activities ----------------
+function BasketStage({ sc, v, c, lang, screenOnly }: any) {
+  const items = sc.items.map((id: string) => c.items.find((i: any) => i.id === id));
+  const bins = binsOf(sc, c, lang);
+  const ar = lang === 'ar';
+  if (v.phase === 'intro' || v.phase === 'answering' || v.phase === 'closed') {
+    const drops: Record<string, number> = {};
+    for (const id of sc.items) for (const [k, n] of Object.entries(v.splits?.[id]?.counts || {})) drops[k] = (drops[k] || 0) + (n as number);
+    return (
+      <div className="basket-board">
+        <h1 className="q-big bb-title">{tr(sc.title, lang)}</h1>
+        {sc.ceo && <p className="bb-sub">{tr(sc.ceo, lang)}</p>}
+        <div className="bb-cards">{items.map((it: any) => <span key={it.id} className="bb-card">{it.icon} {tr(it.name, lang)}</span>)}</div>
+        <div className={`bb-bins n${bins.length}`}>{bins.map(b => <div key={b.id} className={`bb-bin ${b.cls}`}>
+          <div className="bb-ico">{b.icon}</div><b className="bb-label">{b.label}</b><div className="bb-hint">{b.hint}</div>
+          {!screenOnly && v.phase !== 'intro' && <div className="bb-n" dir="ltr">🃏 {drops[b.id] || 0}</div>}
+        </div>)}</div>
+        {v.phase === 'intro' && <div className="bb-howto">📱 {ar ? 'على موبايلك: اسحب كل كارت للسلة الصح' : 'On your phone: drag each card into the right basket'}</div>}
+        {v.phase === 'closed' && <div className="locked-big">🔒 {ar ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+      </div>);
+  }
+  if (v.phase === 'confirmed') {
+    const rows = v.summary || [];
+    const n = rows.reduce((a: number, r: any) => a + r.n, 0); const ok = rows.reduce((a: number, r: any) => a + r.ok, 0);
+    const avg = n ? Math.round(100 * ok / n) : 0;
+    return (
+      <div className="summary">
+        <div className="sum-head"><h1 className="mega">📊 {ar ? 'القاعة عملت إيه؟' : 'How did the room do?'}</h1>
+          <div className="sum-avg"><b dir="ltr">{avg}%</b><span>{ar ? 'من الكروت في السلة الصح' : 'of cards in the right basket'}</span></div></div>
+        <div className="sum-grid">{rows.map((r: any) => {
+          const it = c.items.find((i: any) => i.id === r.id); const good = answerOf(sc, it)[0]; const b = bins.find(x => x.id === good)!;
+          const band = r.pct >= 70 ? 'good' : r.pct >= 40 ? 'mid' : 'bad';
+          return (
+            <div key={r.id} className={`sum-card ${band}`}>
+              <div className="sum-name"><span className="sum-ico">{it.icon}</span>{tr(it.name, lang)}</div>
+              <div className="sum-row"><span className={`bin-chip ${b.cls}`}>{b.icon} {b.label}</span><b className="sum-pct" dir="ltr">{r.pct}%</b></div>
+              <div className="sum-bar"><i className={band} style={{ width: `${Math.max(2, r.pct)}%` }} /></div>
+              {r.topWrong && r.pct < 70 && <div className="sum-miss">{ar ? 'أكتر غلطة:' : 'Most picked instead:'} {binLabel(bins, r.topWrong)}</div>}
+            </div>);
+        })}</div>
+      </div>);
+  }
+  const it = items[v.revealItem];
+  const sp = v.splits?.[it.id] || { counts: {} };
+  const total = Object.values(sp.counts).reduce((a: number, b: any) => a + b, 0) as number;
+  const confirmed = v.revealSub === 'confirmed';
+  const good = answerOf(sc, it);
+  const top = Math.max(0, ...Object.values(sp.counts) as number[]);
+  const contested = total > 0 && top / total < 0.6;
+  const okN = good.reduce((a, k) => a + (sp.counts[k] || 0), 0);
+  const b = bins.find(x => x.id === good[0])!;
+  return (
+    <div className="reveal-item basket-reveal">
+      <div className="ri-left">
+        <div className="ri-progress">{v.revealItem + 1} / {items.length}</div>
+        <div className="ri-icon">{it.icon}</div>
+        <h1 className="ri-name">{tr(it.name, lang)}</h1>
+        <p className="ri-desc">{tr(it.desc, lang)}</p>
+        {contested && !confirmed && !screenOnly && <div className="contested">🔥 {ar ? 'القاعة منقسمة!' : 'The room is split!'}</div>}
+      </div>
+      <div className="ri-right">
+        {screenOnly && !confirmed ? <div className="hands big">{ui('showOfHands', lang)}<div className="hands-opts">{bins.map(x => <span key={x.id} className={`bin-chip ${x.cls}`}>{x.icon} {x.label}</span>)}</div></div>
+          : <Bars total={total} correct={confirmed ? good : undefined} rows={bins.map(x => ({ id: x.id, label: `${x.icon} ${x.label}`, cls: x.cls, n: sp.counts[x.id] || 0 }))} />}
+        {confirmed && <div className="answer-box">
+          <div className="ab-head"><span className={`bin-chip ${b.cls}`}>{b.icon} {b.label}</span>{!screenOnly && total > 0 && <span className="ab-pct" dir="ltr">{Math.round(100 * okN / total)}% {ar ? 'صح' : 'got it right'}</span>}</div>
+          <p className="ab-why">{tr(reasonOf(sc, it), lang)}</p>
+          <div className="src">📚 {c.sources[sourceOf(sc, it)]}</div>
+        </div>}
+      </div>
+      {v.debate && v.revealSub === 'debate' && <DebateCard d={v.debate} lang={lang} c={c} labFn={(x: string) => binLabel(bins, x)} clsFn={(x: string) => bins.find(y => y.id === x)?.cls || ''} />}
+      <AuditorStamp c={c} lang={lang} show={confirmed} />
     </div>);
 }
 
@@ -461,7 +536,8 @@ function FpRow({ label, fp, max, lang, cutLB, cutMB }: any) {
 function FinaleStage({ sc, v, c, lang }: any) {
   const lb = v.leaderboard; const inv = v.inventory;
   useEffect(() => { if (v.step === 0) sfx.fanfare(); }, [v.step]);
-  if (v.step === 0) {
+  const kind = finaleSteps(sc)[v.step] || 'takeaways';
+  if (kind === 'podium') {
     const t = lb?.teams || [];
     const order = [t[1], t[0], t[2]];
     return (
@@ -471,12 +547,12 @@ function FinaleStage({ sc, v, c, lang }: any) {
         <div className="podium">{order.map((x: any, i: number) => x ? <div key={x.id} className={`pod p${[2, 1, 3][i]}`}><div className="pod-team"><TeamName c={c} id={x.id} lang={lang} /></div><div className="pod-score">{x.score}</div><div className="pod-block">{[2, 1, 3][i]}</div></div> : <div key={i} className="pod empty" />)}</div>
       </div>);
   }
-  if (v.step === 1) return (
+  if (kind === 'top') return (
     <div className="top-ind">
       <h1 className="mega">⭐ {ui('topPlayers', lang)}</h1>
       <div className="ind">{(lb?.top || []).slice(0, 3).map((p: any, i: number) => <div key={i} className={`ind-card i${i}`}><div className="ind-medal">{['🥇', '🥈', '🥉'][i]}</div><div className="ind-name">{p.name}</div><TeamName c={c} id={p.teamId} lang={lang} /><div className="ind-score">{p.score}</div></div>)}</div>
     </div>);
-  if (v.step === 2) return (
+  if (kind === 'report') return (
     <div className="report">
       <div className="report-paper">
         <div className="rp-head"><div><div className="rp-co">🥖 {tr(c.meta.company, lang)}</div><h1>{lang === 'ar' ? `جرد الكربون ${c.meta.inventoryYear}` : `Carbon Inventory ${c.meta.inventoryYear}`}</h1></div><div className="rp-total" dir="ltr">{num(inv.total, 0)}<small> t CO₂e</small></div></div>
@@ -499,7 +575,7 @@ function FinaleStage({ sc, v, c, lang }: any) {
   return (
     <div className="takeaways">
       <h1 className="mega">{ui('takeaways', lang)}</h1>
-      <ol>{sc.takeaways.map((t: any, i: number) => <li key={i} style={{ animationDelay: `${i * 0.5}s` }}>{tr(t, lang)}</li>)}</ol>
+      <ol className={sc.takeaways.reduce((n: number, t: any) => n + tr(t, lang).length, 0) > 300 ? 'long' : ''}>{sc.takeaways.map((t: any, i: number) => <li key={i} style={{ animationDelay: `${i * 0.5}s` }}>{tr(t, lang)}</li>)}</ol>
       <div className="thanks">— {c.meta.instructorName}, {lang === 'ar' ? 'كبيرة المدققين' : 'Chief Auditor'}</div>
     </div>);
 }

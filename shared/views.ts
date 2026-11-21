@@ -8,7 +8,7 @@ import {
 // Strip answer keys & instructor notes from content for the audience.
 export function publicContent(c: Content): Content {
   const x: Content = JSON.parse(JSON.stringify(c));
-  for (const it of x.items) { delete it.scope; delete it.cat; delete it.iso; delete it.isoAlso; delete it.reason; delete it.isoReason; delete it.wisdom; delete it.source; delete it.isoSource; }
+  for (const it of x.items) { delete it.scope; delete it.cat; delete it.iso; delete it.isoAlso; delete it.reason; delete it.isoReason; delete it.wisdom; delete it.source; delete it.isoSource; delete it.dtype; delete it.dHalf; delete it.dReason; delete it.dSource; }
   for (const k of Object.values(x.calcs)) { delete k.answer; delete k.formula; delete k.wisdom; delete (k as any).scope; }
   for (const o of Object.values(x.methods.options)) { delete o.answer; delete o.formula; }
   delete x.methods.wisdom;
@@ -25,7 +25,9 @@ function revealedKeys(s: GameState, c: Content) {
     out.items = {};
     for (const id of done) {
       const it = itemById(c, id);
-      out.items[id] = { scope: it.scope, cat: it.cat, iso: it.iso, isoAlso: it.isoAlso, reason: it.reason, isoReason: it.isoReason, source: c.sources[it.source!], isoSource: c.sources[it.isoSource!] };
+      out.items[id] = { scope: it.scope, cat: it.cat, iso: it.iso, isoAlso: it.isoAlso, reason: it.reason, isoReason: it.isoReason, source: c.sources[it.source!], isoSource: c.sources[it.isoSource!],
+        ans: correctChoices(sc, it), why: sc.mode === 'data' ? it.dReason : sc.mode === 'iso' ? it.isoReason : it.reason,
+        src: c.sources[(sc.mode === 'data' ? it.dSource : sc.mode === 'iso' ? it.isoSource : it.source)!] };
     }
   } else if (done.length) {
     if (sc.type === 'vote') out.vote = { correct: sc.correct, reveal: sc.reveal, source: sc.revealSource ? sc.revealSource.split(' + ').map(k => c.sources[k.trim()] || k).join(' · ') : undefined };
@@ -78,6 +80,14 @@ export function screenView(s: GameState, c: Content, now: number) {
   if (sc.type === 'lobby') v.lobby = { names: players.slice(-80).map(p => ({ id: p.id, name: p.name, teamId: p.teamId })) };
   if (sc.type === 'classify') {
     v.splits = Object.fromEntries(sc.items!.map(id => [id, itemSplit(s, sc.id, id)]).map(([id, x]: any) => [id, { counts: x.counts, cats: x.cats }]));
+    if (sc.drag && s.phase === 'confirmed') v.summary = sc.items!.map(id => {
+      const it = itemById(c, id); const good = correctChoices(sc, it); const sp = v.splits[id].counts as Record<string, number>;
+      const n = Object.values(sp).reduce((a, b) => a + b, 0);
+      const ok = good.reduce((a, k) => a + (sp[k] || 0), 0);
+      const half = (it.dHalf || []).reduce((a, k) => a + (sp[k] || 0), 0);
+      const wrong = Object.entries(sp).filter(([k]) => !good.includes(k)).sort((a, b) => b[1] - a[1])[0];
+      return { id, n, ok, half, pct: n ? Math.round(100 * ok / n) : 0, topWrong: wrong?.[0] };
+    });
   }
   if (sc.type === 'vote') v.split = voteSplit(s, sc.id).counts;
   if (sc.type === 'calc' || sc.type === 'methods') v.bands = calcBands(s, c, sc);
@@ -130,7 +140,7 @@ export function statsReport(s: GameState, c: Content) {
       const good = correctChoices(sc, it);
       const ok = Object.entries(sp.counts).filter(([k]) => good.includes(k)).reduce((a, [, v]) => a + v, 0);
       const wrong = Object.entries(sp.counts).filter(([k]) => !good.includes(k)).sort((a, b) => b[1] - a[1])[0];
-      rows.push({ scene: sc.id, item: id, label: `${sc.mode === 'iso' ? 'ISO' : 'Scope'}: ${it.name.en}`, correctPct: Math.round(100 * ok / n), n, topWrong: wrong ? `${wrong[0]} (${Math.round(100 * wrong[1] / n)}%)` : undefined });
+      rows.push({ scene: sc.id, item: id, label: `${sc.mode === 'iso' ? 'ISO' : sc.mode === 'data' ? 'Data type' : 'Scope'}: ${it.name.en}`, correctPct: Math.round(100 * ok / n), n, topWrong: wrong ? `${wrong[0]} (${Math.round(100 * wrong[1] / n)}%)` : undefined });
     }
     if (sc.type === 'calc' || sc.type === 'methods' || (sc.type === 'vote' && !sc.poll)) {
       const ans = s.answers[sc.id] || {}; const n = Object.keys(ans).length; if (!n) continue;

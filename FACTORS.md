@@ -6,6 +6,52 @@ Status: ✅ = checked against the source PDF in `C:\Projects\GHG Project` · �
 
 ---
 
+## 0. The version in use: two activities (`content/content.json`)
+
+The game now runs **lobby → Activity 1 → Activity 2 → finale** (podium, top players, takeaways). The full 23-scene game is kept in `content/content-full-23-scenes.json`, and sections 1–6 below describe it.
+
+### Activity 1: Sort the scopes (drag into Scope 1 / 2 / 3)
+
+| Card | Basket | Basis |
+|---|---|---|
+| Gas burnt in the bread ovens | Scope 1 | Corporate Std Ch. 4 (stationary combustion) |
+| Refrigerant leaking from the cold room | Scope 1 | Corporate Std Ch. 4 (fugitive) |
+| Nile Loaf's own diesel vans | Scope 1 | Table 5.7 row 1 |
+| Grid electricity for bakeries & office | Scope 2 | Corporate Std / Scope 2 Guidance |
+| Own electric vans charged at the depot | Scope 2 | Table 5.7 row 1 ("scope 2 for electricity use") |
+| Chilled water bought for the head office (district cooling) | Scope 2 | Scope 2 Guidance: purchased electricity, steam, heat **and cooling** (new card, not in the deck) |
+| The courier Nile Loaf pays | Scope 3 | Table 5.7 row 7 (Cat 4) |
+| Staff flights to a trade fair | Scope 3 | Table 6.1 row 2 (Cat 6) |
+| Staff commuting | Scope 3 | Table 6.1 row 3 (Cat 7) |
+
+Points: 100 for the right basket + up to 20 for speed. There's no category bonus in this version.
+
+### Activity 2: What kind of data is it? (drag into Site-specific / Primary / Secondary)
+
+Definitions, ISO 14064-1:2018 (checked against the scan):
+- **3.2.2 primary data:** quantified value of a process or activity from a direct measurement, or a calculation based on direct measurements. Note 1: it can be an emission factor and/or activity data.
+- **3.2.3 site-specific data:** primary data obtained **within the organizational boundary**. Note 1: all site-specific data are primary, but not all primary data are site-specific.
+- **3.2.4 secondary data:** data from sources other than primary data, e.g. databases and published literature validated by competent authorities.
+- Annex C.2: primary vs secondary depends on who originally collected the data; site-specific depends on whether it came from the original source. Annex C.5: non-site-specific data include literature data (e.g. default emission factors), calculated data and estimates.
+
+| Card | Basket | Basis |
+|---|---|---|
+| Our gas invoices for the ovens (m³ from our meter) | **Site-specific** | 3.2.3: measured at our own meter. "Primary" earns half points (50), because it isn't wrong, just less precise |
+| Our electricity meter readings | **Site-specific** | 3.2.3 (half points for Primary) |
+| Technician's refill log for our cold room (kg weighed) | **Site-specific** | 3.2.3, Annex C.4 (half points for Primary) |
+| Fuel the courier actually burnt for us (its fuel logs) | **Primary** | 3.2.2: direct measurement, but collected outside our boundary (3.2.3) |
+| Delta Mills' footprint per tonne of flour, from its own meters | **Primary** | 3.2.2 Note 1: a factor calculated from direct measurements is primary |
+| Bag maker's measured energy per 1,000 bags | **Primary** | 3.2.2 / 3.2.3 |
+| DESNZ conversion factor for diesel (2.66 kg CO₂e/L) | **Secondary** | 3.2.4: published database |
+| Default fridge leak rate from IPCC guidelines | **Secondary** | 3.2.4, Annex C.5 ("default emission factors") |
+| Average commute taken from a published study | **Secondary** | 3.2.4, Annex C.5 ("estimates") |
+
+- **J15 Three baskets, but site-specific ⊂ primary.** ISO doesn't define three exclusive types: site-specific is a subset of primary. The game uses three baskets anyway, labelled "Site-specific (primary, inside our boundary)", "Primary (measured, but outside our boundary)" and "Secondary". That's why Primary on a site-specific card scores half. If you'd rather teach only primary vs secondary, change the three site-specific cards' `dtype` to `P` in `/admin`.
+- **J16 Invoices = site-specific.** The instructor's framing "primary = from invoices" holds: a gas or electricity bill reports a meter reading at our own site. An *estimated* bill (no meter read) would not be a direct measurement.
+- **J17 Conversion factors = secondary.** This matches "secondary = conversion/calculation": an emission factor taken from a database (DESNZ, IPCC) is secondary data, even though the litres it multiplies are primary.
+
+---
+
 ## 1. Real-world numbers (cold open)
 
 | Number shown | Value | Source | Status |
