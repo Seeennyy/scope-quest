@@ -24,20 +24,21 @@ Last full run: 21 Nov 2026, on the **3-activity build** (drag-to-basket: system 
 | Server memory | 113 MB RSS |
 
 ## 2. Drag-and-drop on real browser pages
-- `tests/shots.ts both`: a 390×844 phone page joins with 30 bots and drags all 27 cards with real pointer events (some by dragging, some by tapping the basket, one deliberate mistake per activity). The test checks the server received every drop (31/31 complete), that the per-card reveal and results summary appear, and that the phone shows ✅/❌ results. 56 screens per language. **PASS** in English and Arabic (RTL).
+- `tests/shots.ts both`: a 390×844 phone page joins with 30 bots and drags all 27 cards with real pointer events (some by dragging, some by tapping the basket, one deliberate mistake per activity). The test checks the server received every drop (31/31 complete), that the per-card reveal and results summary appear, and that the phone shows /results. 56 screens per language. **PASS** in English and Arabic (RTL).
+- The same run asserts that no emoji appears anywhere on the phone or the projector (icons are line icons; the app was renamed Carbon School and restyled on 22 Nov 2026, and all tests were re-run on that build).
 - `tests/touch.ts`: an emulated touchscreen phone drags the first card with a finger. The basket highlights under the finger, the card lands in it (1/9), and the page doesn't scroll during the drag. **PASS**.
 
 ## 3. Restart (`npm run test:restart`)
 30 players; Activity 1 timer running with 20/30 players finished. The server was killed with **SIGKILL** and restarted 1.2 s later: same scene (`act1`), phase `answering`, 20/30 still finished, 30/30 phones reconnected automatically as the same players. The other 10 then answered, and Confirm scored normally.
 
 ## 4. Offline 20 s (`npx tsx tests/offline.ts`, `SILENT=1 …`)
-A real Chrome phone page drops card 1 (our own bakeries) into "Inside our boundary" (confirmed: 120 pts), then loses its network for 20 s through a TCP proxy while the host moves on. Hard drop: "📶 Reconnecting…" bar shown, back 1.3 s after the network returns as the **same player, 120 pts**. Silent drop: back in 0.7 s, same player, 120 pts.
+A real Chrome phone page drops card 1 (our own bakeries) into "Inside our boundary" (confirmed: 120 pts), then loses its network for 20 s through a TCP proxy while the host moves on. Hard drop: "Reconnecting…" bar shown, back 1.3 s after the network returns as the **same player, 120 pts**. Silent drop: back in 0.7 s, same player, 120 pts.
 
 ## 5. Rehearsal (`npm run test:e2e`)
 Instructor + 40 bots, lobby → all three activities (card-by-card reveal, then results summary) → finale takeaways. Bots answered 40/40 in each. Stats page and CSV export (40 rows) work. Hardest cards in that run: Delta Mills' footprint per tonne (63%), technician's refill log (65%), chilled water (68%).
 
 ## 6. Engine tests (`npm run test:engine`)
-14/14, including: exactly 5 scenes (lobby, boundaries, act1, act2, finale) with 3 cards per basket; every card has a source and an Arabic reason; data-type scoring (site-specific 100+, "primary" on a site-specific card 50, wrong 0, nothing before Confirm); boundaries scoring (JV under financial control = inside); "All → summary"; back/forward from the summary; no answer keys (`dtype`, `btype`, reasons…) sent to phones. The full 23-scene content is still tested for its own answer keys.
+14/14, including: exactly 5 scenes (lobby, boundaries, act1, act2, finale) with 3 cards per basket; every card has a source and an Arabic reason; data-type scoring (site-specific 100+, "primary" on a site-specific card 50, wrong 0, nothing before Confirm); boundaries scoring (JV under financial control = inside); "Confirm all"; back/forward from the summary; no answer keys (`dtype`, `btype`, reasons…) sent to phones. The full 23-scene content is still tested for its own answer keys.
 
 ## Not tested here
 - Real phones on hall wifi, and the Railway deploy of this build (my workspace can't reach railway.app). Do one test round on the live link before the lecture.

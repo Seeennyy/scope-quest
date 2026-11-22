@@ -2,12 +2,13 @@ import React from 'react';
 import type { Doc, Lang, Factor } from '../../../shared/types';
 import { tr } from '../lib/i18n';
 
-const KIND_ICON: Record<string, string> = { invoice: '🧾', bill: '💡', log: '📋', sheet: '🗂️' };
+import { Icon } from './Icon';
+const KIND_ICON: Record<string, string> = { invoice: 'receipt', bill: 'zap', log: 'clipboard-list', sheet: 'file' };
 
 export function DocCard({ doc, lang, method, big }: { doc: Doc; lang: Lang; method?: string; big?: boolean }) {
   return (
     <div className={`doc doc-${doc.kind} ${big ? 'big' : ''}`}>
-      <div className="doc-head"><span className="doc-ico">{KIND_ICON[doc.kind] || '📄'}</span><span>{tr(doc.from, lang)}</span></div>
+      <div className="doc-head"><span className="doc-ico"><Icon name={KIND_ICON[doc.kind] || 'file'} /></span><span>{tr(doc.from, lang)}</span></div>
       <table className="doc-lines"><tbody>
         {doc.lines.map((l, i) => (
           <tr key={i} className={`${l.hl ? 'hl' : ''} ${method && l.m === method ? 'hl mine' : ''} ${method && l.m && l.m !== method ? 'dim' : ''}`}>

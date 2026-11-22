@@ -54,7 +54,7 @@ export function playerPrivateView(s: GameState, c: Content, pid: string) {
   const team = c.teams.find(t => t.id === p.teamId)!;
   const card = sc.type === 'finale' ? personalCard(s, c, pid) : undefined;
   return {
-    pid, name: p.name, teamId: p.teamId, team: { name: team.name, emoji: team.emoji, color: team.color },
+    pid, name: p.name, teamId: p.teamId, team: { name: team.name, color: team.color },
     removed: !!p.removed, score: playerScore(s, pid), method: methodOf(p),
     answer: s.answers[sc.id]?.[pid] || null,
     result: s.results[sc.id]?.[pid] || null,

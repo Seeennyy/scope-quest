@@ -296,6 +296,6 @@ const shutdown = () => { try { snapDirty = true; writeSnapshot(); } catch { } pr
 process.on('SIGTERM', shutdown); process.on('SIGINT', shutdown);
 
 server.listen(PORT, () => {
-  log(`Scope Quest on :${PORT}  room ${state.roomCode}`);
+  log(`Carbon School on :${PORT}  room ${state.roomCode}`);
   log(`Host link: ${PUBLIC_URL || `http://localhost:${PORT}`}/host?k=${HOST_KEY}  (PIN required)`);
 });

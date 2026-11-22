@@ -3,6 +3,7 @@ import type { Content, Lang } from '../../../shared/types';
 import { tr, num, ui } from '../lib/i18n';
 import { secondsLeft } from '../lib/net';
 import { sfx } from '../lib/sound';
+import { Icon, TeamMark } from './Icon';
 
 export function useNow(ms = 250) {
   const [, f] = useState(0);
@@ -31,12 +32,12 @@ export function Countdown({ timer, phase, skew = 0, size = 150, sound = true }: 
 
 export function Confetti({ n = 140 }: { n?: number }) {
   const bits = useMemo(() => Array.from({ length: n }, (_, i) => ({
-    l: Math.random() * 100, d: Math.random() * 1.5, t: 2.5 + Math.random() * 2.5, c: ['#c8553d', '#1f7a8c', '#e0a526', '#2d6a4f', '#8e2c58', '#5a4fcf'][i % 6], r: Math.random() * 360, w: 8 + Math.random() * 10,
+    l: Math.random() * 100, d: Math.random() * 1.5, t: 2.5 + Math.random() * 2.5, c: ['#B4472C', '#1E6FA8', '#8A6A12', '#0F5C4A', '#8E2C58', '#6B4E9B'][i % 6], r: Math.random() * 360, w: 8 + Math.random() * 10,
   })), [n]);
   return <div className="confetti">{bits.map((b, i) => <i key={i} style={{ left: `${b.l}%`, animationDelay: `${b.d}s`, animationDuration: `${b.t}s`, background: b.c, transform: `rotate(${b.r}deg)`, width: b.w, height: b.w * 0.45 }} />)}</div>;
 }
 
-export function Bars({ rows, total, correct, show = true }: { rows: { id: string; label: string; cls?: string; n: number }[]; total: number; correct?: string[]; show?: boolean }) {
+export function Bars({ rows, total, correct, show = true }: { rows: { id: string; label: string; icon?: string; cls?: string; n: number }[]; total: number; correct?: string[]; show?: boolean }) {
   return (
     <div className="bars">
       {rows.map(r => {
@@ -44,7 +45,7 @@ export function Bars({ rows, total, correct, show = true }: { rows: { id: string
         const ok = correct?.includes(r.id);
         return (
           <div key={r.id} className={`bar ${r.cls || ''} ${correct ? (ok ? 'correct' : 'dimmed') : ''}`}>
-            <div className="bar-label">{r.label}</div>
+            <div className="bar-label">{r.icon && <Icon name={r.icon} />}<span>{r.label}</span>{ok && <Icon name="check" className="bar-ok" />}</div>
             <div className="bar-track"><div className="bar-fill" style={{ width: show ? `${Math.max(pct, 1)}%` : '0%' }} /></div>
             <div className="bar-pct">{show ? `${pct}%` : ''}</div>
           </div>
@@ -84,7 +85,7 @@ export function ScopeStack({ inv, lang, highlight, vh = 45 }: { inv: any; lang: 
 
 export function TeamName({ c, id, lang }: { c: Content; id: string; lang: Lang }) {
   const t = c.teams.find(x => x.id === id); if (!t) return null;
-  return <span className="tname" style={{ color: t.color }}>{t.emoji} {tr(t.name, lang)}</span>;
+  return <span className="tname"><TeamMark team={t} lang={lang} /> {tr(t.name, lang)}</span>;
 }
 
 export function LeaderboardPanel({ lb, c, lang }: { lb: any; c: Content; lang: Lang }) {
@@ -92,21 +93,21 @@ export function LeaderboardPanel({ lb, c, lang }: { lb: any; c: Content; lang: L
   const max = Math.max(1, ...lb.teams.map((t: any) => t.score));
   return (
     <div className="lb">
-      <h2>🏆 {ui('leaderboard', lang)}</h2>
+      <h2>{ui('leaderboard', lang)}</h2>
       <div className="lb-teams">
         {lb.teams.map((t: any, i: number) => {
           const tm = c.teams.find(x => x.id === t.id)!;
           return (
             <div key={t.id} className="lb-row">
               <span className="lb-rank">{i + 1}</span>
-              <span className="lb-name">{tm.emoji} {tr(tm.name, lang)} <small>({t.members})</small></span>
+              <span className="lb-name"><TeamMark team={tm} lang={lang} /> {tr(tm.name, lang)} <small>({t.members})</small></span>
               <div className="lb-track"><div className="lb-fill" style={{ width: `${100 * t.score / max}%`, background: tm.color }} /></div>
               <span className="lb-score">{t.score}</span>
             </div>
           );
         })}
       </div>
-      <div className="lb-top">{lb.top.slice(0, 5).map((p: any, i: number) => <span key={i} className="lb-p">{['🥇', '🥈', '🥉', '4', '5'][i]} {p.name} <b>{p.score}</b></span>)}</div>
+      <div className="lb-top">{lb.top.slice(0, 5).map((p: any, i: number) => <span key={i} className="lb-p"><i>{i + 1}</i> {p.name} <b>{p.score}</b></span>)}</div>
     </div>
   );
 }

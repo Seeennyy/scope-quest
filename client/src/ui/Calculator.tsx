@@ -43,7 +43,7 @@ export function Calculator({ onUse }: { onUse: (n: number) => void }) {
         {keys.map(k => <button key={k} className={`ck ${/[÷×−+]/.test(k) ? 'op' : ''} ${k === '=' ? 'eq' : ''}`} onClick={() => press(k)}>{k}</button>)}
         <button className="ck fn" onClick={() => press('C')}>C</button>
         <button className="ck fn" onClick={() => press('⌫')}>⌫</button>
-        <button className="ck use" disabled={(last ?? live) == null} onClick={() => { const v = last ?? live; if (v != null) onUse(v); }}>↓ USE</button>
+        <button className="ck use" disabled={(last ?? live) == null} onClick={() => { const v = last ?? live; if (v != null) onUse(v); }}>Use result</button>
       </div>
     </div>
   );

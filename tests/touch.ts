@@ -25,7 +25,7 @@ const PORT = 3207;
     const progress = await pg.$eval('.drag-progress', e => (e as HTMLElement).innerText);
     const chips = await pg.$$eval('.basket', els => els.map(e => e.querySelectorAll('.bk-chip').length));
     console.log(`basket highlighted under finger: ${over}; progress "${progress}"; chips per basket ${JSON.stringify(chips)}; page scrolled: ${scrollBefore !== scrollAfter}`);
-    ok = over && progress.startsWith('1/') && chips[0] === 1 && scrollBefore === scrollAfter;
+    ok = over && progress.startsWith('1 of') && chips[0] === 1 && scrollBefore === scrollAfter;
   } catch (e) { console.error(e); }
   console.log(ok ? 'TOUCH DRAG TEST PASS' : 'TOUCH DRAG TEST FAIL');
   await browser.close(); srv.kill(); process.exit(ok ? 0 : 1);

@@ -28,24 +28,24 @@ export default function Admin() {
   const save = async () => {
     const r = await fetch(`/api/admin/content?k=${encodeURIComponent(key)}&pin=${encodeURIComponent(pin)}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(draft) });
     const j = await r.json().catch(() => ({}));
-    if (r.ok) { setOrig(JSON.stringify(draft, null, 2)); setMsg({ t: 'Saved ✔ Live for everyone, no redeploy needed.', ok: true }); }
+    if (r.ok) { setOrig(JSON.stringify(draft, null, 2)); setMsg({ t: 'Saved. Live for everyone, no redeploy needed.', ok: true }); }
     else setMsg({ t: 'Not saved: ' + (j.errors || ['error']).join(' · '), ok: false });
   };
 
   if (!draft) return (
-    <div className="host login"><h1>✏️ Content editor</h1>
+    <div className="host login"><h1>Content editor</h1>
       <form onSubmit={e => { e.preventDefault(); load(pin); }}><input type="password" value={pin} onChange={e => setPin(e.target.value)} placeholder="PIN" autoFocus /><button className="btn-primary">Open</button></form>
       {msg && <p className="err">{msg.t}</p>}</div>);
 
   return (
     <div className="admin">
       <aside className="adm-nav">
-        <h2>✏️ Scope Quest content</h2>
+        <h2>Carbon School content</h2>
         {SECTIONS.map(([k, l]) => <button key={k} className={sec === k ? 'on' : ''} onClick={() => { setSec(k); if (k === '__raw') setRaw(JSON.stringify(draft, null, 2)); }}>{l}</button>)}
         <div className="adm-actions">
-          <button className="btn-primary" disabled={!dirty} onClick={save}>💾 Save {dirty ? '•' : ''}</button>
-          <button onClick={() => { setDraft(JSON.parse(orig)); setMsg(null); }} disabled={!dirty}>↺ Discard</button>
-          <a className="btn-link" href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(draft, null, 2))}`} download="content.json">⬇️ Download JSON</a>
+          <button className="btn-primary" disabled={!dirty} onClick={save}>Save {dirty ? '•' : ''}</button>
+          <button onClick={() => { setDraft(JSON.parse(orig)); setMsg(null); }} disabled={!dirty}>Discard</button>
+          <a className="btn-link" href={`data:application/json;charset=utf-8,${encodeURIComponent(JSON.stringify(draft, null, 2))}`} download="content.json">Download JSON</a>
           <button onClick={async () => { if (!confirm('Restore the original content shipped with the app?')) return; await fetch(`/api/admin/content/reset?k=${encodeURIComponent(key)}&pin=${encodeURIComponent(pin)}`, { method: 'POST' }); load(); }}>⟲ Restore defaults</button>
         </div>
         {msg && <p className={msg.ok ? 'okmsg' : 'err'}>{msg.t}</p>}

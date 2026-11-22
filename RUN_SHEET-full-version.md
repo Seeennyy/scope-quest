@@ -1,8 +1,8 @@
-# Scope Quest: Instructor run sheet (45 min)
+# Carbon School: Instructor run sheet (45 min)
 
-**You are the Chief Auditor.** The game creates the argument and you settle it. Nothing scores until you press **✔ CONFIRM**. Your phone (`/host`) shows the big button, a 🦉 wisdom card for every question (talking point, common misconception, exact clause, and a live stat telling you what the room got wrong), and **who picked what**, so you can call on people by nickname.
+**You are the Chief Auditor.** The game creates the argument and you settle it. Nothing scores until you press **Confirm**. Your phone (`/host`) shows the big button, a wisdom card for every question (talking point, common misconception, exact clause, and a live stat telling you what the room got wrong), and **who picked what**, so you can call on people by nickname.
 
-Remote basics: **big button** = the next natural step · **🎤 Debate** lights up when the room splits (no answer above 60%) · **+15 s**, **⏸**, **🔒 Lock**, **⏭ Skip**, **🏆 Board**, **⬛ Blackout**, **📱 QR** · *Room tab*: Ask-the-Auditor queue (📌 pins a question to the big screen).
+Remote basics: **big button** = the next natural step · **Debate** lights up when the room splits (no answer above 60%) · **+15 s**, ****, **Lock**, **Skip**, **Board**, **Blackout**, **QR** · *Room tab*: Ask-the-Auditor queue (pins a question to the big screen).
 
 | Clock | Scene | What you do / say |
 |---|---|---|
@@ -13,7 +13,7 @@ Remote basics: **big button** = the next natural step · **🎤 Debate** lights 
 | **5:00** | **Poll**: biggest scope? | 20 s, don't comment on it: "We'll check this against reality later." |
 | **5:30** | **Ch.1 intro** | "Four places at a time. Scope 1, 2 or 3, and name the category for a bonus." |
 | **6:00** | **Batch 1**: ovens, own diesel vans, grid, own EV vans | 75 s. For each card: **Show split → (Debate) → Confirm**. Key line on the **EV vans**: "Same owner, same job as the diesel vans, but Scope 2. The exhaust moved to the power plant." |
-| **9:45** | **Batch 2**: refrigerant, **leased vans**, generator, courier | **Leased vans is THE debate.** Use 🎤 if offered. Ask the Scope 1 side: "Who controls the van? And what did the board note say?" Settle it: "Table 5.7: leased and operated by us, not already in Scope 1/2 → **Cat 8**. Under operational control it would be Scope 1. The approach decides." Courier: "Outbound, but **we pay**, so Cat 4, not Cat 9. For sold products going out, who pays decides." Refrigerant: "Nothing burns, but it's still Scope 1." |
+| **9:45** | **Batch 2**: refrigerant, **leased vans**, generator, courier | **Leased vans is THE debate.** Use if offered. Ask the Scope 1 side: "Who controls the van? And what did the board note say?" Settle it: "Table 5.7: leased and operated by us, not already in Scope 1/2 → **Cat 8**. Under operational control it would be Scope 1. The approach decides." Courier: "Outbound, but **we pay**, so Cat 4, not Cat 9. For sold products going out, who pays decides." Refrigerant: "Nothing burns, but it's still Scope 1." |
 | **13:30** | **Batch 3**: mill truck, wheat truck, van factory, diesel tanker | "Four trucks, four answers." Mill → Cat 4 (tier 1 → us). Wheat → **Cat 1** ("already inside the flour's cradle-to-gate, so count it twice and you double count"). Van factory → Cat 2. Tanker → **Cat 3** ("fuel transport has its own home in Table 5.7"). |
 | **17:15** | **Batch 4**: flights, commuting, app deliveries, bread bags | App deliveries: "Same bread as the courier, but the *customer* pays → Cat 9. For outbound deliveries: who pays, not which direction." Bags → Cat 12 (end-of-life of sold products). |
 | **21:00** | **Word cloud** | Read 2–3 words aloud. "Scope 3 is usually most of the footprint and the hardest to measure. Both feelings are justified." |
@@ -26,8 +26,8 @@ Remote basics: **big button** = the next natural step · **🎤 Debate** lights 
 | **42:30** | **Finale** | Podium (confetti) → top 3 individuals → the one-page **Nile Loaf Carbon Inventory 2026** (pause here: "This is what you built in 40 minutes") → read the **3 takeaways**. "Screenshot your card." |
 | **45:00** | After | Room tab → **Export CSV**. Stats tab = hardest questions first, ready for next lecture's recap. |
 
-**Debate moment script (any card):** "🎤 *Name A*, you said Scope X. Convince *Name B*." (30 s) → "*Name B*, your reply?" (30 s) → "Let's see what the standard says…" → **Confirm**.
+**Debate moment script (any card):** "*Name A*, you said Scope X. Convince *Name B*." (30 s) → "*Name B*, your reply?" (30 s) → "Let's see what the standard says…" → **Confirm**.
 
 **If wifi dies:** toggle **Screen-only** on the remote (phones go idle; the screen asks for a show of hands). If the laptop itself loses the server, press **Shift+L** on the projector: the story keeps running locally (→ next, ← back, S start, C confirm).
 
-**If behind schedule:** ⏭ Skip the word cloud and the second poll (−2 min), and cut the Debate moments to batch 2 only.
+**If behind schedule:** Skip the word cloud and the second poll (−2 min), and cut the Debate moments to batch 2 only.

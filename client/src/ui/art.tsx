@@ -2,6 +2,7 @@
 import React from 'react';
 import type { Item, Lang } from '../../../shared/types';
 import { tr } from '../lib/i18n';
+import { Icon } from './Icon';
 
 export function CeoAvatar({ size = 160, talking = false }: { size?: number; talking?: boolean }) {
   return (
@@ -28,20 +29,8 @@ export function CeoAvatar({ size = 160, talking = false }: { size?: number; talk
   );
 }
 
-export function Stamp({ name, label, short, show }: { name: string; label: string; short?: string; show: boolean }) {
-  if (!show) return null;
-  return (
-    <>
-      <div className="stamp-wrap" aria-hidden="true">
-        <div className="stamp">
-          <div className="stamp-check">✔</div>
-          <div className="stamp-text">{label}</div>
-          <div className="stamp-name">{name}</div>
-        </div>
-      </div>
-    </>
-  );
-}
+// The big rubber-stamp overlay was retired: the topbar shows "Confirmed by …" instead.
+export function Stamp(_: { name: string; label: string; short?: string; show: boolean }) { return null; }
 
 const PLACES: { x: number; y: number; w: number; h: number; label: { en: string; ar: string }; color: string; roof?: string }[] = [
   { x: 50, y: 60, w: 170, h: 90, label: { en: 'Wheat farms', ar: 'مزارع القمح' }, color: '#e8c35a', roof: '#b98b2a' },
@@ -83,7 +72,7 @@ export function NileMap({ items, lit, done, lang, focus }: { items: Item[]; lit:
           <g key={it.id} transform={`translate(${it.pos[0]} ${it.pos[1]})`} className={`hot ${on ? 'on' : 'off'} ${f ? 'focus' : ''}`}>
             {on && <circle r="62" className="pulse" />}
             <circle r={on ? 46 : 30} fill={d ? `var(--${d.toLowerCase()})` : on ? '#fff' : '#ffffffaa'} stroke="#1b1b2f" strokeWidth={on ? 5 : 3} filter={on ? 'url(#glow)' : undefined} />
-            <text y={on ? 16 : 11} textAnchor="middle" fontSize={on ? 46 : 30}>{it.icon}</text>
+            <g transform={on ? 'translate(-24 -24)' : 'translate(-15 -15)'} style={{ fontSize: on ? 48 : 30, color: '#1F2A2B' }}><Icon name={it.icon} /></g>
             {d && <text y={-56} textAnchor="middle" className="hot-tag">{d.startsWith('S') ? d : `ISO ${d}`}</text>}
           </g>
         );

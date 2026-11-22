@@ -5,6 +5,7 @@ import { connect, fetchContent, qs, secondsLeft } from '../lib/net';
 import { tr, num } from '../lib/i18n';
 import { useNow } from '../ui/bits';
 import { finaleSteps, correctChoices } from '../../../shared/engine';
+import { Icon, Logo, TeamMark } from '../ui/Icon';
 
 const PIN_KEY = 'sq-pin';
 
@@ -35,7 +36,9 @@ export default function Host() {
 
   if (!authed) return (
     <div className="host login">
-      <h1>🔐 Chief Auditor</h1>
+      <div className="login-mark"><Logo /></div>
+      <h1>Instructor remote</h1>
+      <p className="muted">Enter your PIN to control the class.</p>
       <form onSubmit={e => { e.preventDefault(); login(pin); }}>
         <input type="password" inputMode="numeric" autoFocus value={pin} onChange={e => setPin(e.target.value)} placeholder="PIN" />
         <button className="btn-primary">Enter</button>
@@ -52,7 +55,7 @@ export default function Host() {
         <b>{v.scene.idx + 1}/{v.scene.total}</b> <span className="h-scene">{sceneLabel(sc, c)}</span>
         <span className={`phase ph-${v.phase}`}>{v.phase}{sc.type === 'classify' && v.phase === 'reveal' ? ` · ${v.revealItem + 1}/${sc.items!.length} ${v.revealSub || ''}` : ''}{['story', 'finale', 'inventory'].includes(sc.type) ? ` · ${v.step + 1}` : ''}</span>
       </header>
-      <nav className="h-tabs">{(['run', 'room', 'stats'] as const).map(t => <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t === 'run' ? '🎬 Run' : t === 'room' ? `👥 Room (${v.counts.joined}) ${v.asks?.length ? `❓${v.asks.length}` : ''}` : '📈 Stats'}</button>)}</nav>
+      <nav className="h-tabs">{(['run', 'room', 'stats'] as const).map(t => <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>{t === 'run' ? 'Run' : t === 'room' ? `Room (${v.counts.joined})${v.asks?.length ? `, ${v.asks.length} asked` : ''}` : 'Stats'}</button>)}</nav>
       {tab === 'run' && <RunTab v={v} c={c} sc={sc} cmd={cmd} />}
       {tab === 'room' && <RoomTab v={v} c={c} cmd={cmd} hostKey={key} />}
       {tab === 'stats' && <StatsTab hostKey={key} pin={sessionStorage.getItem(PIN_KEY) || ''} />}
@@ -66,31 +69,31 @@ function sceneLabel(sc: Scene, c: Content) {
 function primaryAction(sc: Scene, v: any): { label: string; cmd: HostCmd; cls?: string } {
   const next: HostCmd = { type: 'next' };
   switch (sc.type) {
-    case 'lobby': return { label: '▶ Start the show', cmd: next };
-    case 'story': return { label: v.step < (sc.lines!.length - 1) ? '▶ Next line' : '▶ Next scene', cmd: next };
-    case 'inventory': return { label: v.step < 1 ? '▶ Compare with prediction' : '▶ Next scene', cmd: next };
+    case 'lobby': return { label: 'Start the show', cmd: next };
+    case 'story': return { label: v.step < (sc.lines!.length - 1) ? 'Next line' : 'Next scene', cmd: next };
+    case 'inventory': return { label: v.step < 1 ? 'Compare with prediction' : 'Next scene', cmd: next };
     case 'finale': {
       const st = finaleSteps(sc); const nx = st[v.step + 1];
-      return { label: nx ? ({ podium: '▶ Team podium', top: '▶ Top individuals', report: '▶ Inventory report', takeaways: '▶ Takeaways' } as any)[nx] : '🎉 The end', cmd: next };
+      return { label: nx ? ({ podium: 'Team podium', top: 'Top individuals', report: 'Inventory report', takeaways: 'Takeaways' } as any)[nx] : 'The end', cmd: next };
     }
   }
-  if (v.phase === 'intro') return { label: '⏱ Start timer', cmd: { type: 'start' } };
-  if (v.phase === 'answering') return { label: '🔒 Lock answers', cmd: { type: 'close' } };
+  if (v.phase === 'intro') return { label: 'Start timer', cmd: { type: 'start' } };
+  if (v.phase === 'answering') return { label: 'Lock answers', cmd: { type: 'close' } };
   if (sc.type === 'classify') {
-    if (v.phase === 'closed') return { label: '📊 Show split (card 1)', cmd: next };
-    if (v.phase === 'confirmed') return { label: '▶ Next activity', cmd: next };
-    if (v.revealSub === 'split' || v.revealSub === 'debate') return { label: `✔ CONFIRM card ${v.revealItem + 1}`, cmd: { type: 'confirm' }, cls: 'stamp-btn' };
-    return { label: v.revealItem < sc.items!.length - 1 ? `📊 Show split (card ${v.revealItem + 2})` : sc.drag ? '📊 Results summary' : '▶ Next scene', cmd: next };
+    if (v.phase === 'closed') return { label: 'Show split (card 1)', cmd: next };
+    if (v.phase === 'confirmed') return { label: 'Next activity', cmd: next };
+    if (v.revealSub === 'split' || v.revealSub === 'debate') return { label: `Confirm card ${v.revealItem + 1}`, cmd: { type: 'confirm' }, cls: 'stamp-btn' };
+    return { label: v.revealItem < sc.items!.length - 1 ? `Show split (card ${v.revealItem + 2})` : sc.drag ? 'Results summary' : 'Next scene', cmd: next };
   }
   if (sc.type === 'board') {
-    if (v.phase === 'closed') return { label: '📋 Show team plans', cmd: next };
-    if (v.phase === 'reveal') return v.step < 2 ? { label: v.step === 0 ? '📉 Animate footprints' : '💡 Honest moments', cmd: next } : { label: '✔ CONFIRM results', cmd: { type: 'confirm' }, cls: 'stamp-btn' };
-    return { label: '▶ Next scene', cmd: next };
+    if (v.phase === 'closed') return { label: 'Show team plans', cmd: next };
+    if (v.phase === 'reveal') return v.step < 2 ? { label: v.step === 0 ? 'Animate footprints' : 'Honest moments', cmd: next } : { label: 'Confirm results', cmd: { type: 'confirm' }, cls: 'stamp-btn' };
+    return { label: 'Next scene', cmd: next };
   }
-  if (sc.type === 'wordcloud') return v.phase === 'closed' ? { label: '☁️ Show cloud', cmd: next } : { label: '▶ Next scene', cmd: next };
-  if (v.phase === 'closed') return { label: '📊 Show split', cmd: next };
-  if (v.phase === 'reveal') return sc.type === 'vote' && sc.poll ? { label: '▶ Next scene', cmd: next } : { label: '✔ CONFIRM', cmd: { type: 'confirm' }, cls: 'stamp-btn' };
-  return { label: '▶ Next scene', cmd: next };
+  if (sc.type === 'wordcloud') return v.phase === 'closed' ? { label: 'Show cloud', cmd: next } : { label: 'Next scene', cmd: next };
+  if (v.phase === 'closed') return { label: 'Show split', cmd: next };
+  if (v.phase === 'reveal') return sc.type === 'vote' && sc.poll ? { label: 'Next scene', cmd: next } : { label: 'Confirm', cmd: { type: 'confirm' }, cls: 'stamp-btn' };
+  return { label: 'Next scene', cmd: next };
 }
 
 function RunTab({ v, c, sc, cmd }: any) {
@@ -102,25 +105,25 @@ function RunTab({ v, c, sc, cmd }: any) {
   return (
     <div className="run">
       {isQ && <div className="h-status">
-        <div className="h-timer">{s == null ? '—' : `${s}s`}{v.timer.endsAt ? '' : s != null ? ' ⏸' : ''}</div>
+        <div className="h-timer">{s == null ? '—' : `${s}s`}{v.timer.endsAt ? '' : s != null ? ' paused' : ''}</div>
         <div className="h-count"><b>{v.counts.answered}</b>/{v.counts.total} answered</div>
       </div>}
       <button className={`h-primary ${pa.cls || ''}`} onClick={() => cmd(pa.cmd)}>{pa.label}</button>
-      {contested && <button className="h-debate pulse-b" onClick={() => cmd({ type: 'debate' })}>🎤 Debate moment suggested: room split!</button>}
+      {contested && <button className="h-debate pulse-b" onClick={() => cmd({ type: 'debate' })}>The room is split. Start a debate</button>}
       <div className="h-grid">
-        <button onClick={() => cmd({ type: 'back' })}>◀ Back</button>
-        {isQ && <button onClick={() => cmd(v.timer.endsAt ? { type: 'pause' } : { type: 'start' })}>{v.timer.endsAt ? '⏸ Pause' : '⏱ Start'}</button>}
+        <button onClick={() => cmd({ type: 'back' })}>Back</button>
+        {isQ && <button onClick={() => cmd(v.timer.endsAt ? { type: 'pause' } : { type: 'start' })}>{v.timer.endsAt ? 'Pause' : 'Start'}</button>}
         {isQ && <button onClick={() => cmd({ type: 'addTime', s: 15 })}>+15 s</button>}
-        {isQ && <button onClick={() => cmd({ type: 'close' })}>🔒 Lock</button>}
-        {sc.type === 'classify' && <button onClick={() => cmd({ type: 'debate' })}>🎤 Debate</button>}
-        {sc.type === 'classify' && sc.drag && v.phase !== 'confirmed' && <button onClick={() => { if (confirm('Confirm ALL remaining cards and jump to the results summary?')) cmd({ type: 'confirmAll' }); }}>⏩ All → summary</button>}
-        {isQ && <button className="stamp-mini" onClick={() => cmd({ type: 'confirm' })}>✔ Confirm</button>}
-        <button onClick={() => cmd({ type: 'skip' })}>⏭ Skip</button>
-        <button className={v.overlay === 'leaderboard' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'leaderboard' })}>🏆 Board</button>
-        <button className={v.overlay === 'blackout' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'blackout' })}>⬛ Blackout</button>
-        <button className={v.overlay === 'qr' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'qr' })}>📱 QR</button>
+        {isQ && <button onClick={() => cmd({ type: 'close' })}>Lock</button>}
+        {sc.type === 'classify' && <button onClick={() => cmd({ type: 'debate' })}>Debate</button>}
+        {sc.type === 'classify' && sc.drag && v.phase !== 'confirmed' && <button onClick={() => { if (confirm('Confirm ALL remaining cards and jump to the results summary?')) cmd({ type: 'confirmAll' }); }}>Confirm all</button>}
+        {isQ && <button className="stamp-mini" onClick={() => cmd({ type: 'confirm' })}>Confirm</button>}
+        <button onClick={() => cmd({ type: 'skip' })}>Skip</button>
+        <button className={v.overlay === 'leaderboard' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'leaderboard' })}>Board</button>
+        <button className={v.overlay === 'blackout' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'blackout' })}>Blackout</button>
+        <button className={v.overlay === 'qr' ? 'on' : ''} onClick={() => cmd({ type: 'overlay', v: 'qr' })}>QR</button>
       </div>
-      {v.debate && v.debate.sides?.length > 0 && <div className="h-card debate-names">🎤 {v.debate.sides.map((x: any) => `${x.name} (${x.choice})`).join('  vs  ')} <button onClick={() => cmd({ type: 'debate' })}>🔄 re-pick</button></div>}
+      {v.debate && v.debate.sides?.length > 0 && <div className="h-card debate-names">{v.debate.sides.map((x: any) => `${x.name} (${x.choice})`).join('  vs  ')} <button onClick={() => cmd({ type: 'debate' })}>re-pick</button></div>}
       <Wisdom v={v} c={c} sc={sc} />
       <NameCalling v={v} sc={sc} c={c} />
       <div className="h-toggles">
@@ -129,9 +132,9 @@ function RunTab({ v, c, sc, cmd }: any) {
         <label><input type="checkbox" checked={v.settings.muted} onChange={e => cmd({ type: 'setting', key: 'muted', v: e.target.checked })} /> Mute screen</label>
         <span className="lang-sw">Screen: <button className={v.settings.lang === 'en' ? 'on' : ''} onClick={() => cmd({ type: 'lang', v: 'en' })}>EN</button><button className={v.settings.lang === 'ar' ? 'on' : ''} onClick={() => cmd({ type: 'lang', v: 'ar' })}>عربي</button></span>
       </div>
-      {v.pinnedAsk && <div className="h-card">📌 Pinned: <b>{v.pinnedAsk.name}</b>: {v.pinnedAsk.text} <button onClick={() => cmd({ type: 'unpinAsk' })}>Unpin</button></div>}
-      <details className="h-scenes"><summary>🗂 Jump to scene</summary>
-        {c.scenes.map((x: Scene, i: number) => <button key={x.id} className={i === v.scene.idx ? 'on' : ''} onClick={() => cmd({ type: 'goto', idx: i })}>{i + 1}. {sceneLabel(x, c)} {v.confirmed?.[x.id]?.length ? '✔' : ''}</button>)}
+      {v.pinnedAsk && <div className="h-card">Pinned: <b>{v.pinnedAsk.name}</b>: {v.pinnedAsk.text} <button onClick={() => cmd({ type: 'unpinAsk' })}>Unpin</button></div>}
+      <details className="h-scenes"><summary>Jump to scene</summary>
+        {c.scenes.map((x: Scene, i: number) => <button key={x.id} className={i === v.scene.idx ? 'on' : ''} onClick={() => cmd({ type: 'goto', idx: i })}>{i + 1}. {sceneLabel(x, c)} {v.confirmed?.[x.id]?.length ? '(confirmed)' : ''}</button>)}
       </details>
     </div>);
 }
@@ -139,7 +142,7 @@ function RunTab({ v, c, sc, cmd }: any) {
 function Wisdom({ v, c, sc }: any) {
   let w: any = sc.wisdom; let head = '';
   if (sc.type === 'classify' && v.phase === 'confirmed' && sc.drag) return null;
-  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.icon} ${it.name.en} → ${sc.bins ? sc.bins.find((b: any) => b.id === correctChoices(sc, it)[0])?.t.en + (it.dHalf ? ' (Primary = half points)' : '') : sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
+  if (sc.type === 'classify') { const it = c.items.find((i: any) => i.id === sc.items[Math.min(v.revealItem, sc.items.length - 1)]); w = it.wisdom; head = `${it.name.en}: ${sc.bins ? sc.bins.find((b: any) => b.id === correctChoices(sc, it)[0])?.t.en + (it.dHalf ? ' (Primary = half points)' : '') : sc.mode === 'iso' ? 'ISO ' + [...it.iso, ...(it.isoAlso || [])].join('/') : it.scope + (it.cat ? ' Cat ' + it.cat : '')}`; if (sc.mode === 'iso' && sc.wisdom) w = { ...w, talk: `${it.isoReason.en} ${w.talk}` }; }
   if (sc.type === 'calc') { const k = c.calcs[sc.calc]; w = k.wisdom; head = `Answer: ${num(k.answer, 2)} t · ${k.formula.en}`; }
   if (sc.type === 'methods') { w = c.methods.wisdom; head = Object.entries(c.methods.options).map(([k, o]: any) => `${k} ${num(o.answer, 1)} t`).join(' · '); }
   if (sc.type === 'vote' && sc.correct) head = `Answer: ${sc.options.find((o: any) => o.id === sc.correct).t.en}`;
@@ -148,12 +151,12 @@ function Wisdom({ v, c, sc }: any) {
   const st = v.focus?.stat;
   return (
     <div className="h-card wisdom">
-      <div className="w-head">🦉 {head}</div>
+      <div className="w-head">{head}</div>
       {w?.talk && <p className="w-talk">{w.talk}</p>}
-      {w?.misconception && <p className="w-mis">⚠️ {w.misconception}</p>}
-      {w?.clause && <p className="w-cl">📚 {w.clause}</p>}
-      {st && st.pct > 0 && <p className="w-stat">📊 <b>{st.pct}%</b> chose <b>{sc.bins?.find((b: any) => b.id === st.choice)?.t.en || st.choice}</b>. {st.follow}</p>}
-      {sc.type === 'calc' || sc.type === 'methods' ? v.bands && <p className="w-stat">📊 {v.bands.bands.ok} within 5% · {v.bands.bands.close} close · {v.bands.bands.slip} kg-slip · {v.bands.bands.off} off</p> : null}
+      {w?.misconception && <p className="w-mis"><b>Common mistake.</b> {w.misconception}</p>}
+      {w?.clause && <p className="w-cl"><b>Reference.</b> {w.clause}</p>}
+      {st && st.pct > 0 && <p className="w-stat"><b>{st.pct}%</b> chose <b>{sc.bins?.find((b: any) => b.id === st.choice)?.t.en || st.choice}</b>. {st.follow}</p>}
+      {sc.type === 'calc' || sc.type === 'methods' ? v.bands && <p className="w-stat">{v.bands.bands.ok} within 5% · {v.bands.bands.close} close · {v.bands.bands.slip} kg-slip · {v.bands.bands.off} off</p> : null}
     </div>);
 }
 
@@ -162,8 +165,8 @@ function NameCalling({ v, sc, c }: any) {
   const lab = (k: string) => sc.type === 'vote' ? (sc.options.find((o: any) => o.id === k)?.t.en || k) : sc.bins ? (sc.bins.find((b: any) => b.id === k)?.t.en || k) : sc.mode === 'iso' ? `ISO ${k}` : k;
   return (
     <details className="h-card names" open={v.phase === 'reveal'}>
-      <summary>🙋 Who picked what (call on people)</summary>
-      {Object.entries(names).map(([k, ns]: any) => <div key={k} className="nc-row"><b>{lab(k)} ({ns.length})</b>: {ns.filter((n: string) => !n.startsWith('🤖')).slice(0, 30).join(', ') || ns.slice(0, 12).join(', ')}</div>)}
+      <summary>Who picked what (call on people)</summary>
+      {Object.entries(names).map(([k, ns]: any) => <div key={k} className="nc-row"><b>{lab(k)} ({ns.length})</b>: {ns.filter((n: string) => !n.startsWith('Bot ')).slice(0, 30).join(', ') || ns.slice(0, 12).join(', ')}</div>)}
     </details>);
 }
 
@@ -174,27 +177,27 @@ function RoomTab({ v, c, cmd, hostKey }: any) {
   return (
     <div className="room">
       <div className="h-card">
-        <h3>❓ Ask the Auditor ({v.asks.length})</h3>
+        <h3>Ask the Auditor ({v.asks.length})</h3>
         {v.asks.length === 0 && <p className="muted">No questions yet.</p>}
-        {v.asks.slice().reverse().map((a: any) => <div key={a.id} className="ask-row"><span><b>{a.name}</b>: {a.text}</span><span><button onClick={() => cmd({ type: 'pinAsk', id: a.id })}>📌 Pin</button><button onClick={() => cmd({ type: 'dismissAsk', id: a.id })}>✕</button></span></div>)}
+        {v.asks.slice().reverse().map((a: any) => <div key={a.id} className="ask-row"><span><b>{a.name}</b>: {a.text}</span><span><button onClick={() => cmd({ type: 'pinAsk', id: a.id })}>Pin</button><button onClick={() => cmd({ type: 'dismissAsk', id: a.id })}>Dismiss</button></span></div>)}
       </div>
       <div className="h-card">
-        <h3>🔗 Links</h3>
-        <a className="btn-link" href={screenUrl} target="_blank">🖥️ Open projector screen</a>
-        <a className="btn-link" href={`/admin?k=${encodeURIComponent(hostKey)}`} target="_blank">✏️ Edit content (/admin)</a>
-        <a className="btn-link" href={`/api/export.csv?k=${encodeURIComponent(hostKey)}&pin=${encodeURIComponent(pin)}`}>⬇️ Export results CSV</a>
+        <h3>Links</h3>
+        <a className="btn-link" href={screenUrl} target="_blank">Open projector screen</a>
+        <a className="btn-link" href={`/admin?k=${encodeURIComponent(hostKey)}`} target="_blank">Edit content (/admin)</a>
+        <a className="btn-link" href={`/api/export.csv?k=${encodeURIComponent(hostKey)}&pin=${encodeURIComponent(pin)}`}>Export results CSV</a>
       </div>
       <div className="h-card">
-        <h3>🤖 Rehearsal bots</h3>
+        <h3>Rehearsal bots</h3>
         <div className="row"><input type="number" min={1} max={300} value={n} onChange={e => setN(Number(e.target.value))} /><button onClick={() => cmd({ type: 'addBots', n })}>Add bots</button><button onClick={() => cmd({ type: 'removeBots' })}>Remove bots</button></div>
       </div>
       <div className="h-card">
-        <h3>👥 Players ({v.players.length})</h3>
-        <div className="teams-mini">{v.leaderboard.teams.map((t: any) => { const tm = c.teams.find((x: any) => x.id === t.id); return <span key={t.id}>{tm.emoji} {t.members} · {t.score}</span>; })}</div>
-        <div className="plist">{v.players.map((p: any) => <div key={p.id} className="prow"><span className={`dot-online ${p.connected ? 'on' : ''}`} /><span className="pn">{p.name}</span><span>{c.teams.find((x: any) => x.id === p.teamId)?.emoji}</span><span>{p.score}</span><button onClick={() => { if (confirm(`Remove ${p.name}?`)) cmd({ type: 'removePlayer', pid: p.id }); }}>✕</button></div>)}</div>
+        <h3>Players ({v.players.length})</h3>
+        <div className="teams-mini">{v.leaderboard.teams.map((t: any) => { const tm = c.teams.find((x: any) => x.id === t.id); return <span key={t.id} className="tm-mini"><TeamMark team={tm} lang="en" /> {t.members} players, {t.score} pts</span>; })}</div>
+        <div className="plist">{v.players.map((p: any) => <div key={p.id} className="prow"><span className={`dot-online ${p.connected ? 'on' : ''}`} /><span className="pn">{p.name}</span><TeamMark team={c.teams.find((x: any) => x.id === p.teamId)!} lang="en" /><span>{p.score}</span><button onClick={() => { if (confirm(`Remove ${p.name}?`)) cmd({ type: 'removePlayer', pid: p.id }); }}>Remove</button></div>)}</div>
       </div>
       <div className="h-card danger">
-        <button onClick={() => { if (confirm('Reset the whole game? All players and scores will be wiped.')) cmd({ type: 'reset' }); }}>♻️ Reset game</button>
+        <button onClick={() => { if (confirm('Reset the whole game? All players and scores will be wiped.')) cmd({ type: 'reset' }); }}>Reset game</button>
       </div>
     </div>);
 }
@@ -206,7 +209,7 @@ function StatsTab({ hostKey, pin }: { hostKey: string; pin: string }) {
   if (!d) return <div className="spinner" />;
   return (
     <div className="stats">
-      <div className="row"><h3>Hardest questions first · {d.players} players</h3><button onClick={load}>↻</button><a className="btn-link" href={`/api/export.csv?k=${encodeURIComponent(hostKey)}&pin=${encodeURIComponent(pin)}`}>⬇️ CSV</a></div>
+      <div className="row"><h3>Hardest cards first ({d.players} players)</h3><button onClick={load}>Refresh</button><a className="btn-link" href={`/api/export.csv?k=${encodeURIComponent(hostKey)}&pin=${encodeURIComponent(pin)}`}>CSV</a></div>
       <table className="stats-t"><thead><tr><th>Question</th><th>% correct</th><th>n</th><th>Most common wrong</th></tr></thead>
         <tbody>{d.rows.map((r: any) => <tr key={r.scene + r.item}><td>{r.label}</td><td><div className="sbar"><div style={{ width: `${r.correctPct}%` }} /><span>{r.correctPct}%</span></div></td><td>{r.n}</td><td>{r.topWrong || ''}</td></tr>)}</tbody></table>
     </div>);

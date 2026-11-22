@@ -80,7 +80,7 @@ async function run(lang: string, browser: Browser) {
   await phone.goto(`${BASE}/?r=${room}`, { waitUntil: 'load' });
   await phone.waitForSelector('input', { timeout: 10000 }); await phone.click('input', { count: 3 }); await phone.keyboard.press('Backspace'); await phone.type('input', 'Seeny');
   await h.cmd({ type: 'addBots', n: 30 });
-  await clickText(phone, lang === 'ar' ? 'يلا' : "Let's go");
+  await clickText(phone, lang === 'ar' ? 'انضم' : 'Join');
   await shot('lobby');
 
   for (const act of content.scenes.filter((s: any) => s.type === 'classify')) {
@@ -110,8 +110,11 @@ async function run(lang: string, browser: Browser) {
     else { for (let k = 1; k < act.items.length; k++) { await next(); await h.cmd({ type: 'confirm' }); } await next(); }
     if (h.last().phase !== 'confirmed') errors.push(`${act.id}: summary phase is ${h.last().phase}`);
     await shot(`${act.id}-summary`, ['screen', 'phone'], 1500);
-    const ph = await phone.evaluate(() => document.body.innerText);
-    if (!/✅|❌/.test(ph)) errors.push(`${act.id}: phone shows no results`);
+    const nRes = await phone.$$eval('.res-verdict', els => els.length);
+    if (nRes !== act.items.length) errors.push(`${act.id}: phone shows ${nRes}/${act.items.length} results`);
+    const emoji = await phone.evaluate(() => /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(document.body.innerText));
+    const emojiS = await s1080.evaluate(() => /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(document.body.innerText));
+    if (emoji || emojiS) errors.push(`${act.id}: emoji found on ${emoji ? 'phone' : 'screen'}`);
     if (act.mode === 'data') {
       const hp = await mk(390, 844, 2);
       await hp.evaluateOnNewDocument(() => { sessionStorage.setItem('sq-pin', '4321'); });

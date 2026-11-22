@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": {
-      "en": "Scope Quest",
-      "ar": "سكوب كويست"
+      "en": "Carbon School",
+      "ar": "مدرسة الكربون"
     },
     "subtitle": {
-      "en": "The Nile Loaf Carbon Inventory",
-      "ar": "جرد الكربون لشركة نايل لوف"
+      "en": "Greenhouse gas accounting in practice",
+      "ar": "محاسبة غازات الاحتباس الحراري عملياً"
     },
     "instructorName": "Dr. Instructor",
     "company": {
@@ -30,8 +30,7 @@
         "en": "Team Felucca",
         "ar": "فريق الفلوكة"
       },
-      "emoji": "⛵",
-      "color": "#1f7a8c"
+      "color": "#1E6FA8"
     },
     {
       "id": "koshary",
@@ -39,8 +38,7 @@
         "en": "Team Koshary",
         "ar": "فريق الكشري"
       },
-      "emoji": "🍲",
-      "color": "#c8553d"
+      "color": "#B4472C"
     },
     {
       "id": "karkade",
@@ -48,8 +46,7 @@
         "en": "Team Karkadeh",
         "ar": "فريق الكركديه"
       },
-      "emoji": "🌺",
-      "color": "#8e2c58"
+      "color": "#8E2C58"
     },
     {
       "id": "scarab",
@@ -57,8 +54,7 @@
         "en": "Team Scarab",
         "ar": "فريق الجعران"
       },
-      "emoji": "🪲",
-      "color": "#2d6a4f"
+      "color": "#0F5C4A"
     },
     {
       "id": "lotus",
@@ -66,8 +62,7 @@
         "en": "Team Lotus",
         "ar": "فريق اللوتس"
       },
-      "emoji": "🪷",
-      "color": "#5a4fcf"
+      "color": "#6B4E9B"
     },
     {
       "id": "taameya",
@@ -75,8 +70,7 @@
         "en": "Team Ta'ameya",
         "ar": "فريق الطعمية"
       },
-      "emoji": "🧆",
-      "color": "#b07d12"
+      "color": "#8A6A12"
     }
   ],
   "sources": {
@@ -250,7 +244,7 @@
   "items": [
     {
       "id": "oven_gas",
-      "icon": "🔥",
+      "icon": "flame",
       "pos": [
         470,
         430
@@ -292,7 +286,7 @@
     },
     {
       "id": "own_diesel_vans",
-      "icon": "🚐",
+      "icon": "truck",
       "pos": [
         880,
         540
@@ -334,7 +328,7 @@
     },
     {
       "id": "grid_power",
-      "icon": "⚡",
+      "icon": "zap",
       "pos": [
         1430,
         520
@@ -376,7 +370,7 @@
     },
     {
       "id": "own_ev_vans",
-      "icon": "🔌",
+      "icon": "plug-zap",
       "pos": [
         990,
         470
@@ -418,7 +412,7 @@
     },
     {
       "id": "fridge_leak",
-      "icon": "❄️",
+      "icon": "snowflake",
       "pos": [
         610,
         360
@@ -460,7 +454,7 @@
     },
     {
       "id": "leased_vans",
-      "icon": "🔑",
+      "icon": "key",
       "pos": [
         1080,
         610
@@ -504,7 +498,7 @@
     },
     {
       "id": "generator",
-      "icon": "🛢️",
+      "icon": "cylinder",
       "pos": [
         400,
         300
@@ -546,7 +540,7 @@
     },
     {
       "id": "courier",
-      "icon": "📦",
+      "icon": "package",
       "pos": [
         360,
         660
@@ -588,7 +582,7 @@
     },
     {
       "id": "mill_truck",
-      "icon": "🚚",
+      "icon": "truck",
       "pos": [
         300,
         480
@@ -629,7 +623,7 @@
     },
     {
       "id": "wheat_truck",
-      "icon": "🌾",
+      "icon": "wheat",
       "pos": [
         130,
         170
@@ -672,7 +666,7 @@
     },
     {
       "id": "van_factory",
-      "icon": "🏭",
+      "icon": "factory",
       "pos": [
         1330,
         200
@@ -713,7 +707,7 @@
     },
     {
       "id": "diesel_delivery",
-      "icon": "⛽",
+      "icon": "fuel",
       "pos": [
         1180,
         400
@@ -756,7 +750,7 @@
     },
     {
       "id": "flights",
-      "icon": "✈️",
+      "icon": "plane",
       "pos": [
         1460,
         110
@@ -797,7 +791,7 @@
     },
     {
       "id": "commuting",
-      "icon": "🚌",
+      "icon": "bus",
       "pos": [
         1260,
         770
@@ -838,7 +832,7 @@
     },
     {
       "id": "app_delivery",
-      "icon": "🛵",
+      "icon": "bike",
       "pos": [
         700,
         790
@@ -879,7 +873,7 @@
     },
     {
       "id": "packaging",
-      "icon": "🗑️",
+      "icon": "trash",
       "pos": [
         930,
         800
@@ -920,7 +914,7 @@
     },
     {
       "id": "cooling_bought",
-      "icon": "🧊",
+      "icon": "thermometer-snowflake",
       "pos": [
         1500,
         600
@@ -953,7 +947,7 @@
     },
     {
       "id": "d_gas_bill",
-      "icon": "🧾",
+      "icon": "receipt",
       "pos": [
         0,
         0
@@ -988,7 +982,7 @@
     },
     {
       "id": "d_desnz",
-      "icon": "📚",
+      "icon": "database",
       "pos": [
         0,
         0
@@ -1020,7 +1014,7 @@
     },
     {
       "id": "d_courier_fuel",
-      "icon": "📦",
+      "icon": "fuel",
       "pos": [
         0,
         0
@@ -1052,7 +1046,7 @@
     },
     {
       "id": "d_elec_meter",
-      "icon": "⚡",
+      "icon": "gauge",
       "pos": [
         0,
         0
@@ -1087,7 +1081,7 @@
     },
     {
       "id": "d_ipcc_leak",
-      "icon": "📖",
+      "icon": "book-open",
       "pos": [
         0,
         0
@@ -1119,7 +1113,7 @@
     },
     {
       "id": "d_mill_pcf",
-      "icon": "🌾",
+      "icon": "wheat",
       "pos": [
         0,
         0
@@ -1151,7 +1145,7 @@
     },
     {
       "id": "d_avg_commute",
-      "icon": "🚌",
+      "icon": "bus",
       "pos": [
         0,
         0
@@ -1183,7 +1177,7 @@
     },
     {
       "id": "d_fridge_log",
-      "icon": "❄️",
+      "icon": "clipboard-list",
       "pos": [
         0,
         0
@@ -1218,7 +1212,7 @@
     },
     {
       "id": "d_bag_supplier",
-      "icon": "🛍️",
+      "icon": "shopping-bag",
       "pos": [
         0,
         0
@@ -1250,7 +1244,7 @@
     },
     {
       "id": "b_bakeries",
-      "icon": "🥖",
+      "icon": "store",
       "pos": [
         0,
         0
@@ -1282,7 +1276,7 @@
     },
     {
       "id": "b_jv",
-      "icon": "🤝",
+      "icon": "handshake",
       "pos": [
         0,
         0
@@ -1314,7 +1308,7 @@
     },
     {
       "id": "b_vans",
-      "icon": "🚐",
+      "icon": "truck",
       "pos": [
         0,
         0
@@ -1346,7 +1340,7 @@
     },
     {
       "id": "b_power",
-      "icon": "⚡",
+      "icon": "zap",
       "pos": [
         0,
         0
@@ -1378,7 +1372,7 @@
     },
     {
       "id": "b_mill",
-      "icon": "🌾",
+      "icon": "wheat",
       "pos": [
         0,
         0
@@ -1410,7 +1404,7 @@
     },
     {
       "id": "b_courier",
-      "icon": "📦",
+      "icon": "package",
       "pos": [
         0,
         0
@@ -1442,7 +1436,7 @@
     },
     {
       "id": "b_neighbour",
-      "icon": "🏭",
+      "icon": "factory",
       "pos": [
         0,
         0
@@ -1474,7 +1468,7 @@
     },
     {
       "id": "b_homes",
-      "icon": "🏠",
+      "icon": "house",
       "pos": [
         0,
         0
@@ -1506,7 +1500,7 @@
     },
     {
       "id": "b_sold",
-      "icon": "🔑",
+      "icon": "key",
       "pos": [
         0,
         0
@@ -1539,7 +1533,7 @@
   ],
   "calcs": {
     "calc_vans": {
-      "icon": "⛽",
+      "icon": "fuel",
       "factor": "diesel",
       "answer": 47.908,
       "unit": "t CO₂e",
@@ -1599,7 +1593,7 @@
       }
     },
     "calc_elec": {
-      "icon": "⚡",
+      "icon": "zap",
       "factor": "grid_eg",
       "answer": 165.735,
       "unit": "t CO₂e",
@@ -1669,7 +1663,7 @@
       }
     },
     "calc_fridge": {
-      "icon": "❄️",
+      "icon": "snowflake",
       "factor": "r134a",
       "answer": 64.26,
       "unit": "t CO₂e",
@@ -1749,7 +1743,7 @@
       }
     },
     "calc_flights": {
-      "icon": "✈️",
+      "icon": "plane",
       "factor": "flight",
       "answer": 1.873,
       "unit": "t CO₂e",
@@ -1939,7 +1933,7 @@
   "levers": [
     {
       "id": "ev",
-      "icon": "🔌",
+      "icon": "plug-zap",
       "cost": 40,
       "name": {
         "en": "Electrify the 6 diesel vans",
@@ -1952,7 +1946,7 @@
     },
     {
       "id": "leak",
-      "icon": "🔧",
+      "icon": "wrench",
       "cost": 15,
       "name": {
         "en": "Fix refrigerant leaks",
@@ -1965,7 +1959,7 @@
     },
     {
       "id": "ppa",
-      "icon": "📜",
+      "icon": "file",
       "cost": 20,
       "name": {
         "en": "Green electricity contract",
@@ -1978,7 +1972,7 @@
     },
     {
       "id": "solar",
-      "icon": "☀️",
+      "icon": "sun",
       "cost": 35,
       "name": {
         "en": "Rooftop solar (25% of power)",
@@ -1991,7 +1985,7 @@
     },
     {
       "id": "courier_ev",
-      "icon": "🛺",
+      "icon": "bus",
       "cost": 15,
       "name": {
         "en": "Courier switches to EVs / rail",
@@ -2004,7 +1998,7 @@
     },
     {
       "id": "shuttle",
-      "icon": "🚌",
+      "icon": "bus",
       "cost": 10,
       "name": {
         "en": "Staff commuting shuttle",
@@ -2017,7 +2011,7 @@
     },
     {
       "id": "supplier",
-      "icon": "🤝",
+      "icon": "handshake",
       "cost": 30,
       "name": {
         "en": "Engage the flour mill",
@@ -2055,8 +2049,8 @@
       "drag": true,
       "time": 100,
       "title": {
-        "en": "Activity 1 · System boundaries",
-        "ar": "النشاط 1 · حدود النظام"
+        "en": "Activity 1: System boundaries",
+        "ar": "النشاط 1: حدود النظام"
       },
       "ceo": {
         "en": "We use financial control. For each card: inside our organizational boundary, outside but still in our report, or not in our report at all?",
@@ -2076,7 +2070,7 @@
       "bins": [
         {
           "id": "IN",
-          "icon": "🏠",
+          "icon": "building",
           "t": {
             "en": "Inside our boundary",
             "ar": "جوه حدودنا"
@@ -2089,7 +2083,7 @@
         },
         {
           "id": "REP",
-          "icon": "📝",
+          "icon": "file-check",
           "t": {
             "en": "Outside, but reported",
             "ar": "بره، بس في التقرير"
@@ -2102,7 +2096,7 @@
         },
         {
           "id": "OUT",
-          "icon": "🚫",
+          "icon": "ban",
           "t": {
             "en": "Not in our report",
             "ar": "مش في تقريرنا"
@@ -2122,8 +2116,8 @@
       "drag": true,
       "time": 90,
       "title": {
-        "en": "Activity 2 · Sort the scopes",
-        "ar": "النشاط 2 · رتّب النطاقات"
+        "en": "Activity 2: Sort the scopes",
+        "ar": "النشاط 2: رتّب النطاقات"
       },
       "ceo": {
         "en": "Drag each emission source into the right basket: Scope 1, 2 or 3.",
@@ -2143,7 +2137,7 @@
       "bins": [
         {
           "id": "S1",
-          "icon": "🔥",
+          "icon": "flame",
           "t": {
             "en": "Scope 1",
             "ar": "نطاق 1"
@@ -2156,7 +2150,7 @@
         },
         {
           "id": "S2",
-          "icon": "⚡",
+          "icon": "zap",
           "t": {
             "en": "Scope 2",
             "ar": "نطاق 2"
@@ -2169,7 +2163,7 @@
         },
         {
           "id": "S3",
-          "icon": "🔗",
+          "icon": "waypoints",
           "t": {
             "en": "Scope 3",
             "ar": "نطاق 3"
@@ -2189,8 +2183,8 @@
       "drag": true,
       "time": 120,
       "title": {
-        "en": "Activity 3 · What kind of data is it?",
-        "ar": "النشاط 3 · نوع البيانات إيه؟"
+        "en": "Activity 3: What kind of data is it?",
+        "ar": "النشاط 3: نوع البيانات إيه؟"
       },
       "ceo": {
         "en": "Drag each piece of data into its basket. Ask: who measured it, and where?",
@@ -2211,7 +2205,7 @@
       "bins": [
         {
           "id": "SS",
-          "icon": "🏭",
+          "icon": "map-pin",
           "t": {
             "en": "Site-specific",
             "ar": "خاصة بالموقع"
@@ -2224,7 +2218,7 @@
         },
         {
           "id": "P",
-          "icon": "📏",
+          "icon": "ruler",
           "t": {
             "en": "Primary",
             "ar": "أولية"
@@ -2237,7 +2231,7 @@
         },
         {
           "id": "S",
-          "icon": "📚",
+          "icon": "library",
           "t": {
             "en": "Secondary",
             "ar": "ثانوية"

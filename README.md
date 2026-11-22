@@ -1,4 +1,4 @@
-# 🥖 Scope Quest: the Nile Loaf Carbon Inventory
+# Carbon School: greenhouse gas accounting in practice
 
 A live GHG accounting game for a lecture hall (30–150+ people on their own phones, no app, no account). The audience works for **Nile Loaf**, a fictional Cairo bakery chain. The instructor plays the **Chief Auditor**: nothing is official until she stamps it.
 
@@ -36,7 +36,7 @@ Or from your laptop, if you have SSH access to the droplet: `./deploy.sh root@YO
 
 What runs: `docker compose` with **app** (Node 22: Express + Socket.IO, also serves the built React client) and **caddy** (TLS via Let's Encrypt). Game state is snapshotted every 2 s to `./data/snapshot.json`, so a restart resumes the session with scores intact. Edited content is saved to `./data/content.json`.
 
-Update: `git pull && ./deploy.sh`. Logs: `docker compose logs -f app`. New session: Remote → Room tab → ♻️ Reset game (or stop the app and delete `data/snapshot.json`).
+Update: `git pull && ./deploy.sh`. Logs: `docker compose logs -f app`. New session: Remote → Room tab → Reset game (or stop the app and delete `data/snapshot.json`).
 
 ### Fallback hosts (if the droplet is unavailable)
 - **Render**: New → Web Service → this repo → Runtime *Docker* (uses the Dockerfile) → add env vars `HOST_KEY`, `HOST_PIN`, `PUBLIC_URL` → add a **Disk** mounted at `/app/data` (otherwise a restart loses the snapshot). Free instances sleep, so use a paid instance on lecture day.
@@ -54,12 +54,12 @@ Phones on the same wifi can join via `http://<laptop-ip>:3000`.
 ---
 
 ## Lecture-day checklist
-- [ ] **Day before:** rehearse once alone: Remote → Room → 🤖 *Add 40 bots*, then click through the whole game. Remove bots and ♻️ Reset afterwards.
+- [ ] **Day before:** rehearse once alone: Remote → Room → *Add 40 bots*, then click through the whole game. Remove bots and Reset afterwards.
 - [ ] **Day before:** sign off [FACTORS.md](FACTORS.md) and set your name in `/admin` → Meta → `instructorName` (it appears on the stamp).
 - [ ] **In the hall, 15 min early:** test the hall wifi from your own phone (open the audience URL and join as "test", then remove that player from the Room tab).
 - [ ] Open the **host link** on your phone early and enter the PIN; open the **projector screen** from the Room tab; click once for sound; press **F** for fullscreen.
 - [ ] Bring a **backup 4G hotspot** for the projector laptop. If the audience wifi dies, toggle *Screen-only* on the remote (show of hands). If the laptop loses the server too, press **Shift+L** on the projector to keep running the story locally.
-- [ ] After: Room tab → ⬇️ Export CSV (nicknames only); Stats tab shows the hardest questions first.
+- [ ] After: Room tab → Export CSV (nicknames only); Stats tab shows the hardest questions first.
 
 ## How to edit the content
 Everything the audience sees or hears, plus every source, factor, answer key and talking point, lives in **one file: `content/content.json`** (English + Arabic side by side).
@@ -70,7 +70,7 @@ Everything the audience sees or hears, plus every source, factor, answer key and
 - If you change a factor, also change the matching calc `answer` and `formula` (the wisdom card shows them to you). `npm run test:engine` re-checks that every answer equals activity × factor.
 
 ## Features
-- **Drag-to-basket activities:** cards are dragged with a finger (or tapped, then a basket tapped: same result, and accessible). A card can be moved to another basket until answers are locked. The projector shows live basket counts, then per-card splits (Show split → Confirm), then a results summary with % correct per card and the most common wrong basket. Remote: **⏩ All → summary** confirms every remaining card at once.
+- **Drag-to-basket activities:** cards are dragged with a finger (or tapped, then a basket tapped: same result, and accessible). A card can be moved to another basket until answers are locked. The projector shows live basket counts, then per-card splits (Show split → Confirm), then a results summary with % correct per card and the most common wrong basket. Remote: **Confirm all** confirms every remaining card at once.
 - **Finale:** team podium, top individuals, takeaways, and a personal result card on each phone. (The full version adds the story, cold open, polls, word cloud, calculations and a one-page inventory report.)
 - **Instructor control:** nothing advances unless pressed. Start/pause timer, +15 s, lock, show split, **Debate moment** (picks one nickname per side when no answer has more than 60%), **Confirm** (stamp + sound), leaderboard, skip, back, jump to any scene, blackout, QR overlay, auto-advance (opt-in), screen language EN/AR, mute.
 - **Wisdom cards** with live stats ("41% chose S1. Ask them who controls the van"), name-calling lists, Ask-the-Auditor queue with pin-to-screen, remove player, rehearsal bots, CSV export, stats page.

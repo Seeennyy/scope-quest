@@ -1,4 +1,4 @@
-// Shared types for Scope Quest (server, clients, offline screen engine)
+// Shared types for Carbon School (server, clients, offline screen engine)
 export type Lang = 'en' | 'ar';
 export type L10n = { en: string; ar: string };
 
@@ -32,7 +32,7 @@ export interface Scene {
 
 export interface Content {
   meta: { title: L10n; subtitle: L10n; instructorName: string; company: L10n; inventoryYear: number; ceoName: L10n; consolidation: L10n };
-  teams: { id: string; name: L10n; emoji: string; color: string }[];
+  teams: { id: string; name: L10n; emoji?: string; color: string }[];
   sources: Record<string, string>;
   factors: Factor[];
   categories: { ghgp: Record<string, L10n>; iso: Record<string, L10n> };

@@ -1,8 +1,8 @@
-# FACTORS.md: Scope Quest numbers, sources and judgment calls
+# FACTORS.md: Carbon School numbers, sources and judgment calls
 
 **For the instructor to sign off before the lecture.** Every number on a reveal screen comes from this file. All of them live in `content/content.json` and can be changed in `/admin` without redeploying.
 
-Status: ✅ = checked against the source PDF in `C:\Projects\GHG Project` · 🔎 = official source outside the PDFs, **verify the value before the lecture** (my build workspace couldn't download the original spreadsheet, so the value comes from a published copy of it).
+Status: = checked against the source PDF in `C:\Projects\GHG Project` · = official source outside the PDFs, **verify the value before the lecture** (my build workspace couldn't download the original spreadsheet, so the value comes from a published copy of it).
 
 ---
 
@@ -77,11 +77,11 @@ Definitions, ISO 14064-1:2018 (checked against the scan):
 
 | Number shown | Value | Source | Status |
 |---|---|---|---|
-| Egypt GHG emissions 2023 | 335.968 Mt CO₂eq (shown as "336 Mt") | JRC/EDGAR 2024 booklet, Egypt page (PDF p. 114) | ✅ |
-| Egypt per capita 2023 | 3.107 t CO₂eq/cap (shown as "3.1 t"; population 108.117 M) | same page | ✅ |
-| Egypt transport, 2023 vs 1990 | **+221%** (all sectors +128%; power +299% is the only faster sector) | same page | ✅ |
-| World total 2023 | 53.0 Gt CO₂eq (without LULUCF), +1.9% vs 2022 | EDGAR booklet, Key conclusions (PDF p. 8) | ✅ |
-| World per capita 2023 | 6.59 t CO₂eq/cap | EDGAR booklet, PDF p. 17 | ✅ |
+| Egypt GHG emissions 2023 | 335.968 Mt CO₂eq (shown as "336 Mt") | JRC/EDGAR 2024 booklet, Egypt page (PDF p. 114) | |
+| Egypt per capita 2023 | 3.107 t CO₂eq/cap (shown as "3.1 t"; population 108.117 M) | same page | |
+| Egypt transport, 2023 vs 1990 | **+221%** (all sectors +128%; power +299% is the only faster sector) | same page | |
+| World total 2023 | 53.0 Gt CO₂eq (without LULUCF), +1.9% vs 2022 | EDGAR booklet, Key conclusions (PDF p. 8) | |
+| World per capita 2023 | 6.59 t CO₂eq/cap | EDGAR booklet, PDF p. 17 | |
 
 Wrong options on the cold-open question: 0.3 t, 13 t, 31 t (decimal-shift distractors).
 
@@ -89,13 +89,13 @@ Wrong options on the cold-open question: 0.3 t, 13 t, 31 t (decimal-shift distra
 
 | id | Factor | Value | Unit | Source | Status |
 |---|---|---|---|---|---|
-| `diesel` | Diesel (100% mineral diesel), combustion | **2.66155** | kg CO₂e / litre | UK DESNZ GHG Conversion Factors **2025**, Fuels › Liquid fuels | 🔎 |
-| `grid_eg` | Egypt grid electricity, average | **0.381** | kg CO₂ / kWh | Egyptian Electricity Holding Company (EEHC) Annual Report 2024/2025: 380.86 t CO₂/GWh | 🔎 |
-| `r134a` | HFC-134a GWP100 | **1,530** | kg CO₂e / kg | IPCC AR6 WG1 Ch. 7, Table 7.SM.7 | 🔎 (well known; DESNZ files use AR5 = 1,300) |
-| `natgas` | Natural gas, stationary combustion (commercial/institutional table; the manufacturing table, CH₄ 1 kg/TJ, would give 56.16) | **56.276** | kg CO₂e / GJ (NCV) | IPCC 2006 Guidelines Vol. 2 Ch. 2 Table 2.4 (CO₂ 56,100; CH₄ 5; N₂O 0.1 kg/TJ) × AR6 GWP100 (CH₄ fossil 29.8; N₂O 273) | 🔎 |
-| `van_tkm` | Diesel van, average up to 3.5 t, freight | **0.61643** | kg CO₂e / tonne·km | UK DESNZ GHG Conversion Factors **2024**, Freighting goods › Vans › Diesel | 🔎 (2024 edition; update to the current year) |
-| `flight` | Flight, international to/from non-UK, economy, **without RF** | **0.0645** | kg CO₂e / passenger·km | UK DESNZ GHG Conversion Factors 2025, Business travel – air | 🔎 |
-| `eeio_truck` | Spend-based: US trucking-industry factor, specialized freight trucking, local (NAICS 484220; 484110 or 492110 couriers would also fit) | **0.595** | kg CO₂e / USD (2022) | US EPA Supply Chain GHG Emission Factors v1.3 (with margins) | 🔎 |
+| `diesel` | Diesel (100% mineral diesel), combustion | **2.66155** | kg CO₂e / litre | UK DESNZ GHG Conversion Factors **2025**, Fuels › Liquid fuels | |
+| `grid_eg` | Egypt grid electricity, average | **0.381** | kg CO₂ / kWh | Egyptian Electricity Holding Company (EEHC) Annual Report 2024/2025: 380.86 t CO₂/GWh | |
+| `r134a` | HFC-134a GWP100 | **1,530** | kg CO₂e / kg | IPCC AR6 WG1 Ch. 7, Table 7.SM.7 | (well known; DESNZ files use AR5 = 1,300) |
+| `natgas` | Natural gas, stationary combustion (commercial/institutional table; the manufacturing table, CH₄ 1 kg/TJ, would give 56.16) | **56.276** | kg CO₂e / GJ (NCV) | IPCC 2006 Guidelines Vol. 2 Ch. 2 Table 2.4 (CO₂ 56,100; CH₄ 5; N₂O 0.1 kg/TJ) × AR6 GWP100 (CH₄ fossil 29.8; N₂O 273) | |
+| `van_tkm` | Diesel van, average up to 3.5 t, freight | **0.61643** | kg CO₂e / tonne·km | UK DESNZ GHG Conversion Factors **2024**, Freighting goods › Vans › Diesel | (2024 edition; update to the current year) |
+| `flight` | Flight, international to/from non-UK, economy, **without RF** | **0.0645** | kg CO₂e / passenger·km | UK DESNZ GHG Conversion Factors 2025, Business travel – air | |
+| `eeio_truck` | Spend-based: US trucking-industry factor, specialized freight trucking, local (NAICS 484220; 484110 or 492110 couriers would also fit) | **0.595** | kg CO₂e / USD (2022) | US EPA Supply Chain GHG Emission Factors v1.3 (with margins) | |
 | `fx` | Exchange rate for the spend-based method | **50** | EGP / USD | Game assumption (approx. 2025–26 rate) | judgment |
 | `flour_pcf` | Flour cradle-to-gate footprint | **0.45** | kg CO₂e / kg | **Fictional** "Delta Mills" supplier declaration (story data, not a real factor) | fictional |
 

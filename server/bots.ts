@@ -9,7 +9,7 @@ let timers: NodeJS.Timeout[] = [];
 export function makeBots(s: GameState, c: Content, n: number, now: number) {
   const existing = Object.values(s.players).filter(p => p.bot).length;
   for (let i = 0; i < n; i++) {
-    const nm = `🤖${NAMES[(existing + i) % NAMES.length]}`;
+    const nm = `Bot ${NAMES[(existing + i) % NAMES.length]}`;
     addPlayer(s, c, nm, now, { bot: true });
   }
 }

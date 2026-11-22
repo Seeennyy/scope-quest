@@ -7,6 +7,7 @@ import { sfx, buzz } from '../lib/sound';
 import { Calculator } from '../ui/Calculator';
 import { DocCard, FactorCard } from '../ui/DocCard';
 import { binsOf, binLabel } from '../lib/bins';
+import { Icon, Logo, TeamMark } from '../ui/Icon';
 
 type Pub = any; type Me = any;
 const TOKEN_KEY = 'sq-token';
@@ -37,7 +38,7 @@ export default function Play() {
     return () => { s.close(); };
   }, []);
 
-  if (me?.removed) return <div className="phone center"><div className="big-emoji">🚫</div><h2>{ui('removed', lang)}</h2></div>;
+  if (me?.removed) return <div className="phone center"><div className="big-ico bad"><Icon name="user-x" /></div><h2>{ui('removed', lang)}</h2></div>;
   if (!content || !pub) return <div className="phone center"><div className="spinner" /><p>{ui('reconnecting', lang)}</p></div>;
   if (needJoin && !me) return <JoinView lang={lang} setLang={setLang} content={content} sock={sock.current!} onJoined={() => setNeedJoin(false)} />;
   if (!me) return <div className="phone center"><div className="spinner" /></div>;
@@ -46,16 +47,16 @@ export default function Play() {
   return (
     <div className="phone">
       <header className="ph-head" style={{ ['--team' as any]: me.team.color }}>
-        <div className="ph-team"><span className="ph-emoji">{me.team.emoji}</span><span>{tr(me.team.name, lang)}</span></div>
+        <div className="ph-team"><TeamMark team={me.team} lang={lang} /><span>{tr(me.team.name, lang)}</span></div>
         <div className="ph-name">{me.name}</div>
         <div className="ph-score" aria-label={ui('score', lang)}>{me.score}<small> {ui('points', lang)}</small></div>
         <button className="ph-lang" onClick={() => { const l: Lang = lang === 'en' ? 'ar' : 'en'; setLang(l); sock.current?.emit('lang', l); }}>{lang === 'en' ? 'ع' : 'EN'}</button>
       </header>
-      {!online && <div className="offline-bar">📶 {ui('reconnecting', lang)}</div>}
+      {!online && <div className="offline-bar"><Icon name="wifi-off" /> {ui('reconnecting', lang)}</div>}
       <main className="ph-main">
         <SceneView key={sc.id} sc={sc} pub={pub} me={me} content={content} lang={lang} sock={sock.current!} />
       </main>
-      <button className="ask-fab" onClick={() => setAskOpen(true)}>❓ {ui('askAuditor', lang)}</button>
+      <button className="ask-fab" onClick={() => setAskOpen(true)}><Icon name="help" /> {ui('askAuditor', lang)}</button>
       {askOpen && <AskSheet lang={lang} sock={sock.current!} onClose={() => setAskOpen(false)} />}
     </div>
   );
@@ -79,14 +80,14 @@ function JoinView({ lang, setLang, content, sock, onJoined }: { lang: Lang; setL
   return (
     <div className="phone join">
       <button className="ph-lang abs" onClick={() => setLang(lang === 'en' ? 'ar' : 'en')}>{lang === 'en' ? 'عربي' : 'English'}</button>
-      <div className="join-logo">🥖</div>
+      <div className="join-logo"><Logo /></div>
       <h1 className="join-title">{tr(content.meta.title, lang)}</h1>
       <p className="join-sub">{tr(content.meta.subtitle, lang)}</p>
       <form onSubmit={submit} className="join-form">
         <label>{ui('nickname', lang)}<input autoFocus maxLength={16} value={name} onChange={e => setName(e.target.value)} placeholder="Nour" autoComplete="nickname" /></label>
         {!qs('r') && <label>{ui('roomCode', lang)}<input inputMode="numeric" maxLength={4} value={room} onChange={e => setRoom(e.target.value.replace(/\D/g, ''))} placeholder="0000" /></label>}
         {err && <div className="err">{err}</div>}
-        <button className="btn-primary" disabled={busy || name.trim().length < 2}>{ui('go', lang)} →</button>
+        <button className="btn-primary" disabled={busy || name.trim().length < 2}>{ui('go', lang)}</button>
       </form>
       <p className="muted">{ui('noAccount', lang)}</p>
     </div>
@@ -98,11 +99,11 @@ function AskSheet({ lang, sock, onClose }: { lang: Lang; sock: Socket; onClose: 
   return (
     <div className="sheet-bg" onClick={onClose}>
       <div className="sheet" onClick={e => e.stopPropagation()}>
-        <h3>❓ {ui('askAuditor', lang)}</h3>
+        <h3>{ui('askAuditor', lang)}</h3>
         <textarea maxLength={140} value={t} onChange={e => setT(e.target.value)} placeholder={ui('askPh', lang)} rows={3} />
         <div className="row">
-          <button className="btn-ghost" onClick={onClose}>✕</button>
-          <button className="btn-primary" disabled={t.trim().length < 3} onClick={() => sock.emit('ask', { text: t }, (r: any) => { if (r?.ok) { setDone(ui('sent', lang)); setT(''); setTimeout(onClose, 900); } else setDone('⚠️'); })}>{done || ui('send', lang)}</button>
+          <button className="btn-ghost" onClick={onClose} aria-label="Close"><Icon name="x" /></button>
+          <button className="btn-primary" disabled={t.trim().length < 3} onClick={() => sock.emit('ask', { text: t }, (r: any) => { if (r?.ok) { setDone(ui('sent', lang)); setT(''); setTimeout(onClose, 900); } else setDone(lang === 'ar' ? 'حاول تاني' : 'Try again'); })}>{done || ui('send', lang)}</button>
         </div>
       </div>
     </div>
@@ -117,7 +118,7 @@ function useCountdown(pub: Pub) {
 function TimerPill({ pub }: { pub: Pub }) {
   const s = useCountdown(pub);
   if (pub.phase !== 'answering' || s == null) return null;
-  return <div className={`timer-pill ${s <= 5 ? 'hot' : ''}`}>⏱ {s}s</div>;
+  return <div className={`timer-pill ${s <= 5 ? 'hot' : ''}`}><Icon name="timer" /> <span dir="ltr">{s}s</span></div>;
 }
 
 function send(sock: Socket, payload: any) {
@@ -126,13 +127,13 @@ function send(sock: Socket, payload: any) {
 }
 
 function SceneView({ sc, pub, me, content, lang, sock }: { sc: Scene; pub: Pub; me: Me; content: Content; lang: Lang; sock: Socket }) {
-  if (pub.screenOnly && sc.type !== 'lobby' && sc.type !== 'finale') return <EyesUp lang={lang} hint="✋" />;
+  if (pub.screenOnly && sc.type !== 'lobby' && sc.type !== 'finale') return <EyesUp lang={lang} hint="hand" />;
   switch (sc.type) {
     case 'lobby': return (
       <div className="center">
-        <div className="big-emoji">{me.team.emoji}</div>
+        <div className="big-ico ok"><Icon name="circle-check" /></div>
         <h2>{ui('youreIn', lang)}</h2>
-        <div className="team-chip" style={{ background: me.team.color }}>{tr(me.team.name, lang)}</div>
+        <div className="team-chip"><TeamMark team={me.team} lang={lang} /> {tr(me.team.name, lang)}</div>
         <p className="muted">{ui('waitStart', lang)}</p>
       </div>);
     case 'story': case 'inventory': return <EyesUp lang={lang} />;
@@ -147,10 +148,10 @@ function SceneView({ sc, pub, me, content, lang, sock }: { sc: Scene; pub: Pub; 
 }
 
 function EyesUp({ lang, hint }: { lang: Lang; hint?: string }) {
-  return <div className="center eyes"><div className="big-emoji">{hint || '👀'}</div><h2>{ui('eyesUp', lang)}</h2></div>;
+  return <div className="center eyes"><div className="big-ico"><Icon name={hint || 'eye'} /></div><h2>{ui('eyesUp', lang)}</h2></div>;
 }
-function Waiting({ lang }: { lang: Lang }) { return <div className="locked">🔒 {ui('locked', lang)}</div>; }
-function Intro({ lang, title }: { lang: Lang; title?: string }) { return <div className="center"><div className="big-emoji pulse-e">⏳</div><h2>{ui('getReady', lang)}</h2>{title && <p className="muted">{title}</p>}</div>; }
+function Waiting({ lang }: { lang: Lang }) { return <div className="locked"><Icon name="lock" /> {ui('locked', lang)}</div>; }
+function Intro({ lang, title }: { lang: Lang; title?: string }) { return <div className="center"><div className="big-ico"><Icon name="hourglass" /></div><h2>{ui('getReady', lang)}</h2>{title && <p className="muted">{title}</p>}</div>; }
 
 function useResultFx(result: any) {
   const prev = useRef<string>('');
@@ -187,8 +188,8 @@ function VoteView({ sc, pub, me, lang, sock }: any) {
         })}
       </div>
       {mine && !rv && pub.phase !== 'answering' && <Waiting lang={lang} />}
-      {rv && me.result && <div className={`verdict ${me.result.ok ? 'ok' : 'no'}`}>{me.result.ok ? `✅ ${ui('correct', lang)} +${me.result.pts}` : `❌ ${ui('wrong', lang)}`}</div>}
-      {rv && <div className="reveal-lines">{(rv.reveal || []).map((l: any, i: number) => <p key={i}>{tr(l, lang)}</p>)}{rv.source && <p className="src">📚 {rv.source}</p>}</div>}
+      {rv && me.result && <div className={`verdict ${me.result.ok ? 'ok' : 'no'}`}><Icon name={me.result.ok ? 'circle-check' : 'circle-x'} /> {me.result.ok ? `${ui('correct', lang)} +${me.result.pts}` : ui('wrong', lang)}</div>}
+      {rv && <div className="reveal-lines">{(rv.reveal || []).map((l: any, i: number) => <p key={i}>{tr(l, lang)}</p>)}{rv.source && <p className="src">{ui('source', lang)}: {rv.source}</p>}</div>}
     </div>
   );
 }
@@ -228,22 +229,22 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
     if (catFor) return (
       <div className="q">
         <TimerPill pub={pub} />
-        <h3 className="cat-q">⭐ {ui('whichCat', lang)}</h3>
+        <h3 className="cat-q">{ui('whichCat', lang)}</h3>
         <div className="cats">{Object.entries(content.categories.ghgp).map(([k, v]: any) => <button key={k} className={`cat ${merged[catFor]?.cat === k ? 'mine' : ''}`} onClick={() => pickCat(k)}>{tr(v, lang)}</button>)}</div>
-        <button className="btn-ghost wide" onClick={() => pickCat(null)}>{ui('skip', lang)} →</button>
+        <button className="btn-ghost wide" onClick={() => pickCat(null)}>{ui('skip', lang)}</button>
       </div>);
     if (done && cur >= items.length) return (
       <div className="q">
         <TimerPill pub={pub} />
         <Waiting lang={lang} />
-        <div className="mylist">{items.map((x: any, i: number) => <button key={x.id} className="myrow" onClick={() => setCur(i)}><span>{x.icon} {tr(x.name, lang)}</span><b className={`tag ${iso ? 'iso' + merged[x.id]?.c : merged[x.id]?.c?.toLowerCase()}`}>{iso ? `ISO ${merged[x.id]?.c}` : merged[x.id]?.c}{merged[x.id]?.cat ? ` · ${merged[x.id].cat}` : ''}</b></button>)}</div>
+        <div className="mylist">{items.map((x: any, i: number) => <button key={x.id} className="myrow" onClick={() => setCur(i)}><span><Icon name={x.icon} /> {tr(x.name, lang)}</span><b className={`tag ${iso ? 'iso' + merged[x.id]?.c : merged[x.id]?.c?.toLowerCase()}`}>{iso ? `ISO ${merged[x.id]?.c}` : merged[x.id]?.c}{merged[x.id]?.cat ? ` · ${merged[x.id].cat}` : ''}</b></button>)}</div>
       </div>);
     return (
       <div className="q classify">
         <TimerPill pub={pub} />
         <div className="dots">{items.map((x: any, i: number) => <span key={x.id} onClick={() => setCur(i)} className={`dot ${i === idx ? 'cur' : ''} ${merged[x.id] ? 'done' : ''}`} />)}</div>
         <div className="card-item">
-          <div className="ci-icon">{it.icon}</div>
+          <div className="ci-icon"><Icon name={it.icon} /></div>
           <h2>{tr(it.name, lang)}</h2>
           <p>{tr(it.desc, lang)}</p>
         </div>
@@ -261,19 +262,19 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
   if (sc.drag) return (
     <div className="q">
       {!Object.keys(rv).length && <Waiting lang={lang} />}
-      {pub.phase === 'confirmed' && <div className="sum-me">{ui('yourScore', lang)}: <b>{Object.values(res).filter((x: any) => x.ok).length}/{items.length}</b> ✅ · +{me.result?.pts || 0}</div>}
+      {pub.phase === 'confirmed' && <div className="sum-me">{ui('yourScore', lang)}: <b>{Object.values(res).filter((x: any) => x.ok).length}/{items.length}</b> <span className="sum-pts">+{me.result?.pts || 0} {ui('points', lang)}</span></div>}
       <div className="results">
         {order.map((it: any) => {
           const r = rv[it.id]; const mine = merged[it.id]; const rr = res[it.id];
           const st = r ? (rr?.ok ? 'ok' : rr?.half ? 'half' : 'no') : 'pending';
           return (
             <div key={it.id} className={`res ${st} ${latest === it.id && r && pub.phase !== 'confirmed' ? 'latest' : ''}`}>
-              <div className="res-top"><span>{it.icon} {tr(it.name, lang)}</span><span className="res-mine">{mine ? binLabel(bins, mine.c) : '—'}</span></div>
+              <div className="res-top"><span><Icon name={it.icon} /> {tr(it.name, lang)}</span><span className="res-mine">{ui('yourAnswer', lang)}: {mine ? binLabel(bins, mine.c) : (lang === 'ar' ? 'مفيش' : 'none')}</span></div>
               {r ? <>
-                <div className="res-verdict">{rr?.ok ? '✅' : rr?.half ? '🟡' : '❌'} {r.ans.map((x: string) => binLabel(bins, x)).join(' / ')} {rr?.pts ? <b>+{rr.pts}</b> : null} {rr?.half ? <span className="bonus">{ui('halfRight', lang)}</span> : null}</div>
+                <div className="res-verdict"><Icon name={rr?.ok ? 'circle-check' : rr?.half ? 'circle-minus' : 'circle-x'} className={rr?.ok ? 'ok' : rr?.half ? 'half' : 'no'} /> {r.ans.map((x: string) => binLabel(bins, x)).join(' / ')} {rr?.pts ? <b>+{rr.pts}</b> : null} {rr?.half ? <span className="bonus">{ui('halfRight', lang)}</span> : null}</div>
                 <div className="res-why">{tr(r.why, lang)}</div>
-                <div className="src">📚 {r.src}</div>
-              </> : <div className="res-wait">⚖️ …</div>}
+                <div className="src">{ui('source', lang)}: {r.src}</div>
+              </> : <div className="res-wait">{ui('awaiting', lang)}</div>}
             </div>);
         })}
       </div>
@@ -287,12 +288,12 @@ function ClassifyView({ sc, pub, me, content, lang, sock }: any) {
           const correctLabel = r ? (iso ? [...(r.iso || []), ...(r.isoAlso || [])].map((x: number) => `ISO ${x}`).join(' / ') : `${r.scope}${r.cat ? ' · Cat ' + r.cat : ''}`) : '';
           return (
             <div key={it.id} className={`res ${r ? (rr?.ok ? 'ok' : 'no') : 'pending'} ${latest === it.id && r ? 'latest' : ''}`}>
-              <div className="res-top"><span>{it.icon} {tr(it.name, lang)}</span><span className="res-mine">{mine ? (iso ? `ISO ${mine.c}` : mine.c + (mine.cat ? ' · ' + mine.cat : '')) : '—'}</span></div>
+              <div className="res-top"><span><Icon name={it.icon} /> {tr(it.name, lang)}</span><span className="res-mine">{mine ? (iso ? `ISO ${mine.c}` : mine.c + (mine.cat ? ' · ' + mine.cat : '')) : '—'}</span></div>
               {r ? <>
-                <div className="res-verdict">{rr?.ok ? '✅' : '❌'} {correctLabel} {rr?.pts ? <b>+{rr.pts}</b> : null} {rr?.catOk ? <span className="bonus">⭐ {ui('bonus', lang)}</span> : null}</div>
+                <div className="res-verdict"><Icon name={rr?.ok ? 'circle-check' : 'circle-x'} className={rr?.ok ? 'ok' : 'no'} /> {correctLabel} {rr?.pts ? <b>+{rr.pts}</b> : null} {rr?.catOk ? <span className="bonus">{ui('bonus', lang)}</span> : null}</div>
                 <div className="res-why">{tr(iso ? r.isoReason : r.reason, lang)}</div>
-                <div className="src">📚 {iso ? r.isoSource : r.source}</div>
-              </> : <div className="res-wait">⚖️ …</div>}
+                <div className="src">{ui('source', lang)}: {iso ? r.isoSource : r.source}</div>
+              </> : <div className="res-wait">{ui('awaiting', lang)}</div>}
             </div>);
         })}
       </div>
@@ -324,7 +325,7 @@ function DragView({ sc, pub, me, content, lang, sock, items }: any) {
     setLocal(l => ({ ...l, [id]: binId })); setPickId(null); setPulse(binId); sfx.blip();
     setTimeout(() => setPulse(p => (p === binId ? null : p)), 500);
     const r = await send(sock, { scene: sc.id, item: id, c: binId });
-    if (r && r.ok === false) { setErr(r.error === 'closed' ? ui('timeUp', lang) : '⚠️ ' + (r.error || '')); setLocal(l => { const n = { ...l }; delete n[id]; return n; }); }
+    if (r && r.ok === false) { setErr(r.error === 'closed' ? ui('timeUp', lang) : (lang === 'ar' ? 'ما اتسجلتش. حاول تاني' : 'Not saved. Try again')); setLocal(l => { const n = { ...l }; delete n[id]; return n; }); }
     else setErr('');
   };
   const onDown = (e: React.PointerEvent) => { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); setDrag({ sx: e.clientX, sy: e.clientY, dx: 0, dy: 0, over: null }); };
@@ -333,16 +334,15 @@ function DragView({ sc, pub, me, content, lang, sock, items }: any) {
 
   return (
     <div className="q drag">
-      <TimerPill pub={pub} />
-      <div className="drag-progress" dir="ltr">{nPlaced}/{items.length} ✅</div>
+      <div className="drag-top"><div className="drag-progress">{lang === 'ar' ? `${nPlaced} من ${items.length} اترتبوا` : `${nPlaced} of ${items.length} sorted`}</div><TimerPill pub={pub} /></div>
       <div className="drag-zone">
         {it ? <div key={it.id} className={`card-item drag-card ${drag ? 'dragging' : ''}`} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => setDrag(null)}
           style={drag ? { transform: `translate(${drag.dx}px, ${drag.dy}px) rotate(${Math.max(-12, Math.min(12, drag.dx / 18))}deg) scale(${drag.over ? .45 : .92})`, opacity: drag.over ? .85 : 1 } : undefined}>
-          <div className="ci-icon">{it.icon}</div>
+          <div className="ci-icon"><Icon name={it.icon} /></div>
           <h2>{tr(it.name, lang)}</h2>
           <p>{tr(it.desc, lang)}</p>
-          <div className="drag-hint">👇 {ui('dragHint', lang)}</div>
-        </div> : <div className="all-sorted"><div className="big-emoji">🧺</div><h2>{ui('allSorted', lang)}</h2><p className="muted">{ui('tapToMove', lang)}</p></div>}
+          <div className="drag-hint">{ui('dragHint', lang)}</div>
+        </div> : <div className="all-sorted"><div className="big-ico ok"><Icon name="circle-check" /></div><h2>{ui('allSorted', lang)}</h2><p className="muted">{ui('tapToMove', lang)}</p></div>}
       </div>
       {err && <div className="drag-err">{err}</div>}
       <div className={`baskets n${bins.length}`}>
@@ -352,9 +352,9 @@ function DragView({ sc, pub, me, content, lang, sock, items }: any) {
             <div key={b.id} ref={el => { binRefs.current[b.id] = el; }} role="button" tabIndex={0} aria-label={b.label}
               className={`basket ${b.cls} ${drag?.over === b.id ? 'over' : ''} ${pulse === b.id ? 'got' : ''}`}
               onClick={() => it && drop(b.id)} onKeyDown={e => { if ((e.key === 'Enter' || e.key === ' ') && it) drop(b.id); }}>
-              <div className="bk-head"><span className="bk-ico">{b.icon}</span><b>{b.label}</b></div>
+              <div className="bk-head"><span className="bk-ico"><Icon name={b.icon} /></span><b>{b.label}</b></div>
               <div className="bk-hint">{b.hint}</div>
-              <div className="bk-in">{inside.map((x: any) => <button key={x.id} className={`bk-chip ${pickId === x.id ? 'sel' : ''}`} title={tr(x.name, lang)} onClick={e => { e.stopPropagation(); setPickId(pickId === x.id ? null : x.id); }}>{x.icon}</button>)}</div>
+              <div className="bk-in">{inside.map((x: any) => <button key={x.id} className={`bk-chip ${pickId === x.id ? 'sel' : ''}`} title={tr(x.name, lang)} onClick={e => { e.stopPropagation(); setPickId(pickId === x.id ? null : x.id); }}><Icon name={x.icon} /></button>)}</div>
             </div>);
         })}
       </div>
@@ -382,24 +382,24 @@ function CalcView({ sc, pub, me, content, lang, sock }: any) {
       {isM && <div className="method-chip">{ui('yourMethod', lang)}: <b>{tr(myOpt.name, lang)}</b></div>}
       <DocCard doc={doc} lang={lang} method={isM ? me.method : undefined} />
       <FactorCard f={factor} lang={lang} />
-      {fx && <div className="factor small">💱 {fx.value} {fx.unit} <span className="muted">({fx.source})</span></div>}
-      {isM && <p className="hint">💡 {tr(myOpt.hint, lang)}</p>}
+      {fx && <div className="factor small">{fx.value} {fx.unit} <span className="muted">({fx.source})</span></div>}
+      {isM && <p className="hint"><Icon name="bulb" /> {tr(myOpt.hint, lang)}</p>}
       {pub.phase === 'answering' ? <>
         <div className="answer-row" dir="ltr">
           <input inputMode="decimal" value={val} onChange={e => { setVal(e.target.value); setSent(false); }} placeholder="0.0" aria-label={ui('answerIn', lang)} />
           <span className="unit">t CO₂e</span>
-          <button className="btn-primary" disabled={!val} onClick={submit}>{sent ? '✓' : ui('submit', lang)}</button>
+          <button className="btn-primary" disabled={!val} onClick={submit}>{sent ? <Icon name="check" /> : ui('submit', lang)}</button>
         </div>
         {sent && <Waiting lang={lang} />}
-        <button className="link" onClick={() => setShowCalc(!showCalc)}>{showCalc ? '▾' : '▸'} 🧮</button>
+        <button className="link" onClick={() => setShowCalc(!showCalc)}><Icon name={showCalc ? 'chevron-down' : 'chevron-right'} /> <Icon name="calculator" /></button>
         {showCalc && <Calculator onUse={n => { setVal(String(Math.round(n * 1000) / 1000)); setSent(false); }} />}
       </> : <>
         {me.answer?.v != null && <div className="my-num" dir="ltr">{num(me.answer.v, 2)} t CO₂e</div>}
         {!rv && <Waiting lang={lang} />}
         {rv && <div className={`verdict ${me.result?.ok ? 'ok' : me.result?.close ? 'mid' : 'no'}`}>
-          {me.result?.ok ? `✅ ${ui('correct', lang)} +${me.result.pts}` : me.result?.unitSlip ? `⚠️ ${ui('unitSlip', lang)}` : me.result?.close ? `🟡 ${ui('close', lang)} +${me.result.pts}` : `❌ ${ui('wrong', lang)}`}
+          <Icon name={me.result?.ok ? 'circle-check' : me.result?.unitSlip ? 'alert' : me.result?.close ? 'circle-minus' : 'circle-x'} /> {me.result?.ok ? `${ui('correct', lang)} +${me.result.pts}` : me.result?.unitSlip ? ui('unitSlip', lang) : me.result?.close ? `${ui('close', lang)} +${me.result.pts}` : ui('wrong', lang)}
         </div>}
-        {rv && <div className="reveal-lines"><p dir="ltr"><b>{num(rv.answer, 1)} t CO₂e</b></p><p>{tr(rv.formula, lang)}</p><p className="src">📚 {rv.source}</p></div>}
+        {rv && <div className="reveal-lines"><p dir="ltr"><b>{num(rv.answer, 1)} t CO₂e</b></p><p>{tr(rv.formula, lang)}</p><p className="src">{ui('source', lang)}: {rv.source}</p></div>}
       </>}
     </div>
   );
@@ -414,8 +414,8 @@ function BoardView({ sc, pub, me, content, lang, sock }: any) {
   if (pub.phase === 'intro') return <Intro lang={lang} title={tr(sc.title, lang)} />;
   if (pub.phase !== 'answering') {
     const plan = pub.board?.plans?.[me.teamId] || [];
-    return <div className="q"><h3>{me.team.emoji} {ui('waitingPlan', lang)}</h3>
-      <div className="mylist">{plan.length ? plan.map((id: string) => { const l = content.levers.find((x: any) => x.id === id); return <div key={id} className="myrow">{l.icon} {tr(l.name, lang)}</div>; }) : <EyesUp lang={lang} />}</div></div>;
+    return <div className="q"><h3><TeamMark team={me.team} lang={lang} /> {ui('waitingPlan', lang)}</h3>
+      <div className="mylist">{plan.length ? plan.map((id: string) => { const l = content.levers.find((x: any) => x.id === id); return <div key={id} className="myrow"><Icon name={l.icon} /> {tr(l.name, lang)}</div>; }) : <EyesUp lang={lang} />}</div></div>;
   }
   const toggle = (id: string) => { setSent(false); setSel(s => s.includes(id) ? s.filter(x => x !== id) : [...s, id]); };
   return (
@@ -426,11 +426,11 @@ function BoardView({ sc, pub, me, content, lang, sock }: any) {
         {content.levers.map((l: any) => {
           const on = sel.includes(l.id); const cant = !on && spent + l.cost > budget;
           return <button key={l.id} className={`lever ${on ? 'on' : ''}`} disabled={cant} onClick={() => toggle(l.id)}>
-            <span className="lv-ico">{l.icon}</span><span className="lv-t"><b>{tr(l.name, lang)}</b><small>{tr(l.effect, lang)}</small></span><span className="lv-c">🪙{l.cost}</span>
+            <span className="lv-ico"><Icon name={l.icon} /></span><span className="lv-t"><b>{tr(l.name, lang)}</b><small>{tr(l.effect, lang)}</small></span><span className="lv-c"><Icon name="coins" /> {l.cost}</span>
           </button>;
         })}
       </div>
-      <button className="btn-primary wide" disabled={spent > budget} onClick={async () => { const r = await send(sock, { scene: sc.id, levers: sel }); if (r?.ok) setSent(true); }}>{sent ? '✓ ' + ui('planSent', lang) : ui('sendPlan', lang)}</button>
+      <button className="btn-primary wide" disabled={spent > budget} onClick={async () => { const r = await send(sock, { scene: sc.id, levers: sel }); if (r?.ok) setSent(true); }}>{sent ? ui('planSent', lang) : ui('sendPlan', lang)}</button>
     </div>
   );
 }
@@ -456,15 +456,15 @@ function FinaleCard({ me, lang, content }: { me: Me; lang: Lang; content: Conten
   const c = me.card;
   useEffect(() => { sfx.fanfare(); buzz([60, 60, 60]); }, []);
   if (!c) return <EyesUp lang={lang} />;
-  const medal = c.teamRank === 1 ? '🥇' : c.teamRank === 2 ? '🥈' : c.teamRank === 3 ? '🥉' : '🎖️';
+  const medal = c.teamRank ? `#${c.teamRank}` : '';
   return (
     <div className="center">
       <div className="result-card" style={{ ['--team' as any]: me.team.color }}>
-        <div className="rc-top">{tr(content.meta.title, lang)} · {tr(content.meta.company, lang)}</div>
+        <div className="rc-top"><Logo /> {tr(content.meta.title, lang)}</div>
         <div className="rc-name">{me.name}</div>
-        <div className="rc-badge">🏅 {tr(c.badge, lang)}</div>
+        <div className="rc-badge"><Icon name="award" /> {tr(c.badge, lang)}</div>
         <div className="rc-line" dir="ltr">{c.classified}/{c.total} {ui('classified', lang)}</div>
-        <div className="rc-line">{me.team.emoji} {tr(me.team.name, lang)} {medal}</div>
+        <div className="rc-line"><TeamMark team={me.team} lang={lang} /> {tr(me.team.name, lang)} {medal}</div>
         <div className="rc-score">{c.score} {ui('points', lang)} · #{c.rank}/{c.of}</div>
       </div>
       <p className="muted">{ui('screenshot', lang)}</p>

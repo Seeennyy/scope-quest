@@ -1,12 +1,12 @@
 {
   "meta": {
     "title": {
-      "en": "Scope Quest",
-      "ar": "سكوب كويست"
+      "en": "Carbon School",
+      "ar": "مدرسة الكربون"
     },
     "subtitle": {
-      "en": "The Nile Loaf Carbon Inventory",
-      "ar": "جرد الكربون لشركة نايل لوف"
+      "en": "Greenhouse gas accounting in practice",
+      "ar": "محاسبة غازات الاحتباس الحراري عملياً"
     },
     "instructorName": "Dr. Instructor",
     "company": {
@@ -30,8 +30,7 @@
         "en": "Team Felucca",
         "ar": "فريق الفلوكة"
       },
-      "emoji": "⛵",
-      "color": "#1f7a8c"
+      "color": "#1E6FA8"
     },
     {
       "id": "koshary",
@@ -39,8 +38,7 @@
         "en": "Team Koshary",
         "ar": "فريق الكشري"
       },
-      "emoji": "🍲",
-      "color": "#c8553d"
+      "color": "#B4472C"
     },
     {
       "id": "karkade",
@@ -48,8 +46,7 @@
         "en": "Team Karkadeh",
         "ar": "فريق الكركديه"
       },
-      "emoji": "🌺",
-      "color": "#8e2c58"
+      "color": "#8E2C58"
     },
     {
       "id": "scarab",
@@ -57,8 +54,7 @@
         "en": "Team Scarab",
         "ar": "فريق الجعران"
       },
-      "emoji": "🪲",
-      "color": "#2d6a4f"
+      "color": "#0F5C4A"
     },
     {
       "id": "lotus",
@@ -66,8 +62,7 @@
         "en": "Team Lotus",
         "ar": "فريق اللوتس"
       },
-      "emoji": "🪷",
-      "color": "#5a4fcf"
+      "color": "#6B4E9B"
     },
     {
       "id": "taameya",
@@ -75,8 +70,7 @@
         "en": "Team Ta'ameya",
         "ar": "فريق الطعمية"
       },
-      "emoji": "🧆",
-      "color": "#b07d12"
+      "color": "#8A6A12"
     }
   ],
   "sources": {
@@ -242,7 +236,7 @@
   "items": [
     {
       "id": "oven_gas",
-      "icon": "🔥",
+      "icon": "flame",
       "pos": [
         470,
         430
@@ -284,7 +278,7 @@
     },
     {
       "id": "own_diesel_vans",
-      "icon": "🚐",
+      "icon": "truck",
       "pos": [
         880,
         540
@@ -326,7 +320,7 @@
     },
     {
       "id": "grid_power",
-      "icon": "⚡",
+      "icon": "zap",
       "pos": [
         1430,
         520
@@ -368,7 +362,7 @@
     },
     {
       "id": "own_ev_vans",
-      "icon": "🔌",
+      "icon": "plug-zap",
       "pos": [
         990,
         470
@@ -410,7 +404,7 @@
     },
     {
       "id": "fridge_leak",
-      "icon": "❄️",
+      "icon": "snowflake",
       "pos": [
         610,
         360
@@ -452,7 +446,7 @@
     },
     {
       "id": "leased_vans",
-      "icon": "🔑",
+      "icon": "key",
       "pos": [
         1080,
         610
@@ -496,7 +490,7 @@
     },
     {
       "id": "generator",
-      "icon": "🛢️",
+      "icon": "cylinder",
       "pos": [
         400,
         300
@@ -538,7 +532,7 @@
     },
     {
       "id": "courier",
-      "icon": "📦",
+      "icon": "package",
       "pos": [
         360,
         660
@@ -580,7 +574,7 @@
     },
     {
       "id": "mill_truck",
-      "icon": "🚚",
+      "icon": "truck",
       "pos": [
         300,
         480
@@ -621,7 +615,7 @@
     },
     {
       "id": "wheat_truck",
-      "icon": "🌾",
+      "icon": "wheat",
       "pos": [
         130,
         170
@@ -664,7 +658,7 @@
     },
     {
       "id": "van_factory",
-      "icon": "🏭",
+      "icon": "factory",
       "pos": [
         1330,
         200
@@ -705,7 +699,7 @@
     },
     {
       "id": "diesel_delivery",
-      "icon": "⛽",
+      "icon": "fuel",
       "pos": [
         1180,
         400
@@ -748,7 +742,7 @@
     },
     {
       "id": "flights",
-      "icon": "✈️",
+      "icon": "plane",
       "pos": [
         1460,
         110
@@ -789,7 +783,7 @@
     },
     {
       "id": "commuting",
-      "icon": "🚌",
+      "icon": "bus",
       "pos": [
         1260,
         770
@@ -830,7 +824,7 @@
     },
     {
       "id": "app_delivery",
-      "icon": "🛵",
+      "icon": "bike",
       "pos": [
         700,
         790
@@ -871,7 +865,7 @@
     },
     {
       "id": "packaging",
-      "icon": "🗑️",
+      "icon": "trash",
       "pos": [
         930,
         800
@@ -913,7 +907,7 @@
   ],
   "calcs": {
     "calc_vans": {
-      "icon": "⛽",
+      "icon": "fuel",
       "factor": "diesel",
       "answer": 47.908,
       "unit": "t CO₂e",
@@ -973,7 +967,7 @@
       }
     },
     "calc_elec": {
-      "icon": "⚡",
+      "icon": "zap",
       "factor": "grid_eg",
       "answer": 165.735,
       "unit": "t CO₂e",
@@ -1043,7 +1037,7 @@
       }
     },
     "calc_fridge": {
-      "icon": "❄️",
+      "icon": "snowflake",
       "factor": "r134a",
       "answer": 64.26,
       "unit": "t CO₂e",
@@ -1123,7 +1117,7 @@
       }
     },
     "calc_flights": {
-      "icon": "✈️",
+      "icon": "plane",
       "factor": "flight",
       "answer": 1.873,
       "unit": "t CO₂e",
@@ -1313,7 +1307,7 @@
   "levers": [
     {
       "id": "ev",
-      "icon": "🔌",
+      "icon": "plug-zap",
       "cost": 40,
       "name": {
         "en": "Electrify the 6 diesel vans",
@@ -1326,7 +1320,7 @@
     },
     {
       "id": "leak",
-      "icon": "🔧",
+      "icon": "wrench",
       "cost": 15,
       "name": {
         "en": "Fix refrigerant leaks",
@@ -1339,7 +1333,7 @@
     },
     {
       "id": "ppa",
-      "icon": "📜",
+      "icon": "file",
       "cost": 20,
       "name": {
         "en": "Green electricity contract",
@@ -1352,7 +1346,7 @@
     },
     {
       "id": "solar",
-      "icon": "☀️",
+      "icon": "sun",
       "cost": 35,
       "name": {
         "en": "Rooftop solar (25% of power)",
@@ -1365,7 +1359,7 @@
     },
     {
       "id": "courier_ev",
-      "icon": "🛺",
+      "icon": "bus",
       "cost": 15,
       "name": {
         "en": "Courier switches to EVs / rail",
@@ -1378,7 +1372,7 @@
     },
     {
       "id": "shuttle",
-      "icon": "🚌",
+      "icon": "bus",
       "cost": 10,
       "name": {
         "en": "Staff commuting shuttle",
@@ -1391,7 +1385,7 @@
     },
     {
       "id": "supplier",
-      "icon": "🤝",
+      "icon": "handshake",
       "cost": 30,
       "name": {
         "en": "Engage the flour mill",
@@ -1882,16 +1876,16 @@
       },
       "honest": [
         {
-          "en": "⚡ Electric vans don't make emissions vanish. They MOVE from Scope 1 to Scope 2 (on Egypt's gas-heavy grid).",
-          "ar": "⚡ الفانات الكهربا مش بتخفي الانبعاثات… بتنقلها من النطاق 1 للنطاق 2 (على شبكة مصر اللي معتمدة على الغاز)."
+          "en": "Electric vans don't make emissions vanish. They MOVE from Scope 1 to Scope 2 (on Egypt's gas-heavy grid).",
+          "ar": "الفانات الكهربا مش بتخفي الانبعاثات… بتنقلها من النطاق 1 للنطاق 2 (على شبكة مصر اللي معتمدة على الغاز)."
         },
         {
-          "en": "📜 A green electricity contract changes MARKET-based Scope 2, not LOCATION-based Scope 2. You must report both.",
-          "ar": "📜 عقد الكهرباء الخضراء بيغيّر النطاق 2 حسب السوق، مش حسب الموقع. ولازم تبلّغ الاتنين."
+          "en": "A green electricity contract changes MARKET-based Scope 2, not LOCATION-based Scope 2. You must report both.",
+          "ar": "عقد الكهرباء الخضراء بيغيّر النطاق 2 حسب السوق، مش حسب الموقع. ولازم تبلّغ الاتنين."
         },
         {
-          "en": "🚌 The shuttle might be great, but we never measured commuting, so we can't show a number. You can't manage what you don't measure.",
-          "ar": "🚌 الأتوبيس ممكن يكون ممتاز… بس إحنا ما قسناش التنقل، فمفيش رقم. اللي ما يتقاسش ما يتداراش."
+          "en": "The shuttle might be great, but we never measured commuting, so we can't show a number. You can't manage what you don't measure.",
+          "ar": "الأتوبيس ممكن يكون ممتاز… بس إحنا ما قسناش التنقل، فمفيش رقم. اللي ما يتقاسش ما يتداراش."
         }
       ],
       "wisdom": {

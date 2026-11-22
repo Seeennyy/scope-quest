@@ -10,7 +10,7 @@ export function binsOf(sc: Scene, c: Content, lang: Lang): BinView[] {
   if (sc.mode === 'iso') return Object.entries(c.categories.iso).map(([k, v]) => ({ id: k, icon: '', label: tr(v, lang), hint: '', cls: `iso${k}` }));
   return ['S1', 'S2', 'S3'].map(s => ({ id: s, icon: '', label: lang === 'ar' ? `نطاق ${s[1]}` : `Scope ${s[1]}`, hint: '', cls: s.toLowerCase() }));
 }
-export const binLabel = (bins: BinView[], id?: string) => { const b = bins.find(x => x.id === id); return b ? `${b.icon ? b.icon + ' ' : ''}${b.label}` : (id || '—'); };
+export const binLabel = (bins: BinView[], id?: string) => { const b = bins.find(x => x.id === id); return b ? b.label : (id || '—'); };
 
 // Correct basket(s) for an item (full content only: host/screen).
 export function answerOf(sc: Scene, it: any): string[] {

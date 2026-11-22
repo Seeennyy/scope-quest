@@ -1,7 +1,7 @@
 {
-  "name": "scope-quest",
+  "name": "carbon-school",
   "version": "1.0.0",
-  "description": "Scope Quest: live GHG lecture game (Nile Loaf)",
+  "description": "Carbon School: live GHG lecture game (Nile Loaf)",
   "scripts": {
     "dev": "npm run build && node dist/server.cjs",
     "build": "vite build && npm run build:server",
@@ -17,11 +17,13 @@
   "dependencies": {
     "compression": "^1.8.2",
     "express": "^5.3.0",
-    "socket.io": "^4.8.4",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.4"
   },
   "devDependencies": {
     "@fontsource/cairo": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/ibm-plex-sans-arabic": "^5.3.0",
     "@types/compression": "^1.8.1",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
@@ -30,6 +32,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "esbuild": "^0.28.2",
+    "lucide-react": "^1.77.0",
     "puppeteer-core": "^25.18.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

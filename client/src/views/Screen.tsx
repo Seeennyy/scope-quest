@@ -8,6 +8,7 @@ import { Countdown, Confetti, Bars, ScopeStack, LeaderboardPanel, TeamName, useN
 import { DocCard, FactorCard } from '../ui/DocCard';
 import { newState, hostCommand, tick, finaleSteps } from '../../../shared/engine';
 import { binsOf, binLabel, answerOf, reasonOf, sourceOf } from '../lib/bins';
+import { Icon, Logo, TeamMark } from '../ui/Icon';
 import { screenView } from '../../../shared/views';
 
 export default function Screen() {
@@ -76,9 +77,9 @@ export default function Screen() {
   return (
     <div className={`screen lang-${lang}`} dir={lang === 'ar' ? 'rtl' : 'ltr'} onClick={() => { if (!soundOk) { sfx.unlock(); setSoundOk(true); } }}>
       <Stage v={view} c={c} lang={lang} join={join} skew={local ? 0 : skew.current} screenOnly={!!view.settings?.screenOnly} />
-      {!soundOk && !preview && <div className="sound-gate">🔊 Click anywhere to enable sound · press F for fullscreen</div>}
-      {!online && !local && lostSince && <div className="lost">📡 Connection lost. Reconnecting… <b>Shift+L</b> = screen-only mode (keyboard: → next, ← back, S start, C confirm)</div>}
-      {local && <div className="local-badge">✋ Screen-only mode · → next · ← back · S start · C confirm</div>}
+      {!soundOk && !preview && <div className="sound-gate"><Icon name="volume" /> Click anywhere to turn sound on. Press F for full screen.</div>}
+      {!online && !local && lostSince && <div className="lost"><Icon name="wifi-off" /> Connection lost. Reconnecting… Press <b>Shift+L</b> to carry on without phones (Right arrow next, Left arrow back, S start, C confirm).</div>}
+      {local && <div className="local-badge">Screen-only mode: Right arrow next, Left arrow back, S start, C confirm</div>}
     </div>
   );
 }
@@ -98,10 +99,10 @@ function Stage({ v, c, lang, join, skew, screenOnly }: { v: any; c: Content; lan
   return (
     <>
       <div className="topbar">
-        <div className="tb-title">🥖 {tr(c.meta.title, lang)}{chapter?.title ? <span className="tb-ch"> · {tr(chapter.title, lang)}</span> : null}</div>
-        {stamped && !showCounter && <div className="stamp-pill" aria-live="polite">✔ {lang === 'ar' ? 'اعتمدتها كبيرة المدققين' : 'Confirmed by the Chief Auditor'} — {c.meta.instructorName}</div>}
+        <div className="tb-title"><Logo /> <span className="tb-name">{tr(c.meta.title, lang)}</span>{chapter?.title ? <span className="tb-ch">{tr(chapter.title, lang)}</span> : null}</div>
+        {stamped && !showCounter && <div className="stamp-pill" aria-live="polite"><Icon name="check" /> {lang === 'ar' ? 'معتمد من' : 'Confirmed by'} {c.meta.instructorName}</div>}
         {showCounter && !screenOnly && <div className="tb-count"><b>{v.counts.answered}</b> {ui('of', lang)} <b>{v.counts.total}</b> {ui('answered', lang)}</div>}
-        <div className="tb-room">{join?.short ? <>{join.short} · </> : null}{ui('room', lang)} <b>{v.roomCode}</b> · 👥 {v.counts.joined}</div>
+        <div className="tb-room">{join?.short ? <span className="tb-url" dir="ltr">{join.short}</span> : null}<span>{ui('room', lang)} <b dir="ltr">{v.roomCode}</b></span><span className="tb-people"><Icon name="users" /> {v.counts.joined}</span></div>
       </div>
       <div className="stage">
         <SceneStage sc={sc} v={v} c={c} lang={lang} join={join} skew={skew} screenOnly={screenOnly} />
@@ -109,7 +110,7 @@ function Stage({ v, c, lang, join, skew, screenOnly }: { v: any; c: Content; lan
       </div>
       {v.overlay === 'leaderboard' && <div className="overlay"><LeaderboardPanel lb={v.leaderboard} c={c} lang={lang} /></div>}
       {v.overlay === 'qr' && join && <div className="overlay"><JoinPanel join={join} lang={lang} /></div>}
-      {v.pinnedAsk && <div className="pinned-ask">❓ <b>{v.pinnedAsk.name}:</b> {v.pinnedAsk.text}</div>}
+      {v.pinnedAsk && <div className="pinned-ask"><span className="pa-k">{lang === 'ar' ? 'سؤال من' : 'Question from'} {v.pinnedAsk.name}</span> {v.pinnedAsk.text}</div>}
     </>
   );
 }
@@ -119,7 +120,7 @@ function JoinPanel({ join, lang, compact }: { join: any; lang: Lang; compact?: b
     <div className={`joinpanel ${compact ? 'compact' : ''}`}>
       <img className="qr" src={`/api/qr.svg?u=${encodeURIComponent(join.url)}`} alt="QR" />
       <div className="jp-text">
-        <div className="jp-scan">📱 {ui('scanToJoin', lang)}</div>
+        <div className="jp-scan">{ui('scanToJoin', lang)}</div>
         <div className="jp-or">{ui('orGoTo', lang)}</div>
         <div className="jp-url">{join.short}</div>
         <div className="jp-code">{ui('room', lang)} <b>{join.room}</b></div>
@@ -154,7 +155,7 @@ function SceneStage({ sc, v, c, lang, join, skew, screenOnly }: any) {
       <div className="story">
         {sc.title && <h1 className="chapter-title">{tr(sc.title, lang)}</h1>}
         <Ceo line={sc.lines[v.step]} lang={lang} c={c} big />
-        {sc.showConsolidation && v.step === sc.lines.length - 1 && <div className="board-note">📌 {tr(c.meta.consolidation, lang)}</div>}
+        {sc.showConsolidation && v.step === sc.lines.length - 1 && <div className="board-note">{tr(c.meta.consolidation, lang)}</div>}
       </div>);
     case 'vote': return <VoteStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
     case 'classify': return sc.drag ? <BasketStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} /> : sc.mode === 'iso' ? <IsoStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} /> : <ClassifyStage sc={sc} v={v} c={c} lang={lang} screenOnly={screenOnly} />;
@@ -183,8 +184,8 @@ function Lobby({ v, c, lang, join }: any) {
       </div>
       <div className="lobby-right">
         <div className={`counter ${bump ? 'bump' : ''}`}>{v.counts.joined}<small>{ui('players', lang)}</small></div>
-        <div className="bubbles">{names.slice(-60).reverse().map((n: any, i: number) => { const t = c.teams.find((x: any) => x.id === n.teamId)!; return <span key={n.id} className="nick" style={{ background: t.color, animationDelay: `${(i % 6) * 0.03}s` }}>{n.name}</span>; })}</div>
-        <div className="team-strip">{v.teams.map((t: any) => { const tm = c.teams.find((x: any) => x.id === t.id)!; return <span key={t.id} className="ts" style={{ borderColor: tm.color }}>{tm.emoji} {tr(tm.name, lang)} <b>{t.members}</b></span>; })}</div>
+        <div className="bubbles">{names.slice(-60).reverse().map((n: any, i: number) => { const t = c.teams.find((x: any) => x.id === n.teamId)!; return <span key={n.id} className="nick"><i style={{ background: t.color }} />{n.name}</span>; })}</div>
+        <div className="team-strip">{v.teams.map((t: any) => { const tm = c.teams.find((x: any) => x.id === t.id)!; return <span key={t.id} className="ts"><TeamMark team={tm} lang={lang} /> {tr(tm.name, lang)} <b>{t.members}</b></span>; })}</div>
       </div>
     </div>
   );
@@ -197,7 +198,7 @@ function VoteStage({ sc, v, c, lang, screenOnly }: any) {
   const showBars = (v.phase === 'reveal' || confirmed) && !screenOnly;
   return (
     <div className="vote">
-      {sc.poll && <div className="poll-tag">📊 {lang === 'ar' ? 'استطلاع سريع' : 'Pulse poll'}</div>}
+      {sc.poll && <div className="poll-tag">{lang === 'ar' ? 'استطلاع سريع' : 'Pulse poll'}</div>}
       <h1 className="q-big">{tr(sc.q, lang)}</h1>
       {screenOnly && v.phase !== 'confirmed' && v.phase !== 'intro' && <div className="hands">{ui('showOfHands', lang)}</div>}
       <div className={`vote-grid n${sc.options.length}`}>
@@ -212,7 +213,7 @@ function VoteStage({ sc, v, c, lang, screenOnly }: any) {
             </div>);
         })}
       </div>
-      {confirmed && sc.reveal && <div className="reveal-box">{sc.reveal.map((l: any, i: number) => <p key={i} style={{ animationDelay: `${0.6 + i * 0.7}s` }}>{tr(l, lang)}</p>)}<div className="src">📚 {sc.revealSource?.split(' + ').map((k: string) => c.sources[k.trim()]).join(' · ')}</div></div>}
+      {confirmed && sc.reveal && <div className="reveal-box">{sc.reveal.map((l: any, i: number) => <p key={i} style={{ animationDelay: `${0.6 + i * 0.7}s` }}>{tr(l, lang)}</p>)}<div className="src">{ui('source', lang)}: {sc.revealSource?.split(' + ').map((k: string) => c.sources[k.trim()]).join(' · ')}</div></div>}
       <AuditorStamp c={c} lang={lang} show={confirmed && !!sc.correct} />
     </div>
   );
@@ -231,9 +232,9 @@ function ClassifyStage({ sc, v, c, lang, screenOnly }: any) {
         <div className="side">
           <h2 className="side-title">{tr(sc.title, lang)}</h2>
           {sc.ceo && <Ceo line={sc.ceo} lang={lang} c={c} />}
-          <div className="side-items">{items.map((it: any, i: number) => <div key={it.id} className="side-item"><span className="si-n">{i + 1}</span><span className="si-ico">{it.icon}</span><span>{tr(it.name, lang)}</span></div>)}</div>
+          <div className="side-items">{items.map((it: any, i: number) => <div key={it.id} className="side-item"><span className="si-n">{i + 1}</span><span className="si-ico"><Icon name={it.icon} /></span><span>{tr(it.name, lang)}</span></div>)}</div>
           <div className="bins-legend">{SCOPES.map(s => <span key={s} className={`bin-chip ${s.toLowerCase()}`}>{lang === 'ar' ? `نطاق ${s[1]}` : `Scope ${s[1]}`}</span>)}</div>
-          {v.phase === 'closed' && <div className="locked-big">🔒 {lang === 'ar' ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+          {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {lang === 'ar' ? 'الإجابات اتقفلت' : 'Answers locked'}</div>}
         </div>
       </div>);
   }
@@ -247,18 +248,18 @@ function ClassifyStage({ sc, v, c, lang, screenOnly }: any) {
     <div className="reveal-item">
       <div className="ri-left">
         <div className="ri-progress">{v.revealItem + 1} / {items.length}</div>
-        <div className="ri-icon">{it.icon}</div>
+        <div className="ri-icon"><Icon name={it.icon} /></div>
         <h1 className="ri-name">{tr(it.name, lang)}</h1>
         <p className="ri-desc">{tr(it.desc, lang)}</p>
-        {contested && !confirmed && !screenOnly && <div className="contested">🔥 {lang === 'ar' ? 'القاعة منقسمة!' : 'The room is split!'}</div>}
+        {contested && !confirmed && !screenOnly && <div className="contested">{lang === 'ar' ? 'القاعة منقسمة' : 'The room is split'}</div>}
       </div>
       <div className="ri-right">
-        {screenOnly && !confirmed ? <div className="hands big">{ui('showOfHands', lang)}<div className="hands-opts">{SCOPES.map(s => <span key={s} className={`bin-chip ${s.toLowerCase()}`}>{lang === 'ar' ? `نطاق ${s[1]}` : `Scope ${s[1]}`}</span>)}</div></div>
+        {screenOnly && !confirmed ? <div className="hands big"><span>{ui('showOfHands', lang)}</span><div className="hands-opts">{SCOPES.map(s => <span key={s} className={`bin-chip ${s.toLowerCase()}`}>{lang === 'ar' ? `نطاق ${s[1]}` : `Scope ${s[1]}`}</span>)}</div></div>
           : <Bars total={total} correct={confirmed ? [it.scope] : undefined} rows={SCOPES.map(s => ({ id: s, label: lang === 'ar' ? `نطاق ${s[1]}` : `Scope ${s[1]}`, cls: s.toLowerCase(), n: sp.counts[s] || 0 }))} />}
         {confirmed && <div className="answer-box">
           <div className="ab-head"><span className={`bin-chip ${it.scope.toLowerCase()}`}>{lang === 'ar' ? `نطاق ${it.scope[1]}` : `Scope ${it.scope[1]}`}</span>{it.cat && <span className="cat-chip">{lang === 'ar' ? 'فئة' : 'Cat'} {tr(c.categories.ghgp[it.cat], lang)}</span>}</div>
           <p className="ab-why">{tr(it.reason, lang)}</p>
-          <div className="src">📚 {c.sources[it.source]}</div>
+          <div className="src">{ui('source', lang)}: {c.sources[it.source]}</div>
         </div>}
       </div>
       {v.debate && v.revealSub === 'debate' && <DebateCard d={v.debate} lang={lang} iso={false} c={c} />}
@@ -272,7 +273,7 @@ function DebateCard({ d, lang, iso, c, labFn, clsFn }: any) {
   const lab = (x: string) => labFn ? labFn(x) : iso ? tr(c.categories.iso[x], lang) : (lang === 'ar' ? `نطاق ${x[1]}` : `Scope ${x[1]}`);
   return (
     <div className="debate">
-      <div className="debate-title">🎤 {ui('debate', lang)}</div>
+      <div className="debate-title">{ui('debate', lang)}</div>
       <div className="debate-vs">
         {d.sides.length ? d.sides.map((s: any, i: number) => <React.Fragment key={s.pid}>{i === 1 && <div className="vs">VS</div>}<div className={`side-card ${clsFn ? clsFn(s.choice) : iso ? 'iso' + s.choice : s.choice.toLowerCase()}`}><div className="sc-name">{s.name}</div><div className="sc-choice">{lab(s.choice)}</div><div className="sc-sub">{ui('defend', lang)}</div></div></React.Fragment>)
           : <div className="side-card">{lang === 'ar' ? 'مين عايز يدافع؟' : 'Who wants to defend their answer?'}</div>}
@@ -292,13 +293,13 @@ function BasketStage({ sc, v, c, lang, screenOnly }: any) {
       <div className="basket-board">
         <h1 className="q-big bb-title">{tr(sc.title, lang)}</h1>
         {sc.ceo && <p className="bb-sub">{tr(sc.ceo, lang)}</p>}
-        <div className="bb-cards">{items.map((it: any) => <span key={it.id} className="bb-card">{it.icon} {tr(it.name, lang)}</span>)}</div>
+        <div className="bb-cards">{items.map((it: any) => <span key={it.id} className="bb-card"><Icon name={it.icon} /> {tr(it.name, lang)}</span>)}</div>
         <div className={`bb-bins n${bins.length}`}>{bins.map(b => <div key={b.id} className={`bb-bin ${b.cls}`}>
-          <div className="bb-ico">{b.icon}</div><b className="bb-label">{b.label}</b><div className="bb-hint">{b.hint}</div>
-          {!screenOnly && v.phase !== 'intro' && <div className="bb-n" dir="ltr">🃏 {drops[b.id] || 0}</div>}
+          <div className="bb-ico"><Icon name={b.icon} /></div><b className="bb-label">{b.label}</b><div className="bb-hint">{b.hint}</div>
+          {!screenOnly && v.phase !== 'intro' && <div className="bb-n"><b dir="ltr">{drops[b.id] || 0}</b> {ar ? 'كارت' : 'cards'}</div>}
         </div>)}</div>
-        {v.phase === 'intro' && <div className="bb-howto">📱 {ar ? 'على موبايلك: اسحب كل كارت للسلة الصح' : 'On your phone: drag each card into the right basket'}</div>}
-        {v.phase === 'closed' && <div className="locked-big">🔒 {ar ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+        {v.phase === 'intro' && <div className="bb-howto"><Icon name="phone" /> {ar ? 'على موبايلك: اسحب كل كارت للسلة الصح' : 'On your phone: drag each card into the right basket'}</div>}
+        {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {ar ? 'الإجابات اتقفلت' : 'Answers locked'}</div>}
       </div>);
   }
   if (v.phase === 'confirmed') {
@@ -307,17 +308,18 @@ function BasketStage({ sc, v, c, lang, screenOnly }: any) {
     const avg = n ? Math.round(100 * ok / n) : 0;
     return (
       <div className="summary">
-        <div className="sum-head"><h1 className="mega">📊 {ar ? 'القاعة عملت إيه؟' : 'How did the room do?'}</h1>
+        <div className="sum-head"><h1 className="mega">{ar ? 'نتيجة القاعة' : 'How the room did'}</h1>
           <div className="sum-avg"><b dir="ltr">{avg}%</b><span>{ar ? 'من الكروت في السلة الصح' : 'of cards in the right basket'}</span></div></div>
-        <div className="sum-grid">{rows.map((r: any) => {
+        <div className="sum-list">{rows.map((r: any) => {
           const it = c.items.find((i: any) => i.id === r.id); const good = answerOf(sc, it)[0]; const b = bins.find(x => x.id === good)!;
           const band = r.pct >= 70 ? 'good' : r.pct >= 40 ? 'mid' : 'bad';
           return (
-            <div key={r.id} className={`sum-card ${band}`}>
-              <div className="sum-name"><span className="sum-ico">{it.icon}</span>{tr(it.name, lang)}</div>
-              <div className="sum-row"><span className={`bin-chip ${b.cls}`}>{b.icon} {b.label}</span><b className="sum-pct" dir="ltr">{r.pct}%</b></div>
-              <div className="sum-bar"><i className={band} style={{ width: `${Math.max(2, r.pct)}%` }} /></div>
-              {r.topWrong && r.pct < 70 && <div className="sum-miss">{ar ? 'أكتر غلطة:' : 'Most picked instead:'} {binLabel(bins, r.topWrong)}</div>}
+            <div key={r.id} className={`sum-line ${band}`}>
+              <div className="sum-name"><Icon name={it.icon} /><span>{tr(it.name, lang)}</span></div>
+              <span className={`bin-chip ${b.cls}`}><Icon name={b.icon} /> {b.label}</span>
+              <div className="sum-meter"><div className="sum-bar"><i className={band} style={{ width: `${Math.max(2, r.pct)}%` }} /></div>
+                {r.topWrong && r.pct < 70 && <div className="sum-miss">{ar ? 'أكتر اختيار غلط:' : 'Most picked instead:'} {binLabel(bins, r.topWrong)}</div>}</div>
+              <b className="sum-pct" dir="ltr">{r.pct}%</b>
             </div>);
         })}</div>
       </div>);
@@ -335,18 +337,18 @@ function BasketStage({ sc, v, c, lang, screenOnly }: any) {
     <div className="reveal-item basket-reveal">
       <div className="ri-left">
         <div className="ri-progress">{v.revealItem + 1} / {items.length}</div>
-        <div className="ri-icon">{it.icon}</div>
+        <div className="ri-icon"><Icon name={it.icon} /></div>
         <h1 className="ri-name">{tr(it.name, lang)}</h1>
         <p className="ri-desc">{tr(it.desc, lang)}</p>
-        {contested && !confirmed && !screenOnly && <div className="contested">🔥 {ar ? 'القاعة منقسمة!' : 'The room is split!'}</div>}
+        {contested && !confirmed && !screenOnly && <div className="contested">{ar ? 'القاعة منقسمة' : 'The room is split'}</div>}
       </div>
       <div className="ri-right">
-        {screenOnly && !confirmed ? <div className="hands big">{ui('showOfHands', lang)}<div className="hands-opts">{bins.map(x => <span key={x.id} className={`bin-chip ${x.cls}`}>{x.icon} {x.label}</span>)}</div></div>
-          : <Bars total={total} correct={confirmed ? good : undefined} rows={bins.map(x => ({ id: x.id, label: `${x.icon} ${x.label}`, cls: x.cls, n: sp.counts[x.id] || 0 }))} />}
+        {screenOnly && !confirmed ? <div className="hands big"><span>{ui('showOfHands', lang)}</span><div className="hands-opts">{bins.map(x => <span key={x.id} className={`bin-chip ${x.cls}`}><Icon name={x.icon} /> {x.label}</span>)}</div></div>
+          : <Bars total={total} correct={confirmed ? good : undefined} rows={bins.map(x => ({ id: x.id, label: x.label, icon: x.icon, cls: x.cls, n: sp.counts[x.id] || 0 }))} />}
         {confirmed && <div className="answer-box">
-          <div className="ab-head"><span className={`bin-chip ${b.cls}`}>{b.icon} {b.label}</span>{!screenOnly && total > 0 && <span className="ab-pct" dir="ltr">{Math.round(100 * okN / total)}% {ar ? 'صح' : 'got it right'}</span>}</div>
+          <div className="ab-head"><span className={`bin-chip ${b.cls}`}><Icon name={b.icon} /> {b.label}</span>{!screenOnly && total > 0 && <span className="ab-pct" dir="ltr">{Math.round(100 * okN / total)}% {ar ? 'صح' : 'got it right'}</span>}</div>
           <p className="ab-why">{tr(reasonOf(sc, it), lang)}</p>
-          <div className="src">📚 {c.sources[sourceOf(sc, it)]}</div>
+          <div className="src">{ui('source', lang)}: {c.sources[sourceOf(sc, it)]}</div>
         </div>}
       </div>
       {v.debate && v.revealSub === 'debate' && <DebateCard d={v.debate} lang={lang} c={c} labFn={(x: string) => binLabel(bins, x)} clsFn={(x: string) => bins.find(y => y.id === x)?.cls || ''} />}
@@ -363,9 +365,9 @@ function IsoStage({ sc, v, c, lang, screenOnly }: any) {
       <div className="iso-board">
         <h1 className="q-big">{tr(sc.title, lang)}</h1>
         <div className="iso-cats">{Object.entries(c.categories.iso).map(([k, x]: any) => <div key={k} className={`iso-cat iso${k}`}><b>{k}</b><span>{tr(x, lang).replace(/^\d\s/, '')}</span></div>)}</div>
-        <div className="iso-items">{items.map((it: any) => <span key={it.id} className="iso-item">{it.icon} {tr(it.name, lang)}</span>)}</div>
-        <div className="src">📚 {c.sources['ISO_524']}</div>
-        {v.phase === 'closed' && <div className="locked-big">🔒 {lang === 'ar' ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+        <div className="iso-items">{items.map((it: any) => <span key={it.id} className="iso-item"><Icon name={it.icon} /> {tr(it.name, lang)}</span>)}</div>
+        <div className="src">{ui('source', lang)}: {c.sources['ISO_524']}</div>
+        {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {lang === 'ar' ? 'الإجابات اتقفلت' : 'Answers locked'}</div>}
       </div>);
   }
   const cur = items[v.revealItem];
@@ -381,14 +383,14 @@ function IsoStage({ sc, v, c, lang, screenOnly }: any) {
           const shown = confirmedIds.includes(it.id); const isCur = it.id === cur.id;
           return (
             <tr key={it.id} className={`${shown ? 'shown' : ''} ${isCur ? 'cur' : ''}`}>
-              <td>{it.icon} {tr(it.name, lang)}</td>
+              <td><Icon name={it.icon} /> {tr(it.name, lang)}</td>
               <td>{shown ? <span className={`bin-chip ${it.scope.toLowerCase()}`}>{label(it)}</span> : '…'}</td>
               <td>{shown ? <span className={`iso-chip iso${it.iso[0]}`}>{[...it.iso, ...(it.isoAlso || [])].map((x: number) => tr(c.categories.iso[x], lang)).join(' / ')}</span> : isCur && !screenOnly && total ? <MiniSplit counts={sp.counts} total={total} /> : '…'}</td>
             </tr>);
         })}</tbody>
       </table>
-      {v.revealSub === 'confirmed' && !allDone && <div className="iso-why">{cur.icon} {tr(cur.isoReason, lang)} <span className="src">📚 {c.sources[cur.isoSource]}</span></div>}
-      {allDone && <div className="insight">💡 {tr(sc.insight, lang)}</div>}
+      {v.revealSub === 'confirmed' && !allDone && <div className="iso-why"><Icon name={cur.icon} /> {tr(cur.isoReason, lang)} <span className="src">{ui('source', lang)}: {c.sources[cur.isoSource]}</span></div>}
+      {allDone && <div className="insight">{tr(sc.insight, lang)}</div>}
       {v.debate && v.revealSub === 'debate' && <DebateCard d={v.debate} lang={lang} iso c={c} />}
       <AuditorStamp c={c} lang={lang} show={v.revealSub === 'confirmed'} />
     </div>);
@@ -418,21 +420,21 @@ function CalcStage({ sc, v, c, lang, screenOnly }: any) {
   return (
     <div className="calc-stage">
       <div className="cs-left">
-        <h1 className="cs-title">{k.icon} {tr(sc.title, lang)}</h1>
+        <h1 className="cs-title"><Icon name={k.icon} /> {tr(sc.title, lang)}</h1>
         <DocCard doc={k.doc} lang={lang} big />
-        {screenOnly && !confirmed && <div className="hands">🧮 {lang === 'ar' ? 'احسبوها مع اللي جنبكم!' : 'Work it out with your neighbour!'}</div>}
+        {screenOnly && !confirmed && <div className="hands">{lang === 'ar' ? 'احسبوها مع اللي جنبكم!' : 'Work it out with your neighbour!'}</div>}
       </div>
       <div className="cs-right">
         {!confirmed && <FactorCard f={f} lang={lang} />}
-        {(v.phase === 'intro' || v.phase === 'answering') && <div className="calc-hint">🧮 {lang === 'ar' ? 'النشاط × المعامل ÷ 1,000 = طن CO₂e' : 'Activity × factor ÷ 1,000 = t CO₂e'}</div>}
+        {(v.phase === 'intro' || v.phase === 'answering') && <div className="calc-hint">{lang === 'ar' ? 'النشاط × المعامل ÷ 1,000 = طن CO₂e' : 'Activity × factor ÷ 1,000 = t CO₂e'}</div>}
         {v.phase === 'reveal' && !screenOnly && <Bars total={tot} correct={confirmed ? ['ok'] : undefined} rows={[
           { id: 'ok', label: lang === 'ar' ? 'في حدود ±5%' : 'Within ±5%', cls: 'good', n: b.ok },
           { id: 'close', label: lang === 'ar' ? 'قريب (±15%)' : 'Close (±15%)', cls: 'mid', n: b.close },
           { id: 'slip', label: lang === 'ar' ? 'كيلو بدل طن' : 'kg, not tonnes', cls: 'slip', n: b.slip },
           { id: 'off', label: lang === 'ar' ? 'بعيد' : 'Off', cls: 'bad', n: b.off }]} />}
-        {confirmed && <div className="answer-box big"><div className="ab-num" dir="ltr">{num(k.answer, 1)} <small>t CO₂e</small></div><p className="ab-formula" dir="ltr">{tr(k.formula, 'en')}</p><div className="src">📚 {f.source}</div></div>}
+        {confirmed && <div className="answer-box big"><div className="ab-num" dir="ltr">{num(k.answer, 1)} <small>t CO₂e</small></div><p className="ab-formula" dir="ltr">{tr(k.formula, 'en')}</p><div className="src">{ui('source', lang)}: {f.source}</div></div>}
         {confirmed && <ScopeStack inv={v.inventory} lang={lang} highlight={sc.id} vh={34} />}
-        {v.phase === 'closed' && <div className="locked-big">🔒 {lang === 'ar' ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+        {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {lang === 'ar' ? 'الإجابات اتقفلت' : 'Answers locked'}</div>}
       </div>
       <AuditorStamp c={c} lang={lang} show={confirmed} />
     </div>);
@@ -445,11 +447,11 @@ function MethodsStage({ sc, v, c, lang, screenOnly }: any) {
   const max = Math.max(...keys.map(k => m.options[k].answer));
   return (
     <div className="methods-stage">
-      <h1 className="cs-title">🚚 {tr(sc.title, lang)}</h1>
+      <h1 className="cs-title">{tr(sc.title, lang)}</h1>
       {(v.phase === 'intro' || v.phase === 'answering' || v.phase === 'closed') && <div className="ms-pre">
         {sc.ceo && <Ceo line={sc.ceo} lang={lang} c={c} />}
         <DocCard doc={m.doc} lang={lang} big />
-        {v.phase === 'closed' && <div className="locked-big">🔒 {lang === 'ar' ? 'الإجابات اتقفلت!' : 'Answers locked!'}</div>}
+        {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {lang === 'ar' ? 'الإجابات اتقفلت' : 'Answers locked'}</div>}
       </div>}
       {(v.phase === 'reveal' || confirmed) && <div className="ms-cols">
         {keys.map(k => {
@@ -464,7 +466,7 @@ function MethodsStage({ sc, v, c, lang, screenOnly }: any) {
             </div>);
         })}
       </div>}
-      {confirmed && <div className="hierarchy">{lang === 'ar' ? 'جودة البيانات' : 'Data quality'}: <b>⛽ {tr(m.options.fuel.name, lang)}</b> ▶ <b>📏 {tr(m.options.distance.name, lang)}</b> ▶ <b>💵 {tr(m.options.spend.name, lang)}</b></div>}
+      {confirmed && <div className="hierarchy">{lang === 'ar' ? 'جودة البيانات' : 'Data quality'}: <b>{tr(m.options.fuel.name, lang)}</b> &gt; <b>{tr(m.options.distance.name, lang)}</b> &gt; <b>{tr(m.options.spend.name, lang)}</b></div>}
       <AuditorStamp c={c} lang={lang} show={confirmed} />
     </div>);
 }
@@ -477,7 +479,7 @@ function InventoryStage({ sc, v, c, lang }: any) {
   return (
     <div className="inventory">
       <div className="inv-left">
-        <h1 className="cs-title">📊 {tr(sc.title, lang)}</h1>
+        <h1 className="cs-title">{tr(sc.title, lang)}</h1>
         <div className="inv-total" dir="ltr">{num(inv.total, 0)} <small>t CO₂e</small></div>
         <ul className="inv-rows">{inv.rows.filter((r: any) => r.done).map((r: any) => <li key={r.id} className={r.scope.toLowerCase()}><span>{tr(r.label, lang)}</span><b dir="ltr">{num(r.value, 1)}</b></li>)}</ul>
         <p className="muted small">{ui('notMeasured', lang)}</p>
@@ -498,17 +500,17 @@ function BoardStage({ sc, v, c, lang }: any) {
   const b = v.board; const base = b?.base;
   if (v.phase === 'intro' || v.phase === 'answering' || v.phase === 'closed') return (
     <div className="board-pre">
-      <h1 className="cs-title">🏛️ {tr(sc.title, lang)}</h1>
-      <div className="lever-grid">{c.levers.map((l: any) => <div key={l.id} className="lever-tile"><span className="lt-ico">{l.icon}</span><b>{tr(l.name, lang)}</b><small>{tr(l.effect, lang)}</small><span className="lt-cost">🪙 {l.cost}</span></div>)}</div>
-      <div className="muted big-note">{lang === 'ar' ? `الميزانية: ${c.boardModel.budget} عملة لكل فريق` : `Budget: ${c.boardModel.budget} coins per team`} · 🗳️ {b?.votes || 0}</div>
-      {v.phase === 'closed' && <div className="locked-big">🔒 {lang === 'ar' ? 'الخطط اتقفلت!' : 'Plans locked!'}</div>}
+      <h1 className="cs-title">{tr(sc.title, lang)}</h1>
+      <div className="lever-grid">{c.levers.map((l: any) => <div key={l.id} className="lever-tile"><span className="lt-ico"><Icon name={l.icon} /></span><b>{tr(l.name, lang)}</b><small>{tr(l.effect, lang)}</small><span className="lt-cost"><Icon name="coins" /> {l.cost}</span></div>)}</div>
+      <div className="muted big-note">{lang === 'ar' ? `الميزانية: ${c.boardModel.budget} عملة لكل فريق` : `Budget: ${c.boardModel.budget} coins per team`} <span className="votes"><Icon name="vote" /> {b?.votes || 0}</span></div>
+      {v.phase === 'closed' && <div className="locked-big"><Icon name="lock" /> {lang === 'ar' ? 'الخطط اتقفلت' : 'Plans locked'}</div>}
     </div>);
   const res = (b?.results || []).filter((r: any) => r.members > 0);
   const maxLB = base?.LB || 1;
   return (
     <div className="board-reveal">
-      <h1 className="cs-title">🏛️ {tr(sc.title, lang)}</h1>
-      {v.step === 0 && v.phase !== 'confirmed' && <div className="plans">{res.map((r: any) => <div key={r.teamId} className="plan"><TeamName c={c} id={r.teamId} lang={lang} /><div className="plan-levers">{r.plan.length ? r.plan.map((id: string) => { const l = c.levers.find((x: any) => x.id === id); return <span key={id} className="pl">{l.icon} {tr(l.name, lang)}</span>; }) : '—'}</div></div>)}</div>}
+      <h1 className="cs-title">{tr(sc.title, lang)}</h1>
+      {v.step === 0 && v.phase !== 'confirmed' && <div className="plans">{res.map((r: any) => <div key={r.teamId} className="plan"><TeamName c={c} id={r.teamId} lang={lang} /><div className="plan-levers">{r.plan.length ? r.plan.map((id: string) => { const l = c.levers.find((x: any) => x.id === id); return <span key={id} className="pl"><Icon name={l.icon} /> {tr(l.name, lang)}</span>; }) : '—'}</div></div>)}</div>}
       {(v.step === 1 || v.phase === 'confirmed') && <div className="fp-chart">
         <div className="fp-legend"><span className="s1">S1</span><span className="s2">S2</span><span className="s3">S3</span> · {ui('locationBased', lang)} / <i>{ui('marketBased', lang)}</i></div>
         <FpRow label={ui('before', lang)} fp={base} max={maxLB} lang={lang} />
@@ -542,20 +544,19 @@ function FinaleStage({ sc, v, c, lang }: any) {
     const order = [t[1], t[0], t[2]];
     return (
       <div className="podium-wrap">
-        <Confetti />
-        <h1 className="mega">🏆 {lang === 'ar' ? 'الفرق الفائزة' : 'Champions'}</h1>
+        <h1 className="mega">{lang === 'ar' ? 'ترتيب الفرق' : 'Team results'}</h1>
         <div className="podium">{order.map((x: any, i: number) => x ? <div key={x.id} className={`pod p${[2, 1, 3][i]}`}><div className="pod-team"><TeamName c={c} id={x.id} lang={lang} /></div><div className="pod-score">{x.score}</div><div className="pod-block">{[2, 1, 3][i]}</div></div> : <div key={i} className="pod empty" />)}</div>
       </div>);
   }
   if (kind === 'top') return (
     <div className="top-ind">
-      <h1 className="mega">⭐ {ui('topPlayers', lang)}</h1>
-      <div className="ind">{(lb?.top || []).slice(0, 3).map((p: any, i: number) => <div key={i} className={`ind-card i${i}`}><div className="ind-medal">{['🥇', '🥈', '🥉'][i]}</div><div className="ind-name">{p.name}</div><TeamName c={c} id={p.teamId} lang={lang} /><div className="ind-score">{p.score}</div></div>)}</div>
+      <h1 className="mega">{ui('topPlayers', lang)}</h1>
+      <div className="ind">{(lb?.top || []).slice(0, 3).map((p: any, i: number) => <div key={i} className={`ind-card i${i}`}><div className="ind-medal">{i + 1}</div><div className="ind-name">{p.name}</div><TeamName c={c} id={p.teamId} lang={lang} /><div className="ind-score">{p.score}</div></div>)}</div>
     </div>);
   if (kind === 'report') return (
     <div className="report">
       <div className="report-paper">
-        <div className="rp-head"><div><div className="rp-co">🥖 {tr(c.meta.company, lang)}</div><h1>{lang === 'ar' ? `جرد الكربون ${c.meta.inventoryYear}` : `Carbon Inventory ${c.meta.inventoryYear}`}</h1></div><div className="rp-total" dir="ltr">{num(inv.total, 0)}<small> t CO₂e</small></div></div>
+        <div className="rp-head"><div><div className="rp-co">{tr(c.meta.company, lang)}</div><h1>{lang === 'ar' ? `جرد الكربون ${c.meta.inventoryYear}` : `Carbon Inventory ${c.meta.inventoryYear}`}</h1></div><div className="rp-total" dir="ltr">{num(inv.total, 0)}<small> t CO₂e</small></div></div>
         <div className="rp-body">
           <table className="rp-table"><tbody>
             {['S1', 'S2', 'S3'].map(s => <React.Fragment key={s}>
@@ -576,6 +577,6 @@ function FinaleStage({ sc, v, c, lang }: any) {
     <div className="takeaways">
       <h1 className="mega">{ui('takeaways', lang)}</h1>
       <ol className={sc.takeaways.reduce((n: number, t: any) => n + tr(t, lang).length, 0) > 300 ? 'long' : ''}>{sc.takeaways.map((t: any, i: number) => <li key={i} style={{ animationDelay: `${i * 0.5}s` }}>{tr(t, lang)}</li>)}</ol>
-      <div className="thanks">— {c.meta.instructorName}, {lang === 'ar' ? 'كبيرة المدققين' : 'Chief Auditor'}</div>
+      <div className="thanks">{c.meta.instructorName}, {lang === 'ar' ? 'كبيرة المدققين' : 'Chief Auditor'}</div>
     </div>);
 }
